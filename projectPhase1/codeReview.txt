@@ -1,0 +1,19 @@
+After careful consideration and meticulous observations of all of our group
+member’s assignment source code, we have found the most appropriate code to use.
+Our group will exclusively use Jayden Arquelada’s code for 3 very important reasons.
+The first reason being that Jayden Arquelada was the only person in our group
+who had finished bank.java (CandyCane). Thus jayden’s code has already tested a few features
+and implementations. The second reason is that our group <3<3 loves the design
+choices made by Jayden. The program handled exceptions well, rather than
+throwing them, functioning close to how real world bank machines work. Also, it
+let the user know whether things were successfully added, updated, or selected
+from the database through returns or print statements.
+
+Finally, Jayden has superb comments that are all specific and easy to follow so
+it would be really easy for everyone to be up to pace when we start the assignment.
+Due to these reasons, our grouped has come to a general concesus that we should
+use Jayden's code.
+
+For more information on this topic, please visit Jayquelada.com for more
+information about why we, “WonChoiTing” trust Jayden Arquelada to the
+brink of destruction.
