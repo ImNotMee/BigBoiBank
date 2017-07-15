@@ -49,5 +49,4 @@ public class Admin extends User {
     // tries to get the role id from the database
     this.roleId = DatabaseSelectHelper.getUserRole(this.getId());
   }
-
 }

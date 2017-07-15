@@ -5,8 +5,8 @@ import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.Roles;
 
 
-public class UserCreator {
-	public User makeUser(int id, String name, int age, String address) throws ConnectionFailedException{
+public abstract class UserCreator {
+	public static User makeUser(int id, String name, int age, String address) throws ConnectionFailedException{
 		String type = DatabaseSelectHelper.getRole(id);
 		if(type.equals(Roles.ADMIN)){
 			return new Admin(id, name, age, address);
