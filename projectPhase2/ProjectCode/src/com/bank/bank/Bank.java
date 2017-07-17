@@ -235,7 +235,7 @@ public class Bank {
                 System.out.print("Input the password of the Customer: ");
                 String password = inputReader.readLine();
                 // input the Customer into the database
-                tellerTerminal.makeNewUser(customerName, Integer.valueOf(customerAge), 
+                tellerTerminal.makeNewCustomer(customerName, Integer.valueOf(customerAge), 
                     customerAddress, password);
                 // make a new Account and give it to the current Customer
               } else if (tellerOption.equals("3")) {
@@ -278,8 +278,8 @@ public class Bank {
                      Integer.valueOf(typeId))) {
                   // state the id of the created Customer
                   System.out.println("Account successfully added with ID: " 
-                      + String.valueOf(tellerTerminal.listAccounts().get(
-                          tellerTerminal.listAccounts().size() - 1).getId()));
+                      + String.valueOf(tellerTerminal.listCustomerAccounts().get(
+                          tellerTerminal.listCustomerAccounts().size() - 1).getId()));
                 } else {
                   System.out.println("Account was not successfully added.");
                 }
@@ -437,7 +437,7 @@ public class Bank {
             // list accounts and balances
             if (customerOption.equals("1")) {
               // get the accounts for the current Customer
-              List<Account> accounts = automatedTellerMachine.listAccounts();
+              List<Account> accounts = automatedTellerMachine.listCustomerAccounts();
               if (accounts != null) {
                 System.out.println("The account names, IDs, and their balances are: ");
                 // string to hold all the accounts and their balance
