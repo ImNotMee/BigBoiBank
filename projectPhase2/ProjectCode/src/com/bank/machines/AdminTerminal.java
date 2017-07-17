@@ -1,55 +1,68 @@
 package com.bank.machines;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.bank.databasehelper.DatabaseInsertHelper;
+import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.users.*;
 import com.bank.generics.RolesEnumMap;
 
-public class AdminTerminal extends BankServiceSystems{
+public class AdminTerminal extends BankServiceSystems {
   private Admin currentAdmin; 
   private boolean currentAdminAuthenicated;
+  private RolesEnumMap enumMap = new RolesEnumMap();
   
+  /**
+   * Constructor for AdminTerminal.
+   * @param admin the admin that will be using this machine
+   * @param authenicated if the admin is authenticated.
+   */
   public AdminTerminal(Admin admin, boolean authenicated) {
-    currentAdmin = admin;
-    currentAdminAuthenicated = authenicated;
+    this.currentAdmin = admin;
+    this.currentAdminAuthenicated = authenicated;
   }
   
-  
+  /**
+   * Makes a new Admin.
+   * @param name name of the new admin.
+   * @param age the age of the new admin.
+   * @param address the address of the new admin.
+   * @param password the password of the new admin.
+   * @return the id of the admin created.
+   * @throws ConnectionFailedException If the connection fails.
+   */
   public int makeNewAdmin(String name, int age, String address, String password) throws ConnectionFailedException {
-    int adminId = -1;
     if (currentAdminAuthenicated) {
-      Admin newAdmin = (Admin) UserCreator.makeUser(age, password, age, password);
-      adminId = newAdmin.getId();
+      return DatabaseInsertHelper.insertNewUser(name, age, address, this.enumMap.getRoleId("ADMIN"), password);
     }
-    return adminId;
+    return -1;
   }
   
-  public List<Admin> listAdmins() {
-    RolesEnumMap enumMap = new RolesEnumMap();
-    // Get the role Id of Admin
-    int roleId = enumMap.getRoleId("ADMIN");
-    // Find all the admins in the database
-    
-  }
-  
-  public List<Teller> listTellers() {
-    RolesEnumMap enumMap = new RolesEnumMap();
-    // Get the role Id of Teller
-    int roleId = enumMap.getRoleId("TELLER");
-
-  }
-  public List<Customer> listCustomers() {
-    RolesEnumMap enumMap = new RolesEnumMap();
-    // Get the role Id of Customer
-    int roleId = enumMap.getRoleId("CUSTOMER");
-
+  public List<User> listUsers(String roleName) throws ConnectionFailedException {
+    List<User> users = new ArrayList<>();
+    // Get the role Id of the roleName and capitalize it in case they're a bit slow
+    int roleId = this.enumMap.getRoleId(roleName.toUpperCase());
+    // Find all the users in the database of the given role
+    int currId = 1;
+    int currUserRoleId = DatabaseSelectHelper.getUserRole(currId);
+    while (currUserRoleId != -1) {
+      // this means there are still users in the database
+      if (currUserRoleId == roleId) {
+        users.add(DatabaseSelectHelper.getUserDetails(currId));
+      }
+      currId++;
+      currUserRoleId = DatabaseSelectHelper.getUserRole(currId);
+    }
+    return users;
   }
   
   public boolean setCurrentCustomer(Customer customer) {
     boolean success = false;
-    // Check if the Admin is authenticated and if the customer is
-    if (currentAdminAuthenicated && customer.getId() == -1) {
+    int customerId = this.enumMap.getRoleId("CUSTOMER");
+    // Check if the Admin is authenticated and if the customer is a customer
+    if (currentAdminAuthenicated && customer.getId() == customerId) {
       currentCustomer = customer;
       success = true;
     }
@@ -58,9 +71,9 @@ public class AdminTerminal extends BankServiceSystems{
 
   public boolean deauthenciateAdmin() {
     boolean success = false;
-    if (currentAdminAuthenicated) {
-      currentAdminAuthenicated = false;
-      currentAdmin = null;
+    if (this.currentAdminAuthenicated) {
+      this.currentAdminAuthenicated = false;
+      this.currentAdmin = null;
       success = true;
     }
     return success;
