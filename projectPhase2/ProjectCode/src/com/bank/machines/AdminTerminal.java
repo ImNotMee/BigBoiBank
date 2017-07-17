@@ -10,11 +10,14 @@ import com.bank.users.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminTerminal extends BankWorkerServiceSystems {
+public class AdminTerminal extends BankServiceSystems {
   private RolesEnumMap enumMap = new RolesEnumMap();
-  
+  private Admin currentUser;
+  private boolean currentUserAuthenticated;
+
   /**
    * Constructor for AdminTerminal.
+   * 
    * @param admin the admin that will be using this machine
    * @param authenicated if the admin is authenticated.
    */
@@ -22,9 +25,10 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     this.currentUser = admin;
     this.currentUserAuthenticated = authenicated;
   }
-  
+
   /**
    * Makes a new Admin.
+   * 
    * @param name name of the new admin.
    * @param age the age of the new admin.
    * @param address the address of the new admin.
@@ -32,15 +36,22 @@ public class AdminTerminal extends BankWorkerServiceSystems {
    * @return the id of the admin created.
    * @throws ConnectionFailedException If the connection fails.
    */
-  public int makeNewAdmin(String name, int age, String address, String password) throws 
-      ConnectionFailedException {
+  public int makeNewAdmin(String name, int age, String address, String password)
+      throws ConnectionFailedException {
     if (this.currentUserAuthenticated) {
       return DatabaseInsertHelper.insertNewUser(name, age, address, this.enumMap.getRoleId("ADMIN"),
           password);
     }
     return -1;
   }
-  
+
+  /**
+   * A method that returns a list of users given the name of the role.
+   * 
+   * @param roleName , the name of the role.
+   * @return A list of Users , which contains Admin, Teller or Customer.
+   * @throws ConnectionFailedException , if the method cannot connect to the database.
+   */
   public List<User> listUsers(String roleName) throws ConnectionFailedException {
     List<User> users = new ArrayList<>();
     // Get the role Id of the roleName and capitalize it in case they're a bit slow
@@ -59,6 +70,11 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     return users;
   }
 
+  /**
+   * A method that deauthenciates the current admin using this terminal.
+   * 
+   * @return a boolean representing if the action is successful.
+   */
   public boolean deauthenciateAdmin() {
     boolean success = false;
     if (this.currentUserAuthenticated) {
