@@ -10,6 +10,7 @@ import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
+import com.bank.generics.RolesEnumMap;
 import com.bank.users.Customer;
 import com.bank.users.Teller;
 
@@ -18,11 +19,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TellerTerminal extends AutomatedTellerMachine {
-  private Teller currentUser = null;
-  private boolean currentUserAuthenticated = false;
-  private Customer currentCustomer = null;
-  private boolean currentCustomerAuthenticated = false;
+public class TellerTerminal extends BankServiceSystems {
+  private Teller currentTeller = null;
+  private boolean currentTellerAuthenticated = false;
   
   /**
    * Initialize a TellerTerminal with a teller. Must pass authentication on the first try.
@@ -31,103 +30,10 @@ public class TellerTerminal extends AutomatedTellerMachine {
    * @throws ConnectionFailedException If the database was not successfully connected to.
    */
   public TellerTerminal(int tellerId, String password) throws ConnectionFailedException {
-    // call the parent constructor and create a null customer
-    super(-1, null);
     // create a Customer object from the information in the database
-    this.currentUser = (Teller) DatabaseSelectHelper.getUserDetails(tellerId);
+    this.currentTeller = (Teller) DatabaseSelectHelper.getUserDetails(tellerId);
     // ensure the customer has the correct password
-    this.currentUserAuthenticated = currentUser.authenticate(password);
-  }
-  
-  @Override
-  public boolean authenticate(int userId, String password) {
-    // ensures this method does nothing anymore
-    return false;
-  }
-  
-  @Override
-  public List<Account> listAccounts() throws ConnectionFailedException {
-    // ensure the current customer is authenticated
-    if (!this.currentCustomerAuthenticated || !this.currentUserAuthenticated) {
-      System.out.println("The current Customer or Teller is not authenticated.");
-      return null;
-    } else {
-      // create a list to hold the accounts
-      List<Account> accounts = new ArrayList<Account>();
-      // get the id of the accounts for the current customer
-      List<Integer> ids = DatabaseSelectHelper.getAccountIds(this.currentCustomer.getId());
-      // loop through each id, creating a new account for it
-      for (int id: ids) {
-        // create a new user and add it
-        accounts.add(DatabaseSelectHelper.getAccountDetails(id));
-      }
-      // return the list of accounts
-      return accounts;
-    }
-  }
-  
-  @Override
-  public boolean makeDeposit(BigDecimal amount, int accountId) throws ConnectionFailedException, 
-      IllegalAmountException {
-    // check if the user is authenticated
-    if (!this.currentUserAuthenticated || !this.currentCustomerAuthenticated) {
-      System.out.println("The current Customer or Teller is not authenticated.");
-      return false;
-    // check if the user has access to the account
-    } else if (!DatabaseSelectHelper.getAccountIds(
-        this.currentCustomer.getId()).contains(accountId)) {
-      System.out.println("The customer does not have access to this account.");
-      return false;
-    // check if the amount given is valid 
-    } else if (amount.compareTo(BigDecimal.ZERO) < 0) {
-      throw new IllegalAmountException("Input given is an illegal amount.");
-    } else {
-      // add the deposit
-      return DatabaseUpdateHelper.updateAccountBalance(
-          DatabaseSelectHelper.getBalance(accountId).add(amount), accountId);
-    }
-  }
-  
-  @Override
-  public BigDecimal checkBalance(int accountId) throws ConnectionFailedException {
-    // check if the user is authenticated
-    if (!this.currentUserAuthenticated || !this.currentCustomerAuthenticated) {
-      System.out.println("The Customer or Teller is not Authenticated.");
-      return null;
-    // check if the user has access to the account
-    } else if (!DatabaseSelectHelper.getAccountIds(
-        this.currentCustomer.getId()).contains(accountId)) { 
-      System.out.println("The customer does not have access to this account.");
-      return null;
-    } else {
-      // get the balance of the account
-      return DatabaseSelectHelper.getBalance(accountId);
-    }   
-  }
-  
-  @Override
-  public boolean makeWithdrawal(BigDecimal amount, int accountId) throws ConnectionFailedException, 
-      IllegalAmountException, InsufficientFundsException {
-    // check if the user is authenticated
-    if (!this.currentUserAuthenticated || !this.currentCustomerAuthenticated) {
-      System.out.println("The Cutomer or Teller is not Authenticated.");
-      return false;
-    } else if (!DatabaseSelectHelper.getAccountIds(
-        this.currentCustomer.getId()).contains(accountId)) {
-      System.out.println("The customer does not have access to this account.");
-      return false;
-    // check if the amount given is valid
-    } else if (amount.compareTo(BigDecimal.ZERO) < 0) {
-      throw new IllegalAmountException("The amount given is invalid");
-    // check if the account has enough money to be withdrawn
-    } else if (
-        DatabaseSelectHelper.getBalance(accountId).subtract(amount).compareTo(BigDecimal.ZERO) 
-        < 1) {
-      throw new InsufficientFundsException("You do not have enough funds to withdraw that amount.");
-    } else {
-      return DatabaseUpdateHelper.updateAccountBalance(
-        DatabaseSelectHelper.getBalance(accountId).subtract(amount), accountId);
-    }
+    this.currentTellerAuthenticated = currentTeller.authenticate(password);
   }
   
   /**
@@ -145,7 +51,7 @@ public class TellerTerminal extends AutomatedTellerMachine {
     // set that the account was made and registered as false by default
     boolean createdAndRegistered = false;
     // ensure the user and customer are authenticated
-    if (this.currentUserAuthenticated && this.currentCustomerAuthenticated 
+    if (this.currentTellerAuthenticated && this.currentCustomerAuthenticated 
         && currentCustomer != null) {
       // try to make an account with the given info
       int accountId = DatabaseInsertHelper.insertAccount(name, balance, type);
@@ -170,23 +76,6 @@ public class TellerTerminal extends AutomatedTellerMachine {
   }
   
   /**
-   * Try to Authenticate the current Customer.
-   * @param password The possible password of the Customer.
-   * @throws ConnectionFailedException If the database was not successfully connected to.
-   */
-  public void authenticateCurrentCustomer(String password) throws ConnectionFailedException {
-    if (this.currentCustomer != null) {
-      // try to authenticated the current customer
-      this.currentCustomerAuthenticated = currentCustomer.authenticate(password);
-      if (this.currentCustomerAuthenticated) {
-        System.out.println("Customer was succesfully authenticated.");
-      } else {
-        System.out.println("Customer was not successfully authenticated.");
-      }
-    }
-  }
-  
-  /**
    * Make a new Customer in the database with the given details. Details must be valid or the 
    * Customer will not be made.
    * @param name The name of the User.
@@ -195,30 +84,17 @@ public class TellerTerminal extends AutomatedTellerMachine {
    * @param password The password of the user.
    * @throws ConnectionFailedException If the database was not successfully connected to.
    */
-  public void makeNewUser(String name, int age, String address, String password) 
+  public int makeNewCustomer(String name, int age, String address, String password) 
       throws ConnectionFailedException {
     // check that the Teller is authenticated
-    if (this.currentUserAuthenticated) {
-      // get the role Ids in the database
-      List<Integer> roleIds = DatabaseSelectHelper.getAccountTypesIds();
-      // loop through each id, and if it corresponds to customer, create a new customer with the
-      // given parameters, and add it to the database
-      for (Integer roleId : roleIds) {
-        // check if the current id is that of the Customer Account Type
-        if (DatabaseSelectHelper.getRole(roleId).equals("CUSTOMER")) {
-          // insert the account into the database
-          int id = DatabaseInsertHelper.insertNewUser(name, age, address, roleId, password);
-          // check if it was successful 
-          if (id != -1) {
-            System.out.println("Customer was successfully added with ID: " + String.valueOf(id));
-          } else {
-            System.out.println("Customer was not successfully added.");
-          }
-          break;
-        }
-      }
+    if (this.currentTellerAuthenticated) {
+      // use the enumMap to find the id of CUSTOMER
+      RolesEnumMap map = new RolesEnumMap();
+      int roleId = map.getRoleId("CUSTOMER");
+      return DatabaseInsertHelper.insertNewUser(name, age, address, roleId, password);
     } else {
       System.out.println("The Teller is not authenticated.");
+      return -1;
     }
   }
   
@@ -227,9 +103,9 @@ public class TellerTerminal extends AutomatedTellerMachine {
    * @param account The id of the account.
    * @throws ConnectionFailedException If the database was not successfully connected to.
    */
-  public void giveInterest(int account) throws ConnectionFailedException {
+  public boolean giveInterest(int account) throws ConnectionFailedException {
     // ensure the Customer and Teller are authenticated
-    if (this.currentCustomerAuthenticated && this.currentUserAuthenticated) {
+    if (this.currentCustomerAuthenticated && this.currentTellerAuthenticated) {
       // ensure the account belongs to the CurrentCustomer
       if  (DatabaseSelectHelper.getAccountIds(this.currentCustomer.getId()).contains(account)) {
         // create an account from the given id
@@ -240,16 +116,15 @@ public class TellerTerminal extends AutomatedTellerMachine {
         } else if (accountVar instanceof SavingsAccount) {
           ((SavingsAccount) accountVar).addInterest();
         } else if (accountVar instanceof TaxFreeSavingsAccount) {
-          ((TaxFreeSavingsAccount) accountVar).addInterest();
+         ((TaxFreeSavingsAccount) accountVar).addInterest();
         }
-        System.out.println("Interest was added. New balance: " 
-            + DatabaseSelectHelper.getBalance(account).toString());
+        return true;
       } else {
-        System.out.println("The Customer does not have access to this account.");
-      }
+        System.out.println("The Customer does not have access to this account.");      }
     } else {
       System.out.println("The Customer or Teller is not authenticated.");
     }
+    return false;
   }
   
   /**
