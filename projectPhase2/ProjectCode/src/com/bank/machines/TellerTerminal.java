@@ -18,7 +18,4 @@ public class TellerTerminal extends BankWorkerServiceSystems {
     // ensure the customer has the correct password
     this.currentUserAuthenticated = currentUser.authenticate(password);
   }
- 
-  
-  
 }
