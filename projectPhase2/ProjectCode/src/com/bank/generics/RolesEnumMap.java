@@ -12,7 +12,7 @@ public class RolesEnumMap {
   private static EnumMap<Roles, Integer> rolesMap = new EnumMap<>(Roles.class);
   
   public RolesEnumMap() {
-    update();
+    this.update();
   }
   
   /**

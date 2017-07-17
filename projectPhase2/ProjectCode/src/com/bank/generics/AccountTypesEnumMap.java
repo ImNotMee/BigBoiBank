@@ -8,7 +8,7 @@ import java.util.List;
 
 public class AccountTypesEnumMap {
 
-  private EnumMap<AccountTypes, Integer> accountsMap = new EnumMap<>(AccountTypes.class);
+  private static EnumMap<AccountTypes, Integer> accountsMap = new EnumMap<>(AccountTypes.class);
   
   public AccountTypesEnumMap(){
     this.update();
