@@ -6,7 +6,7 @@ import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.AccountTypes;
 
 
-public class AccountCreator{
+public abstract class AccountCreator {
 	/**
 	 * 
 	 * @param id the account id linked to the id
@@ -16,7 +16,7 @@ public class AccountCreator{
 	 * @throws ConnectionFailedException
 	 */
 	
-	public static Account AccountCreator(int id, String name, BigDecimal balance) throws ConnectionFailedException{
+	public static Account createAccount(int id, String name, BigDecimal balance) throws ConnectionFailedException {
 		// finds the account type associated with the id
 		String type = DatabaseSelectHelper.getAccountTypeName(id);
 		if(type.equals(AccountTypes.CHEQUING)){
