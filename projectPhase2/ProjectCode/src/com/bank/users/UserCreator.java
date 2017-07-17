@@ -6,22 +6,17 @@ import com.bank.generics.Roles;
 
 
 public abstract class UserCreator {
-	public static User makeUser(int id, String name, int age, String address) throws ConnectionFailedException{
+	public static User makeUser(int id, String name, int age, String address) throws ConnectionFailedException {
 		String type = DatabaseSelectHelper.getRole(id);
 		if(type.equals(Roles.ADMIN)){
 			return new Admin(id, name, age, address);
-			
-		}
-		else if(type.equals(Roles.CUSTOMER)){
+		} else if(type.equals(Roles.CUSTOMER)) {
 			return new Customer(id, name, age, address);
-			
-			
-		}
-		else if(type.equals(Roles.TELLER)){
+		} else if(type.equals(Roles.TELLER)) {
 			return new Teller(id, name, age, address);
-			
+		} else {
+		  return null;
 		}
-		else return null;
 	}
 
 }
