@@ -10,10 +10,8 @@ import com.bank.users.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminTerminal extends BankServiceSystems {
+public class AdminTerminal extends BankWorkerServiceSystems {
   private RolesEnumMap enumMap = new RolesEnumMap();
-  private Admin currentUser;
-  private boolean currentUserAuthenticated;
 
   /**
    * Constructor for AdminTerminal.
