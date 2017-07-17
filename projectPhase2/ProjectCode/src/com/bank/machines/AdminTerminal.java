@@ -1,17 +1,16 @@
 package com.bank.machines;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
-import com.bank.users.*;
 import com.bank.generics.RolesEnumMap;
+import com.bank.users.Admin;
+import com.bank.users.User;
 
-public class AdminTerminal extends BankServiceSystems {
-  private Admin currentAdmin; 
-  private boolean currentAdminAuthenicated;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AdminTerminal extends BankWorkerServiceSystems {
   private RolesEnumMap enumMap = new RolesEnumMap();
   
   /**
@@ -20,8 +19,8 @@ public class AdminTerminal extends BankServiceSystems {
    * @param authenicated if the admin is authenticated.
    */
   public AdminTerminal(Admin admin, boolean authenicated) {
-    this.currentAdmin = admin;
-    this.currentAdminAuthenicated = authenicated;
+    this.currentUser = admin;
+    this.currentUserAuthenticated = authenicated;
   }
   
   /**
@@ -33,9 +32,11 @@ public class AdminTerminal extends BankServiceSystems {
    * @return the id of the admin created.
    * @throws ConnectionFailedException If the connection fails.
    */
-  public int makeNewAdmin(String name, int age, String address, String password) throws ConnectionFailedException {
-    if (currentAdminAuthenicated) {
-      return DatabaseInsertHelper.insertNewUser(name, age, address, this.enumMap.getRoleId("ADMIN"), password);
+  public int makeNewAdmin(String name, int age, String address, String password) throws 
+      ConnectionFailedException {
+    if (this.currentUserAuthenticated) {
+      return DatabaseInsertHelper.insertNewUser(name, age, address, this.enumMap.getRoleId("ADMIN"),
+          password);
     }
     return -1;
   }
@@ -57,23 +58,12 @@ public class AdminTerminal extends BankServiceSystems {
     }
     return users;
   }
-  
-  public boolean setCurrentCustomer(Customer customer) {
-    boolean success = false;
-    int customerId = this.enumMap.getRoleId("CUSTOMER");
-    // Check if the Admin is authenticated and if the customer is a customer
-    if (currentAdminAuthenicated && customer.getId() == customerId) {
-      currentCustomer = customer;
-      success = true;
-    }
-    return success;
-  }  
 
   public boolean deauthenciateAdmin() {
     boolean success = false;
-    if (this.currentAdminAuthenicated) {
-      this.currentAdminAuthenicated = false;
-      this.currentAdmin = null;
+    if (this.currentUserAuthenticated) {
+      this.currentUserAuthenticated = false;
+      this.currentUser = null;
       success = true;
     }
     return success;

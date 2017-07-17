@@ -1,27 +1,10 @@
 package com.bank.machines;
 
-import com.bank.accounts.Account;
-import com.bank.accounts.ChequingAccount;
-import com.bank.accounts.SavingsAccount;
-import com.bank.accounts.TaxFreeSavingsAccount;
-import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
-import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
-import com.bank.exceptions.IllegalAmountException;
-import com.bank.exceptions.InsufficientFundsException;
-import com.bank.generics.RolesEnumMap;
-import com.bank.users.Customer;
 import com.bank.users.Teller;
 
-import java.math.BigDecimal;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class TellerTerminal extends BankServiceSystems {
-  private Teller currentTeller = null;
-  private boolean currentTellerAuthenticated = false;
+public class TellerTerminal extends BankWorkerServiceSystems {
   
   /**
    * Initialize a TellerTerminal with a teller. Must pass authentication on the first try.
@@ -31,109 +14,11 @@ public class TellerTerminal extends BankServiceSystems {
    */
   public TellerTerminal(int tellerId, String password) throws ConnectionFailedException {
     // create a Customer object from the information in the database
-    this.currentTeller = (Teller) DatabaseSelectHelper.getUserDetails(tellerId);
+    this.currentUser = (Teller) DatabaseSelectHelper.getUserDetails(tellerId);
     // ensure the customer has the correct password
-    this.currentTellerAuthenticated = currentTeller.authenticate(password);
+    this.currentUserAuthenticated = currentUser.authenticate(password);
   }
-  
-  /**
-   * Make a new Account with the given details, put it in the database, and register it to the 
-   * current Customer. Parameters must be valid 
-   * or the Account will not be made.
-   * @param name Name of the Account.
-   * @param balance Balance of the Account.
-   * @param type Integer representation of the type of Account.
-   * @return true if the Account was successfully made and put in the database, false otherwise
-   * @throws ConnectionFailedException If the database was not successfully connected to.
-   */
-  public boolean makeNewAccount(String name, BigDecimal balance, int type) throws 
-        ConnectionFailedException {
-    // set that the account was made and registered as false by default
-    boolean createdAndRegistered = false;
-    // ensure the user and customer are authenticated
-    if (this.currentTellerAuthenticated && this.currentCustomerAuthenticated 
-        && currentCustomer != null) {
-      // try to make an account with the given info
-      int accountId = DatabaseInsertHelper.insertAccount(name, balance, type);
-      // ensure the account was made
-      if (accountId != -1) {
-        // register the Account to the current Customer
-        createdAndRegistered = DatabaseInsertHelper.insertUserAccount(this.currentCustomer.getId(), 
-            accountId);
-      }
-    }
-    // return whether the account was created and registered to the current Customer
-    return createdAndRegistered;
-  }
-  
-  /**
-   * Set the current Customer. Sets that the current Customer is authenticated as false.
-   * @param customer The customer to be set as the current Customer.
-   */
-  public void setCurrentCustomer(Customer customer) {
-    this.currentCustomer = customer;
-    this.currentCustomerAuthenticated = false;
-  }
-  
-  /**
-   * Make a new Customer in the database with the given details. Details must be valid or the 
-   * Customer will not be made.
-   * @param name The name of the User.
-   * @param age The age of the User.
-   * @param address The address of the User.
-   * @param password The password of the user.
-   * @throws ConnectionFailedException If the database was not successfully connected to.
-   */
-  public int makeNewCustomer(String name, int age, String address, String password) 
-      throws ConnectionFailedException {
-    // check that the Teller is authenticated
-    if (this.currentTellerAuthenticated) {
-      // use the enumMap to find the id of CUSTOMER
-      RolesEnumMap map = new RolesEnumMap();
-      int roleId = map.getRoleId("CUSTOMER");
-      return DatabaseInsertHelper.insertNewUser(name, age, address, roleId, password);
-    } else {
-      System.out.println("The Teller is not authenticated.");
-      return -1;
-    }
-  }
-  
-  /**
-   * Give interest to an account belonging to the current Customer.
-   * @param account The id of the account.
-   * @throws ConnectionFailedException If the database was not successfully connected to.
-   */
-  public boolean giveInterest(int account) throws ConnectionFailedException {
-    // ensure the Customer and Teller are authenticated
-    if (this.currentCustomerAuthenticated && this.currentTellerAuthenticated) {
-      // ensure the account belongs to the CurrentCustomer
-      if  (DatabaseSelectHelper.getAccountIds(this.currentCustomer.getId()).contains(account)) {
-        // create an account from the given id
-        Account accountVar = DatabaseSelectHelper.getAccountDetails(account);
-        // check what type accountVar is and add interest to the account
-        if (accountVar instanceof ChequingAccount) {
-          ((ChequingAccount) accountVar).addInterest();
-        } else if (accountVar instanceof SavingsAccount) {
-          ((SavingsAccount) accountVar).addInterest();
-        } else if (accountVar instanceof TaxFreeSavingsAccount) {
-         ((TaxFreeSavingsAccount) accountVar).addInterest();
-        }
-        return true;
-      } else {
-        System.out.println("The Customer does not have access to this account.");      }
-    } else {
-      System.out.println("The Customer or Teller is not authenticated.");
-    }
-    return false;
-  }
-  
-  /**
-   * Set the current Customer as null, and that the current Customer is authenticated as false.
-   */
-  public void deAuthenticateCustomer() {
-    this.currentCustomer = null;
-    this.currentCustomerAuthenticated = false;
-  }
+ 
   
   
 }
