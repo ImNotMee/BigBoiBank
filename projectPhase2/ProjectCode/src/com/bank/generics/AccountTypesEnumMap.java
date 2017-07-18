@@ -10,7 +10,7 @@ public class AccountTypesEnumMap {
 
   private static EnumMap<AccountTypes, Integer> accountsMap = new EnumMap<>(AccountTypes.class);
   
-  public AccountTypesEnumMap(){
+  public AccountTypesEnumMap() {
     this.update();
   }
   
@@ -29,17 +29,17 @@ public class AccountTypesEnumMap {
         
         // add the value of the account Id into the enumMap for the specified account
         accountsMap.put(AccountTypes.valueOf(accountType), (int) accountId);
-       } 
+      } 
       return true;
     } catch (ConnectionFailedException e) {
-        return false;
-      }
+      return false;
     }
+  }
   
   /**
-   * Returns the account id given the string of the account type
-   * @param accountName
-   * @return
+   * Returns the account id given the string of the account type.
+   * @param accountName the name of the account
+   * @return an integer representing the id of the type of account
    */
   public int getAccountId(String accountName) {
     return accountsMap.get(AccountTypes.valueOf(accountName));
