@@ -30,12 +30,12 @@ public class RolesEnumMap {
         
         // add the value of the roleId into the enumMap for the specified role
         rolesMap.put(Roles.valueOf(role), (int) roleId);
-       } 
+      } 
       return true;
     } catch (ConnectionFailedException e) {
-        return false;
-      }
+      return false;
     }
+  }
   
   /**
    * Given a string representing the role, returns the associated roleId.
@@ -45,4 +45,4 @@ public class RolesEnumMap {
   public int getRoleId(String role) {
     return rolesMap.get(Roles.valueOf(role));
   }
- }
+}
