@@ -1,5 +1,6 @@
 package com.bank.accounts;
 
+import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
 
@@ -86,5 +87,16 @@ public abstract class Account {
    */
   public int getType() {
     return this.type;
+  }
+  
+  public String toString() {
+    String info = "";
+    try {
+      info = "Account Type: " + DatabaseSelectHelper.getAccountTypeName(this.type) + "\n Name: " + this.name + "\n Balance: " + this.balance;
+    } catch (ConnectionFailedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return info;
   }
 }

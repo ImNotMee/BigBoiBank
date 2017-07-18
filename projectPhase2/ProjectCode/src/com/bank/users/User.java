@@ -1,5 +1,9 @@
 package com.bank.users;
 
+import java.util.List;
+
+import com.bank.accounts.Account;
+import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
@@ -14,6 +18,7 @@ public abstract class User {
   private String address = "";
   private int roleId = -1;
   private boolean authenticated;
+  private List<Account> accounts;
   
   /**
    * Get the id of the User.
@@ -88,6 +93,34 @@ public abstract class User {
    */
   public int getRoleId() {
     return this.roleId;
+  }
+  
+  
+  public String getAddress() {
+    return this.address;
+  }
+  
+  /**
+   * Get all the Accounts this Customer has.
+   * @return The Accounts of the Customer.
+   */
+  public List<Account> getAccounts() {
+    return this.accounts;
+  }
+  
+  /**
+   * Add an Account to this customer.
+   * @param account Account to be added. Account must not be null, and must not already be 
+   *        be associated to this Customer.
+   * @throws ConnectionFailedException If connection can not be made to the database.
+   */
+  public void addAccount(Account account) throws ConnectionFailedException {
+    // ensure the account is new and not null
+    if (account != null && !this.accounts.contains(account)) {
+      this.accounts.add(account);
+      // add the user account in the database
+      DatabaseInsertHelper.insertUserAccount(this.getId(), account.getId());
+    }
   }
   
   /**
