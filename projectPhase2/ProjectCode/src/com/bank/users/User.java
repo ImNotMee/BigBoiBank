@@ -1,24 +1,24 @@
 package com.bank.users;
 
-import java.util.List;
-
 import com.bank.accounts.Account;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
+import com.bank.generics.RolesEnumMap;
 import com.bank.security.PasswordHelpers;
 
+import java.util.List;
 
 public abstract class User {
   private int id = -1;
   private String name = "";
   private int age = -1;
-  @SuppressWarnings("unused")
   private String address = "";
   private int roleId = -1;
-  private boolean authenticated;
+  protected boolean authenticated;
   private List<Account> accounts;
+  protected RolesEnumMap enumMap = new RolesEnumMap();
   
   /**
    * Get the id of the User.
@@ -88,16 +88,44 @@ public abstract class User {
   }
   
   /**
-   * Get the RoleId of the Account.
-   * @return An int representing the RoleId of the Account.
+   * Get the RoleId of the User.
+   * @return An int representing the RoleId of the User.
    */
   public int getRoleId() {
     return this.roleId;
   }
   
+  /**
+   * Set the RoleId of the User.
+   * @param id An int representing the RoleId of the User.
+   */
+  public void setRoleId(int id) {
+    this.roleId = id;
+  }
   
+  /**
+   * Get the address of the User.
+   * @return The address of the User.
+   */
   public String getAddress() {
     return this.address;
+  }
+  
+  /**
+   * Set the name of the User. Name can not be null, and must have at least one character, or it 
+   * will not be set.
+   * @param address The address of the User.
+   * @throws ConnectionFailedException If connection can not be made to the database.
+   */
+  public void setAddress(String address) throws ConnectionFailedException {
+    if (address != null && address.length() > 0) {
+      // check if the name is being updated
+      if (!this.address.equals("")) {
+        // update the name in the database
+        DatabaseUpdateHelper.updateUserName(name, this.id);
+      }
+      this.address = address;
+    }
   }
   
   /**
@@ -137,4 +165,10 @@ public abstract class User {
     // Return whether the password given matches the password of the User
     return this.authenticated;
   }
+  
+  public String toString() {
+    return "ID: " + String.valueOf(this.id) + "\nName: " + this.name + "\nBalance: " 
+          + "\nAge: " + String.valueOf(this.age) + "\nAddress: " + this.address;
+  }
+  
 }

@@ -23,7 +23,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
    */
   public AdminTerminal(int adminId, String password) throws ConnectionFailedException {
  // create a Customer object from the information in the database
-    this.currentUser = (Teller) DatabaseSelectHelper.getUserDetails(adminId);
+    this.currentUser = (Admin) DatabaseSelectHelper.getUserDetails(adminId);
     // ensure the customer has the correct password
     this.currentUserAuthenticated = currentUser.authenticate(password);
 

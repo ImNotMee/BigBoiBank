@@ -1,13 +1,8 @@
 package com.bank.users;
 
-import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 
 public class Admin extends User {
-
-  int roleId = -1;
-  String address = "";
-  boolean authenticated;
   
   /**
    * Initialize an Admin with an id, name and address.
@@ -22,10 +17,10 @@ public class Admin extends User {
     this.setName(name);
     this.setAge(age);
     if (address != null) {
-      this.address = address;
+      this.setAddress(address);
     }
     // tries to get the role id from the database
-    this.roleId = DatabaseSelectHelper.getUserRole(this.getId());
+    this.setRoleId(this.enumMap.getRoleId("ADMIN"));
   }
   
   /**
@@ -43,10 +38,10 @@ public class Admin extends User {
     this.setName(name);
     this.setAge(age);
     if (address != null) {
-      this.address = address;
+      this.setAddress(address);
     }
     this.authenticated = authenticated;
     // tries to get the role id from the database
-    this.roleId = DatabaseSelectHelper.getUserRole(this.getId());
+    this.setRoleId(this.enumMap.getRoleId("ADMIN"));
   }
 }
