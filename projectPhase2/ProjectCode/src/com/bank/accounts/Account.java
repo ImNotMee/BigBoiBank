@@ -92,9 +92,10 @@ public abstract class Account {
   public String toString() {
     String info = "";
     try {
-      info = "Account Type: " + DatabaseSelectHelper.getAccountTypeName(this.type) + "\n Name: " + this.name + "\n Balance: " + this.balance;
+      info = "Id: " + String.valueOf(this.id) + "\nAccount Type: " 
+          + DatabaseSelectHelper.getAccountTypeName(this.type) + "\nName: " + this.name 
+          + "\nBalance: " + this.balance;
     } catch (ConnectionFailedException e) {
-      // TODO Auto-generated catch block
       System.out.println("Cannot connection to database.");
     }
     return info;

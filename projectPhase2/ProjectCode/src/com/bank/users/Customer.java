@@ -1,20 +1,8 @@
 package com.bank.users;
 
-import com.bank.accounts.Account;
-import com.bank.databasehelper.DatabaseInsertHelper;
-import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 
-import java.util.List;
-
 public class Customer extends User {
-
-  @SuppressWarnings("unused")
-  private String address = "";
-  @SuppressWarnings("unused")
-  private int roleId = -1;
-  @SuppressWarnings("unused")
-  private boolean authenticated;
   
   /**
    * Initialize an Customer with an id, name, and address.
@@ -29,10 +17,10 @@ public class Customer extends User {
     this.setName(name);
     this.setAge(age);
     if (address != null) {
-      this.address = address;
+      this.setAddress(address);
     }
     // try to get the role id of the user
-    this.roleId = DatabaseSelectHelper.getUserRole(this.getId());
+    this.setRoleId(this.enumMap.getRoleId("CUSTOMER"));
   }
   
   /**
@@ -50,11 +38,13 @@ public class Customer extends User {
     this.setName(name);
     this.setAge(age);
     if (address != null) {
-      this.address = address;
+      this.setAddress(address);
     }
     // try to get the role id of the user
-    this.roleId = DatabaseSelectHelper.getUserRole(this.getId());
+    this.setRoleId(this.enumMap.getRoleId("CUSTOMER"));
     this.authenticated = authenticated;
+    this.setRoleId(this.enumMap.getRoleId("CUSTOMER"));
+
   }
 
 }

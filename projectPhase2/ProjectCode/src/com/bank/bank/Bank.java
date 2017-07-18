@@ -332,81 +332,126 @@ public class Bank {
                   System.out.println(currAccount.toString());
                 }
               } else if (adminOption.equals("10")) {
-                // ask for the name of the new Customer
+                // ask for the name of the new Admin
                 System.out.print("Input the name of the Admin: ");
-                String customerName;
-                customerName = inputReader.readLine();
+                String adminName;
+                adminName = inputReader.readLine();
                 // ask for the age of the customer
-                System.out.print("Input the age of the Customer: ");
-                String customerAge = inputReader.readLine();
+                System.out.print("Input the age of the Admin: ");
+                String adminAge = inputReader.readLine();
                 // loop until a valid number is given
-                while (!customerAge.matches("^[0-9]*$") || customerAge.length() == 0 
-                    || Integer.valueOf(customerAge) == 0) {
+                while (!adminAge.matches("^[0-9]*$") || adminAge.length() == 0 
+                    || Integer.valueOf(adminAge) == 0) {
                   System.out.print("Invalid age. Please try again: ");
-                  customerAge = inputReader.readLine();
+                  adminAge = inputReader.readLine();
                 }
-                // ask for the address of the Customer
-                System.out.print("Input the address of the Customer (100 character limit): ");
-                String customerAddress = inputReader.readLine();
+                // ask for the address of the Admin
+                System.out.print("Input the address of the Admin (100 character limit): ");
+                String adminAddress = inputReader.readLine();
                 // loop until the length is valid
-                while (customerAddress.length() > 100) {
-                  System.out.print("Address is too long! Input the address of the Customer (100 "
+                while (adminAddress.length() > 100) {
+                  System.out.print("Address is too long! Input the address of the Admin (100 "
                       + "character limit): ");
-                  customerAddress = inputReader.readLine();
+                  adminAddress = inputReader.readLine();
+                }
+                // ask for the password of the Admin
+                System.out.print("Input the password of the Admin: ");
+                String password = inputReader.readLine();
+                // input the Admin into the database
+                adminTerminal.makeNewAdmin(adminName, Integer.valueOf(adminAge), 
+                    adminAddress, password);
+              } else if (adminOption.equals("11")) {
+                // ask for the name of the new Teller
+                System.out.print("Input the name of the Teller: ");
+                String tellerName;
+                tellerName = inputReader.readLine();
+                // ask for the age of the Teller
+                System.out.print("Input the age of the Teller: ");
+                String tellerAge = inputReader.readLine();
+                // loop until a valid number is given
+                while (!tellerAge.matches("^[0-9]*$") || tellerAge.length() == 0 
+                    || Integer.valueOf(tellerAge) == 0) {
+                  System.out.print("Invalid age. Please try again: ");
+                  tellerAge = inputReader.readLine();
+                }
+                // ask for the address of the Teller
+                System.out.print("Input the address of the Teller (100 character limit): ");
+                String tellerAddress = inputReader.readLine();
+                // loop until the length is valid
+                while (tellerAddress.length() > 100) {
+                  System.out.print("Address is too long! Input the address of the Teller (100 "
+                      + "character limit): ");
+                  tellerAddress = inputReader.readLine();
                 }
                 // ask for the password of the Customer
                 System.out.print("Input the password of the Customer: ");
                 String password = inputReader.readLine();
                 // input the Customer into the database
-                adminTerminal.makeNewAdmin(customerName, Integer.valueOf(customerAge), 
-                    customerAddress, password);
+                adminTerminal.makeNewAdmin(tellerName, Integer.valueOf(tellerAge), 
+                    tellerAddress, password);
+                // show all the current customers
+              } else if (adminOption.equals("12")) {
+                List<User> customers = adminTerminal.listUsers("CUSTOMER");
+                for (User currCustomer : customers) {
+                  System.out.println(currCustomer.toString());
+                }
+              } else if (adminOption.equals("13")) {
+                List<User> customers = adminTerminal.listUsers("TELLER");
+                for (User currCustomer : customers) {
+                  System.out.println(currCustomer.toString());
+                }
+              } else if (adminOption.equals("14")) {
+                List<User> customers = adminTerminal.listUsers("ADMIN");
+                for (User currCustomer : customers) {
+                  System.out.println(currCustomer.toString());
+                }
               }
               
               
               
-              // add a teller if the input is 1
-              if (adminOption.equals("1")) {
-                // ask for the name of the Teller
-                System.out.print("Input the name of the Teller: ");
-                String name;
-                name = inputReader.readLine();
-                // ask for the age of the Teller
-                System.out.print("Input the age of the Teller: ");
-                String age = inputReader.readLine();
-                // loop until the age is valid
-                while (!age.matches("^[0-9]*$") || age.length() == 0 || Integer.valueOf(age) == 0) {
-                  System.out.print("Invalid age, please input a valid age: ");
-                  age = inputReader.readLine();
-                }
-                // ask for the address of the Teller
-                System.out.print("Input the address of the Teller (100 character limit): ");
-                String address = inputReader.readLine();
-                // loop until the length is valid
-                while (address.length() > 100) {
-                  System.out.print("Address is too long! Input the address of the Teller (100 character"
-                      + " limit): ");
-                  address = inputReader.readLine();
-                }
-                // variable to hold the role id
-                int roleId = -1;
-                // get the role Ids
-                List<Integer> roleIds = DatabaseSelectHelper.getRoles();
-                // find the id of Teller
-                for (Integer id : roleIds) {
-                  if (DatabaseSelectHelper.getRole(id).equals("TELLER")) {
-                    roleId = id;
-                    break;
-                  }
-                }
-                // ask for the password of the Teller
-                System.out.print("Input the password of the Teller: ");
-                String password = inputReader.readLine();
-                // input the teller into the database
-                int id = DatabaseInsertHelper.insertNewUser(name, Integer.valueOf(age), address, roleId,
-                    password);
-                // state the id of the created teller
-                System.out.println("Teller successfully added with ID: " + String.valueOf(id));
-              }
+//              // add a teller if the input is 1
+//              if (adminOption.equals("1")) {
+//                // ask for the name of the Teller
+//                System.out.print("Input the name of the Teller: ");
+//                String name;
+//                name = inputReader.readLine();
+//                // ask for the age of the Teller
+//                System.out.print("Input the age of the Teller: ");
+//                String age = inputReader.readLine();
+//                // loop until the age is valid
+//                while (!age.matches("^[0-9]*$") || age.length() == 0 || Integer.valueOf(age) == 0) {
+//                  System.out.print("Invalid age, please input a valid age: ");
+//                  age = inputReader.readLine();
+//                }
+//                // ask for the address of the Teller
+//                System.out.print("Input the address of the Teller (100 character limit): ");
+//                String address = inputReader.readLine();
+//                // loop until the length is valid
+//                while (address.length() > 100) {
+//                  System.out.print("Address is too long! Input the address of the Teller (100 character"
+//                      + " limit): ");
+//                  address = inputReader.readLine();
+//                }
+//                // variable to hold the role id
+//                int roleId = -1;
+//                // get the role Ids
+//                List<Integer> roleIds = DatabaseSelectHelper.getRoles();
+//                // find the id of Teller
+//                for (Integer id : roleIds) {
+//                  if (DatabaseSelectHelper.getRole(id).equals("TELLER")) {
+//                    roleId = id;
+//                    break;
+//                  }
+//                }
+//                // ask for the password of the Teller
+//                System.out.print("Input the password of the Teller: ");
+//                String password = inputReader.readLine();
+//                // input the teller into the database
+//                int id = DatabaseInsertHelper.insertNewUser(name, Integer.valueOf(age), address, roleId,
+//                    password);
+//                // state the id of the created teller
+//                System.out.println("Teller successfully added with ID: " + String.valueOf(id));
+//              }
             } while (!currentInput.equals("15"));
             try {
               connection.close();

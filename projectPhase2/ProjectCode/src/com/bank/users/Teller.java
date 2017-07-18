@@ -1,16 +1,8 @@
 package com.bank.users;
 
-import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 
 public class Teller extends User {
-  
-  @SuppressWarnings("unused")
-  private String address = "";
-  @SuppressWarnings("unused")
-  private int roleId = -1;
-  @SuppressWarnings("unused")
-  private boolean authenticated;
   
   /**
    * Initialize a Teller with an id, name, and address.
@@ -25,10 +17,10 @@ public class Teller extends User {
     this.setName(name);
     this.setAge(age);
     if (address != null) {
-      this.address = address;
+      this.setAddress(address);
     }
     // try to get the role of the User
-    this.roleId = DatabaseSelectHelper.getUserRole(this.getId());
+    this.setRoleId(this.enumMap.getRoleId("TELLER"));
   }
   
   /**
@@ -46,10 +38,10 @@ public class Teller extends User {
     this.setName(name);
     this.setAge(age);
     if (address != null) {
-      this.address = address;
+      this.setAddress(address);
     }
     // try to get the role id of the User
-    this.roleId = DatabaseSelectHelper.getUserRole(this.getId());
+    this.setRoleId(this.enumMap.getRoleId("TELLER"));
     this.authenticated = authenticated;
   }
 }
