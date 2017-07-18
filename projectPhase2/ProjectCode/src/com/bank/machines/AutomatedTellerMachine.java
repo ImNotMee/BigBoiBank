@@ -6,9 +6,10 @@ import com.bank.users.Customer;
 
 
 public class AutomatedTellerMachine extends BankServiceSystems {
-  
+
   /**
    * Instantiate an AutomatedTellerMachine with a Customer and their possible password.
+   * 
    * @param customerId The id of the Customer.
    * @param password The possible password of the Customer.
    * @throws ConnectionFailedException If database was not successfully connected to.
@@ -20,10 +21,15 @@ public class AutomatedTellerMachine extends BankServiceSystems {
     if (this.currentCustomer != null) {
       this.currentCustomerAuthenticated = currentCustomer.authenticate(password);
     }
+    // Prints out the user info if the user is authenicated
+    if (this.currentCustomerAuthenticated) {
+      System.out.println(this.printDetails());
+    }
   }
-  
+
   /**
    * Instantiate an AutomatedTellerMachine with a Customer.
+   * 
    * @param customerId The id of the Customer.
    * @throws ConnectionFailedException If database was not successfully connected to.
    */
@@ -31,5 +37,5 @@ public class AutomatedTellerMachine extends BankServiceSystems {
     // create a Customer object from the information in the database
     this.currentCustomer = (Customer) DatabaseSelectHelper.getUserDetails(customerId);
   }
-  
+
 }

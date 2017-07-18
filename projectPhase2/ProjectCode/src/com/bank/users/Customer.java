@@ -15,7 +15,6 @@ public class Customer extends User {
   private int roleId = -1;
   @SuppressWarnings("unused")
   private boolean authenticated;
-  private List<Account> accounts;
   
   /**
    * Initialize an Customer with an id, name, and address.
@@ -57,27 +56,5 @@ public class Customer extends User {
     this.roleId = DatabaseSelectHelper.getUserRole(this.getId());
     this.authenticated = authenticated;
   }
-  
-  /**
-   * Get all the Accounts this Customer has.
-   * @return The Accounts of the Customer.
-   */
-  public List<Account> getAccounts() {
-    return this.accounts;
-  }
-  
-  /**
-   * Add an Account to this customer.
-   * @param account Account to be added. Account must not be null, and must not already be 
-   *        be associated to this Customer.
-   * @throws ConnectionFailedException If connection can not be made to the database.
-   */
-  public void addAccount(Account account) throws ConnectionFailedException {
-    // ensure the account is new and not null
-    if (account != null && !this.accounts.contains(account)) {
-      this.accounts.add(account);
-      // add the user account in the database
-      DatabaseInsertHelper.insertUserAccount(this.getId(), account.getId());
-    }
-  }
+
 }

@@ -17,5 +17,10 @@ public class TellerTerminal extends BankWorkerServiceSystems {
     this.currentUser = (Teller) DatabaseSelectHelper.getUserDetails(tellerId);
     // ensure the customer has the correct password
     this.currentUserAuthenticated = currentUser.authenticate(password);
+    
+    // Prints out the user info if the user is authenicated
+    if (this.currentCustomerAuthenticated) {
+      System.out.println(this.printDetails());
+    }
   }
 }

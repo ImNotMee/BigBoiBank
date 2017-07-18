@@ -135,4 +135,11 @@ public abstract class BankServiceSystems {
     }
   }
   
+  public String printDetails() {
+    String info = "";
+    info += "Name: " + this.currentCustomer.getName() + "\n Address: "
+        + this.currentCustomer.getAddress() + "\n Accounts: " + this.currentCustomer.getAccounts();
+    return info;
+  }
+  
 }
