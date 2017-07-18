@@ -95,7 +95,7 @@ public abstract class Account {
       info = "Account Type: " + DatabaseSelectHelper.getAccountTypeName(this.type) + "\n Name: " + this.name + "\n Balance: " + this.balance;
     } catch (ConnectionFailedException e) {
       // TODO Auto-generated catch block
-      e.printStackTrace();
+      System.out.println("Cannot connection to database.");
     }
     return info;
   }

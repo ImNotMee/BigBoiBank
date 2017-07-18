@@ -52,18 +52,20 @@ public class AdminTerminal extends BankWorkerServiceSystems {
    */
   public List<User> listUsers(String roleName) throws ConnectionFailedException {
     List<User> users = new ArrayList<>();
-    // Get the role Id of the roleName and capitalize it in case they're a bit slow
-    int roleId = this.enumMap.getRoleId(roleName.toUpperCase());
-    // Find all the users in the database of the given role
-    int currId = 1;
-    int currUserRoleId = DatabaseSelectHelper.getUserRole(currId);
-    while (currUserRoleId != -1) {
-      // this means there are still users in the database
-      if (currUserRoleId == roleId) {
-        users.add(DatabaseSelectHelper.getUserDetails(currId));
+    if (this.currentUserAuthenticated) {
+      // Get the role Id of the roleName and capitalize it in case they're a bit slow
+      int roleId = this.enumMap.getRoleId(roleName.toUpperCase());
+      // Find all the users in the database of the given role
+      int currId = 1;
+      int currUserRoleId = DatabaseSelectHelper.getUserRole(currId);
+      while (currUserRoleId != -1) {
+        // this means there are still users in the database
+        if (currUserRoleId == roleId) {
+          users.add(DatabaseSelectHelper.getUserDetails(currId));
+        }
+        currId++;
+        currUserRoleId = DatabaseSelectHelper.getUserRole(currId);
       }
-      currId++;
-      currUserRoleId = DatabaseSelectHelper.getUserRole(currId);
     }
     return users;
   }
