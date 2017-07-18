@@ -5,6 +5,7 @@ import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.RolesEnumMap;
 import com.bank.users.Admin;
+import com.bank.users.Teller;
 import com.bank.users.User;
 
 import java.util.ArrayList;
@@ -16,12 +17,20 @@ public class AdminTerminal extends BankWorkerServiceSystems {
   /**
    * Constructor for AdminTerminal.
    * 
-   * @param admin the admin that will be using this machine
-   * @param authenicated if the admin is authenticated.
+   * @param adminId the ID of the admin that will be using this machine
+   * @param password the password of the admin
+   * @throws ConnectionFailedException If the database was not successfully connected to.
    */
-  public AdminTerminal(Admin admin, boolean authenicated) {
-    this.currentUser = admin;
-    this.currentUserAuthenticated = authenicated;
+  public AdminTerminal(int adminId, String password) throws ConnectionFailedException {
+ // create a Customer object from the information in the database
+    this.currentUser = (Teller) DatabaseSelectHelper.getUserDetails(adminId);
+    // ensure the customer has the correct password
+    this.currentUserAuthenticated = currentUser.authenticate(password);
+
+    // Prints out the user info if the user is authenicated
+    if (this.currentCustomerAuthenticated) {
+      System.out.println(this.printDetails());
+    }
   }
 
   /**
