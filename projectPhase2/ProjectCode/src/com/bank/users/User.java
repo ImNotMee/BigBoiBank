@@ -8,6 +8,7 @@ import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.RolesEnumMap;
 import com.bank.security.PasswordHelpers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class User {
@@ -17,7 +18,7 @@ public abstract class User {
   private String address = "";
   private int roleId = -1;
   protected boolean authenticated;
-  private List<Account> accounts;
+  private List<Account> accounts = new ArrayList<Account>();
   protected RolesEnumMap enumMap = new RolesEnumMap();
   
   /**
@@ -146,8 +147,10 @@ public abstract class User {
     // ensure the account is new and not null
     if (account != null && !this.accounts.contains(account)) {
       this.accounts.add(account);
-      // add the user account in the database
-      DatabaseInsertHelper.insertUserAccount(this.getId(), account.getId());
+      // add the user account in the database if it is not already there
+      if (!DatabaseSelectHelper.getAccountIds(this.getId()).contains(account.getId())) {
+        DatabaseInsertHelper.insertUserAccount(this.getId(), account.getId());
+      }
     }
   }
   
@@ -167,8 +170,8 @@ public abstract class User {
   }
   
   public String toString() {
-    return "ID: " + String.valueOf(this.id) + "\nName: " + this.name + "\nBalance: " 
-          + "\nAge: " + String.valueOf(this.age) + "\nAddress: " + this.address;
+    return "ID: " + String.valueOf(this.id) + "\nName: " + this.name + "\nAge: " 
+        + String.valueOf(this.age) + "\nAddress: " + this.address;
   }
   
 }

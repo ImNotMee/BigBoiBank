@@ -1,6 +1,9 @@
 package com.bank.users;
 
+import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
+
+import java.util.List;
 
 public class Admin extends User {
   
@@ -19,8 +22,12 @@ public class Admin extends User {
     if (address != null) {
       this.setAddress(address);
     }
-    // tries to get the role id from the database
     this.setRoleId(this.enumMap.getRoleId("ADMIN"));
+    List<Integer> accountIds = DatabaseSelectHelper.getAccountIds(this.getId());
+    // add each account to the users account
+    for (Integer accountId : accountIds) {
+      this.addAccount(DatabaseSelectHelper.getAccountDetails(accountId));
+    }
   }
   
   /**

@@ -19,6 +19,23 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
   protected boolean currentUserAuthenticated;
   
   /**
+   * Used to Authenticate the currentCustomer 
+   * @param password The possible password of the User.
+   * @return true if the password was correct and the User is authenticated, false otherwise
+   * @throws ConnectionFailedException If database was not successfully connected to.
+   */
+  @Override
+  public boolean authenticateCurrentCustomer(String password) throws ConnectionFailedException {
+    this.currentCustomerAuthenticated = currentCustomer.authenticate(password);
+    if (this.currentCustomerAuthenticated) {
+      // print out the details of the customer without the accounts
+      this.printCustomerName();
+      this.printCustomerAddress();
+    }
+    return this.currentCustomerAuthenticated;
+  }
+  
+  /**
    * Make a new Account with the given details, put it in the database, and register it to the 
    * current Customer. Parameters must be valid 
    * or the Account will not be made.
