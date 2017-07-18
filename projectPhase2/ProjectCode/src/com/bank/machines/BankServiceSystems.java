@@ -25,6 +25,12 @@ public abstract class BankServiceSystems {
    */
   public boolean authenticateCurrentCustomer(String password) throws ConnectionFailedException {
     this.currentCustomerAuthenticated = currentCustomer.authenticate(password);
+    if (this.currentCustomerAuthenticated) {
+      // print out the details of the customer and their accounts
+      this.printCustomerName();
+      this.printCustomerAddress();
+      this.printCustomerAccounts();
+    }
     return this.currentCustomerAuthenticated;
   }
   
@@ -135,11 +141,28 @@ public abstract class BankServiceSystems {
     }
   }
   
-  public String printDetails() {
-    String info = "";
-    info += "Name: " + this.currentCustomer.getName() + "\n Address: "
-        + this.currentCustomer.getAddress() + "\n Accounts: " + this.currentCustomer.getAccounts();
-    return info;
+  public void printCustomerName() {
+    System.out.println("Name: " + this.currentCustomer.getName());
   }
+  
+  public void printCustomerAddress() {
+    System.out.println("Address: " + this.currentCustomer.getAddress());
+    
+  }
+  
+  public void printCustomerAccounts() {
+    List<Account> accounts = this.currentCustomer.getAccounts();
+    // ensure there is at least one account
+    if (accounts != null) {
+      for (Account currAccount : accounts) {
+        System.out.println(currAccount.toString());
+      }
+    } else {
+      System.out.println("This Customer has no accounts.");
+    }
+    
+  }
+  
+  
   
 }

@@ -83,8 +83,8 @@ public class Bank {
       do {
         System.out.println("Please input the number of the interface you would like to interact "
             + "through and press enter:");
-        System.out.println("1 - Admin Terminal\r2 - Teller Terminal\r3 - AutomatedTellerMachine "
-            + "(ATM)\r0 - Exit ");
+        System.out.println("1 - Admin Terminal\n2 - Teller Terminal\n3 - AutomatedTellerMachine "
+            + "(ATM)\n0 - Exit ");
         
         currentInput = inputReader.readLine();
         if (currentInput.equals("1")) {
@@ -120,12 +120,12 @@ public class Bank {
               // ask what the admin would like to do
               System.out.println("Please input the number of what you would like to do and press "
                   + "enter"); 
-              System.out.println("1 - Set and authenticate new Customer\r2 - Make new Customer"
-                  + "\r3 - Make new Account\r4 - Give interest\r5 - Make a deposit"
-                  + "\r6 - Make a withdrawal\r7 - Check balance\r8 - Close customer session"
-                  + "\r9 - List Customer Accounts\r10 - Make new Admin\r11 - Make new Teller"
-                  + "\r12 - View current Customers\r13 - View current Tellers"
-                  + "\r14 - View current Admins");
+              System.out.println("1 - Set and authenticate new Customer\n2 - Make new Customer"
+                  + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
+                  + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
+                  + "\n9 - List Customer Accounts\n10 - Make new Admin\n11 - Make new Teller"
+                  + "\n12 - View current Customers\n13 - View current Tellers"
+                  + "\n14 - View current Admins\n15 - Exit");
               adminOption = inputReader.readLine();
               // authenticate the current Customer
               if (adminOption.equals("1")) {
@@ -452,7 +452,7 @@ public class Bank {
 //                // state the id of the created teller
 //                System.out.println("Teller successfully added with ID: " + String.valueOf(id));
 //              }
-            } while (!currentInput.equals("15"));
+            } while (!adminOption.equals("15"));
             try {
               connection.close();
             } catch (Exception e) {
@@ -493,10 +493,10 @@ public class Bank {
                 + "enter (Options 3 - 7 are available only if the current Customer is set and "
                 + "authenticated): ");
             do {
-              System.out.println("1 - Set and authenticate new Customer\r2 - Make new Customer"
-                  + "\r3 - Make new Account\r4 - Give interest\r5 - Make a deposit"
-                  + "\r6 - Make a withdrawal\r7 - Check balance\r8 - Close customer session"
-                  + "\r9 - See Customer Accounts\r10 - exit");
+              System.out.println("1 - Set and authenticate new Customer\n2 - Make new Customer"
+                  + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
+                  + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
+                  + "\n9 - See Customer Accounts\n10 - exit");
               tellerOption = inputReader.readLine();
               // authenticate the current Customer
               if (tellerOption.equals("1")) {
@@ -707,7 +707,7 @@ public class Bank {
           } else {
             System.out.println("Teller was not authenticated");
           }          
-        } else if (currentInput.equals("2")) {
+        } else if (currentInput.equals("3")) {
           System.out.println("AUTOMATED TELLER MACHINE");
           // variable to see if the Customer is authenticated
           boolean authenticated = false;
@@ -750,8 +750,8 @@ public class Bank {
               + "enter: ");
           // see what the user wants to do
           do {
-            System.out.println("1 - List Accounts and Balances\r2 - Make a deposit"
-                + "\r3 - Check balance\r4 - Make a withdrawal\r5 - Exit");
+            System.out.println("1 - List Accounts and Balances\n2 - Make a deposit"
+                + "\n3 - Check balance\n4 - Make a withdrawal\n5 - Exit");
             customerOption = inputReader.readLine();
             // list accounts and balances
             if (customerOption.equals("1")) {

@@ -19,12 +19,9 @@ public class AutomatedTellerMachine extends BankServiceSystems {
     this.currentCustomer = (Customer) DatabaseSelectHelper.getUserDetails(customerId);
     // ensure the customer has the correct password if the customer exists
     if (this.currentCustomer != null) {
-      this.currentCustomerAuthenticated = currentCustomer.authenticate(password);
+      this.authenticateCurrentCustomer(password);
     }
-    // Prints out the user info if the user is authenicated
-    if (this.currentCustomerAuthenticated) {
-      System.out.println(this.printDetails());
-    }
+
   }
 
   /**
