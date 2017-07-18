@@ -6,6 +6,7 @@ import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.AccountTypes;
 import com.bank.generics.Roles;
+import com.bank.machines.AdminTerminal;
 import com.bank.machines.AutomatedTellerMachine;
 import com.bank.machines.TellerTerminal;
 import com.bank.users.Admin;
@@ -39,8 +40,6 @@ public class Bank {
         mode = "user";
       } else if (argv[0].equals("-1")) {
         mode = "initialize";
-      } else if (argv[0].equals("1")) {
-        mode = "admin";
       } else {
         mode = "user";
       }
@@ -73,81 +72,351 @@ public class Bank {
           System.out.println("This database already has already been initialized.");
         }
       } else if (mode.equals("admin")) {
-        System.out.println("You are in admin mode, please enter the password of the admin.");
-        System.out.print("Password: ");
-        currentInput = inputReader.readLine();
-        // loop through until the password is correct
-        // create a user
-        Admin b = (Admin) DatabaseSelectHelper.getUserDetails(1);        
-        while (!b.authenticate(currentInput)) {
-          System.out.print("Incorrect password please try again. Password: ");
-          currentInput = inputReader.readLine();
-        }
-        do {
-          // ask what the admin would like to do
-          System.out.println("Please input the number of what you would like to do and press "
-              + "enter"); 
-          System.out.println("1 - add a Teller \r0 - Exit");
-          currentInput = inputReader.readLine();
-          // add a teller if the input is 1
-          if (currentInput.equals("1")) {
-            // ask for the name of the Teller
-            System.out.print("Input the name of the Teller: ");
-            String name;
-            name = inputReader.readLine();
-            // ask for the age of the Teller
-            System.out.print("Input the age of the Teller: ");
-            String age = inputReader.readLine();
-            // loop until the age is valid
-            while (!age.matches("^[0-9]*$") || age.length() == 0 || Integer.valueOf(age) == 0) {
-              System.out.print("Invalid age, please input a valid age: ");
-              age = inputReader.readLine();
-            }
-            // ask for the address of the Teller
-            System.out.print("Input the address of the Teller (100 character limit): ");
-            String address = inputReader.readLine();
-            // loop until the length is valid
-            while (address.length() > 100) {
-              System.out.print("Address is too long! Input the address of the Teller (100 character"
-                  + " limit): ");
-              address = inputReader.readLine();
-            }
-            // variable to hold the role id
-            int roleId = -1;
-            // get the role Ids
-            List<Integer> roleIds = DatabaseSelectHelper.getRoles();
-            // find the id of Teller
-            for (Integer id : roleIds) {
-              if (DatabaseSelectHelper.getRole(id).equals("TELLER")) {
-                roleId = id;
-                break;
-              }
-            }
-            // ask for the password of the Teller
-            System.out.print("Input the password of the Teller: ");
-            String password = inputReader.readLine();
-            // input the teller into the database
-            int id = DatabaseInsertHelper.insertNewUser(name, Integer.valueOf(age), address, roleId,
-                password);
-            // state the id of the created teller
-            System.out.println("Teller successfully added with ID: " + String.valueOf(id));
-          }
-        } while (!currentInput.equals("0"));
-        try {
-          connection.close();
-        } catch (Exception e) {
-          System.out.println("Looks like it was closed already :)");
-        }
+       
+        
+        
+        
+        
         System.exit(0);
       }
       // create a context menu where the User can interact through a Teller or Atm interface
       do {
         System.out.println("Please input the number of the interface you would like to interact "
             + "through and press enter:");
-        System.out.println("1 - Teller Terminal\r2 - AutomatedTellerMachine (ATM)\r0 - Exit ");
+        System.out.println("1 - Admin Terminal\r2 - Teller Terminal\r3 - AutomatedTellerMachine "
+            + "(ATM)\r0 - Exit ");
+        
         currentInput = inputReader.readLine();
-        // prompt the user for their id and password, as a Teller
         if (currentInput.equals("1")) {
+          System.out.print("You are in admin mode, please enter your admin ID:");
+          String adminId = inputReader.readLine();
+          // loop until a valid Id is given
+          while (!adminId.matches("^[0-9]*$")  || adminId.length() == 0) {
+            System.out.print("Invalid ID. Please try again: ");
+            adminId = inputReader.readLine();
+          }
+          System.out.print("Please enter your password: ");
+          String adminPassword = inputReader.readLine();
+          // variable to hold whether the Teller Terminal can be accessed
+          boolean access = false;
+          // ensure the id is valid
+          if (DatabaseSelectHelper.getRole(DatabaseSelectHelper.getUserRole(
+              Integer.valueOf(adminId))).equals("ADMIN")) {
+            // check that the password is correct
+            Admin admin = (Admin) DatabaseSelectHelper.getUserDetails(Integer.valueOf(adminId));
+            access = admin.authenticate(adminPassword);
+          } else {
+            System.out.println("ID does not belong to an Admin.");
+          }
+          if (access) {
+            // Create a Teller Terminal
+            AdminTerminal adminTerminal = new AdminTerminal(Integer.valueOf(adminId), 
+                adminPassword);
+            String adminOption;
+            System.out.println("Please input the number of what you would like to do and press "
+                + "enter (Options 3 - 7 are available only if the current Customer is set and "
+                + "authenticated): ");
+            do {
+              // ask what the admin would like to do
+              System.out.println("Please input the number of what you would like to do and press "
+                  + "enter"); 
+              System.out.println("1 - Set and authenticate new Customer\r2 - Make new Customer"
+                  + "\r3 - Make new Account\r4 - Give interest\r5 - Make a deposit"
+                  + "\r6 - Make a withdrawal\r7 - Check balance\r8 - Close customer session"
+                  + "\r9 - List Customer Accounts\r10 - Make new Admin\r11 - Make new Teller"
+                  + "\r12 - View current Customers\r13 - View current Tellers"
+                  + "\r14 - View current Admins");
+              adminOption = inputReader.readLine();
+              // authenticate the current Customer
+              if (adminOption.equals("1")) {
+                // ask for the customer id
+                System.out.print("Input the ID of the customer you would like to load: ");
+                String customerId = inputReader.readLine();
+                // loop until a valid number is given
+                while (!customerId.matches("^[0-9]*$")  || customerId.length() == 0) {
+                  System.out.print("Invalid ID. Please try again: ");
+                  customerId = inputReader.readLine();
+                }
+                // get the Customer of the id
+                User user = DatabaseSelectHelper.getUserDetails(Integer.valueOf(customerId));
+                // check that the User is a Customer
+                if (user instanceof Customer) {
+                  adminTerminal.setCurrentCustomer((Customer) user);
+                  // try to authenticate the password
+                  System.out.print("Please input the password of the Customer.");
+                  String customerPassword = inputReader.readLine();
+                  // try to authenticate the current customer
+                  adminTerminal.authenticateCurrentCustomer(customerPassword);
+                } else {
+                  System.out.println("The given ID does not belong to a customer");
+                }
+                // make a new Customer
+              } else if (adminOption.equals("2")) {
+                // ask for the name of the new Customer
+                System.out.print("Input the name of the Customer: ");
+                String customerName;
+                customerName = inputReader.readLine();
+                // ask for the age of the customer
+                System.out.print("Input the age of the Customer: ");
+                String customerAge = inputReader.readLine();
+                // loop until a valid number is given
+                while (!customerAge.matches("^[0-9]*$") || customerAge.length() == 0 
+                    || Integer.valueOf(customerAge) == 0) {
+                  System.out.print("Invalid age. Please try again: ");
+                  customerAge = inputReader.readLine();
+                }
+                // ask for the address of the Customer
+                System.out.print("Input the address of the Customer (100 character limit): ");
+                String customerAddress = inputReader.readLine();
+                // loop until the length is valid
+                while (customerAddress.length() > 100) {
+                  System.out.print("Address is too long! Input the address of the Customer (100 "
+                      + "character limit): ");
+                  customerAddress = inputReader.readLine();
+                }
+                // ask for the password of the Customer
+                System.out.print("Input the password of the Customer: ");
+                String password = inputReader.readLine();
+                // input the Customer into the database
+                adminTerminal.makeNewCustomer(customerName, Integer.valueOf(customerAge), 
+                    customerAddress, password);
+                // make a new Account and give it to the current Customer
+              } else if (adminOption.equals("3")) {
+                // ask for the name of the Account
+                System.out.print("Input the name of the Account: ");
+                String name;
+                name = inputReader.readLine();
+                // loop until a valid balance is given
+                boolean validBalance = false;
+                String balance = "";
+                while (!validBalance) {
+                  // ask for the balance of the account
+                  System.out.print("Input the balance of the Account (must have two decimal "
+                      + "places): ");
+                  balance = inputReader.readLine();
+                  try {
+                    new BigDecimal(balance);
+                    validBalance = true;
+                  } catch (NumberFormatException e) {
+                    System.out.println("Balance is invalid.");
+                  }
+                }
+                // get the Account Id's
+                List<Integer> accountIds = DatabaseSelectHelper.getAccountTypesIds();
+                // ask which account they would like to make
+                System.out.println("Which kind of account would you like to make?");
+                for (Integer id : accountIds) {
+                  System.out.println(id + " - " + DatabaseSelectHelper.getAccountTypeName(id));
+                }
+                // variable to find what kind of account the User wants
+                String typeId;
+                typeId = inputReader.readLine();
+                while (!(typeId.matches("^[0-9]*$") || typeId.length() == 0) 
+                    || !accountIds.contains(Integer.valueOf(typeId))) {
+                  System.out.print("Invalid value for Account Type, try again: ");
+                  typeId = inputReader.readLine();
+                }
+                // ensure customer and teller are authenticated
+                if (adminTerminal.makeNewAccount(name, new BigDecimal(balance), 
+                     Integer.valueOf(typeId))) {
+                  // state the id of the created Customer
+                  System.out.println("Account successfully added with ID: " 
+                      + String.valueOf(adminTerminal.listCustomerAccounts().get(
+                          adminTerminal.listCustomerAccounts().size() - 1).getId()));
+                } else {
+                  System.out.println("Account was not successfully added.");
+                }
+                // give interest to the current Customer
+              } else if (adminTerminal.equals("4")) {
+                // ask for the account id of the current customer
+                System.out.print("Input the ID of the Account you would like to add interest to, "
+                    + "for the current Customer.");
+                String accountId = inputReader.readLine();
+                // loop until a valid number is given
+                while (!accountId.matches("^[0-9]*$") || accountId.length() == 0) {
+                  System.out.print("Invalid ID. Please try again: ");
+                  accountId = inputReader.readLine();
+                }
+                // try to give interest 
+                adminTerminal.giveInterest(Integer.valueOf(accountId));
+                // make a deposit to the current Customer
+              } else if (adminOption.equals("5")) {
+                // loop until a valid deposit is given
+                boolean validDeposit = false;
+                String deposit = "";
+                while (!validDeposit) {
+                  // ask for the balance of the account
+                  System.out.print("Input the amount to deposit (must have two decimal places): ");
+                  deposit = inputReader.readLine();
+                  try {
+                    new BigDecimal(deposit);
+                    validDeposit = true;
+                  } catch (NumberFormatException e) {
+                    System.out.println("Deposit is invalid.");
+                  }
+                }
+                // ask for the account id of the current customer
+                System.out.print("Input the ID of the Account you would like to deposit to, for the"
+                    + " current Customer.");
+                String accountId = inputReader.readLine();
+                // loop until a valid number is given
+                while (!accountId.matches("^[0-9]*$")  || accountId.length() == 0) {
+                  System.out.print("Invalid ID. Please try again: ");
+                  accountId = inputReader.readLine();
+                }
+                // check if the deposit was successful
+                boolean success = adminTerminal.makeDeposit(new BigDecimal(deposit), 
+                    Integer.valueOf(accountId));
+                if (success) {
+                  System.out.println("Desposit of " + deposit.toString() + " was successful. New"
+                      + "balance: " 
+                      + adminTerminal.checkBalance(Integer.valueOf(accountId)).toString());
+                }
+                // make a withdrawal from the current Customer
+              } else if (adminOption.equals("6")) {
+                // loop until a valid withdrawal amount is given
+                boolean validWithdrawl = false;
+                String withdrawal = "";
+                while (!validWithdrawl) {
+                  // ask for the balance of the account
+                  System.out.print("Input the amount to withdraw (must have two decimal places): ");
+                  withdrawal = inputReader.readLine();
+                  try {
+                    new BigDecimal(withdrawal);
+                    validWithdrawl = true;
+                  } catch (NumberFormatException e) {
+                    System.out.println("Withdrawal amount is invalid.");
+                  }
+                }
+                // ask for the account id of the current customer
+                System.out.print("Input the ID of the Account you would like to withdraw from, for "
+                    + "the current Customer.");
+                String accountId = inputReader.readLine();
+                // loop until a valid number is given
+                while (!accountId.matches("^[0-9]*$") || accountId.length() == 0) {
+                  System.out.print("Invalid ID. Please try again: ");
+                  accountId = inputReader.readLine();
+                }
+                // check if the withdrawal was successful
+                boolean success = adminTerminal.makeWithdrawal(new BigDecimal(withdrawal), 
+                    Integer.valueOf(accountId));
+                if (success) {
+                  System.out.println("The withdrawal of " + withdrawal + " was successful. New "
+                      + "balance: " 
+                      + adminTerminal.checkBalance(Integer.valueOf(accountId)).toString());
+                }
+                // check the balance of the current Customer
+              } else if (adminOption.equals("7")) {
+                // ask for the account id of the current customer
+                System.out.print("Input the ID of the Account you would like to check the balance "
+                    + "for, for the current Customer.");
+                String accountId = inputReader.readLine();
+                // loop until a valid number is given
+                while (!accountId.matches("^[0-9]*$") || accountId.length() == 0) {
+                  System.out.print("Invalid ID. Please try again: ");
+                  accountId = inputReader.readLine();
+                }
+                // ensure this account can be accessed
+                if (adminTerminal.checkBalance(Integer.valueOf(accountId)) != null) {
+                  System.out.println("This account has " 
+                      + adminTerminal.checkBalance(Integer.valueOf(accountId)).toString());
+                }
+                
+                // close the current Customer session
+              } else if (adminOption.equals("8")) {
+                // remove the current Customer
+                adminTerminal.deAuthenticateCustomer();
+              } else if (adminOption.equals("9")) {
+                List<Account> accounts = adminTerminal.listCustomerAccounts();
+                for (Account currAccount : accounts) {
+                  System.out.println(currAccount.toString());
+                }
+              } else if (adminOption.equals("10")) {
+                // ask for the name of the new Customer
+                System.out.print("Input the name of the Admin: ");
+                String customerName;
+                customerName = inputReader.readLine();
+                // ask for the age of the customer
+                System.out.print("Input the age of the Customer: ");
+                String customerAge = inputReader.readLine();
+                // loop until a valid number is given
+                while (!customerAge.matches("^[0-9]*$") || customerAge.length() == 0 
+                    || Integer.valueOf(customerAge) == 0) {
+                  System.out.print("Invalid age. Please try again: ");
+                  customerAge = inputReader.readLine();
+                }
+                // ask for the address of the Customer
+                System.out.print("Input the address of the Customer (100 character limit): ");
+                String customerAddress = inputReader.readLine();
+                // loop until the length is valid
+                while (customerAddress.length() > 100) {
+                  System.out.print("Address is too long! Input the address of the Customer (100 "
+                      + "character limit): ");
+                  customerAddress = inputReader.readLine();
+                }
+                // ask for the password of the Customer
+                System.out.print("Input the password of the Customer: ");
+                String password = inputReader.readLine();
+                // input the Customer into the database
+                adminTerminal.makeNewAdmin(customerName, Integer.valueOf(customerAge), 
+                    customerAddress, password);
+              }
+              
+              
+              
+              // add a teller if the input is 1
+              if (adminOption.equals("1")) {
+                // ask for the name of the Teller
+                System.out.print("Input the name of the Teller: ");
+                String name;
+                name = inputReader.readLine();
+                // ask for the age of the Teller
+                System.out.print("Input the age of the Teller: ");
+                String age = inputReader.readLine();
+                // loop until the age is valid
+                while (!age.matches("^[0-9]*$") || age.length() == 0 || Integer.valueOf(age) == 0) {
+                  System.out.print("Invalid age, please input a valid age: ");
+                  age = inputReader.readLine();
+                }
+                // ask for the address of the Teller
+                System.out.print("Input the address of the Teller (100 character limit): ");
+                String address = inputReader.readLine();
+                // loop until the length is valid
+                while (address.length() > 100) {
+                  System.out.print("Address is too long! Input the address of the Teller (100 character"
+                      + " limit): ");
+                  address = inputReader.readLine();
+                }
+                // variable to hold the role id
+                int roleId = -1;
+                // get the role Ids
+                List<Integer> roleIds = DatabaseSelectHelper.getRoles();
+                // find the id of Teller
+                for (Integer id : roleIds) {
+                  if (DatabaseSelectHelper.getRole(id).equals("TELLER")) {
+                    roleId = id;
+                    break;
+                  }
+                }
+                // ask for the password of the Teller
+                System.out.print("Input the password of the Teller: ");
+                String password = inputReader.readLine();
+                // input the teller into the database
+                int id = DatabaseInsertHelper.insertNewUser(name, Integer.valueOf(age), address, roleId,
+                    password);
+                // state the id of the created teller
+                System.out.println("Teller successfully added with ID: " + String.valueOf(id));
+              }
+            } while (!currentInput.equals("15"));
+            try {
+              connection.close();
+            } catch (Exception e) {
+              System.out.println("Looks like it was closed already :)");
+            }
+          }
+          
+          // prompt the user for their id and password, as a Teller
+        } else if (currentInput.equals("2")) {
           System.out.println("TELLER TERMINAL");
           System.out.print("Please enter your Teller ID: ");
           String tellerId = inputReader.readLine();
@@ -179,10 +448,10 @@ public class Bank {
                 + "enter (Options 3 - 7 are available only if the current Customer is set and "
                 + "authenticated): ");
             do {
-              System.out.println("1 - Set and authenticate new user\r2 - Make new user"
+              System.out.println("1 - Set and authenticate new Customer\r2 - Make new Customer"
                   + "\r3 - Make new Account\r4 - Give interest\r5 - Make a deposit"
                   + "\r6 - Make a withdrawal\r7 - Check balance\r8 - Close customer session"
-                  + "\r9 - exit");
+                  + "\r9 - See Customer Accounts\r10 - exit");
               tellerOption = inputReader.readLine();
               // authenticate the current Customer
               if (tellerOption.equals("1")) {
@@ -383,8 +652,13 @@ public class Bank {
               } else if (tellerOption.equals("8")) {
                 // remove the current Customer
                 tellerTerminal.deAuthenticateCustomer();
+              } else if (tellerOption.equals("9")) {
+                List<Account> accounts = tellerTerminal.listCustomerAccounts();
+                for (Account currAccount : accounts) {
+                  System.out.println(currAccount.toString());
+                }
               }
-            } while (!tellerOption.equals("9"));
+            } while (!tellerOption.equals("10"));
           } else {
             System.out.println("Teller was not authenticated");
           }          
