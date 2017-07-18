@@ -35,4 +35,28 @@ public class AutomatedTellerMachine extends BankServiceSystems {
     this.currentCustomer = (Customer) DatabaseSelectHelper.getUserDetails(customerId);
   }
 
+ /**
+   * Withdraw money from a given account.
+   * 
+   * @param amount The amount of money to be withdrawn.
+   * @param accountId The id of the account.
+   * @return true if the money was successfully withdrawn, false otherwise
+   * @throws ConnectionFailedException If database was not successfully connected to.
+   * @throws IllegalAmountException If the amount to be deposited is not valid.
+   * @throws InsufficientFundsException If the account does not have enough funds to be withdrawn.
+   */
+  public boolean makeWithdrawal(BigDecimal amount, int accountId)
+      throws ConnectionFailedException, IllegalAmountException, InsufficientFundsException {
+    boolean success = false;
+    // check if RestrictedSavingsAccount
+    if (DatabaseSelectHelper.getAccountTypeName(DatabaseSelectHelper.getAccountType(accountId))
+        .equalsIgnoreCase("RESTRICTEDSAVING")) {
+      System.out.println("Please see a teller to withdraw from this account");
+      return success;
+    // use parent withdrawal method
+    } else {
+      success = super.makeWithdrawal(amount, accountId);
+      return success;
+    }
+  }
 }
