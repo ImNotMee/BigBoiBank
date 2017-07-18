@@ -1,5 +1,6 @@
 package com.bank.databasehelper;
 
+import com.bank.database.DatabaseInsertException;
 import com.bank.database.DatabaseInserter;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.AccountTypesContains;
@@ -34,8 +35,14 @@ public class DatabaseInsertHelper extends DatabaseInserter {
       Connection connection = DatabaseDriverHelper.connectOrCreateDataBase();
       // try to add the account to the database if you successfully connected to the database
       if (connection != null) {
+        int id = 0;
         // Create new Account and get it's id
-        int id = DatabaseInserter.insertAccount(name, balance, typeId, connection);
+        try {
+          id = DatabaseInserter.insertAccount(name, balance, typeId, connection);
+        } catch (DatabaseInsertException e) {
+          // in case inserting fails, we return -1 to show that it has failed
+          return -1;
+        }
         try {  
           // try to close the connection to the database
           connection.close();
@@ -65,8 +72,7 @@ public class DatabaseInsertHelper extends DatabaseInserter {
    */
   public static boolean insertAccountType(String name, BigDecimal interestRate) throws 
       ConnectionFailedException {
-    // set the the account was added as false by default
-    boolean added = false;
+    int added = -1;
     // ensure that the interestRate and name are valid
     if (interestRate.compareTo(BigDecimal.ONE) < 0 && interestRate.compareTo(BigDecimal.ZERO) >= 0 
         && AccountTypesContains.contains(name)) {
@@ -86,7 +92,12 @@ public class DatabaseInsertHelper extends DatabaseInserter {
         }
         // try to add a new account type to the database if its not there, seeing if it worked
         if (unique) {
-          added = DatabaseInserter.insertAccountType(name.toUpperCase(), interestRate, connection);
+          try {
+            added = DatabaseInserter.insertAccountType(name.toUpperCase(), interestRate, 
+                connection);
+          } catch (DatabaseInsertException e) {
+            return false;
+          } 
         }
         try {
           // try to close the connection 
@@ -99,7 +110,11 @@ public class DatabaseInsertHelper extends DatabaseInserter {
         throw new ConnectionFailedException("Unable to connect to the database.");
       }
     } 
-    return added;
+    if (added != -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
   
   /**
@@ -126,7 +141,11 @@ public class DatabaseInsertHelper extends DatabaseInserter {
       // ensure the connection exists
       if (connection != null) {
         // insert the user and get the Id
-        id = DatabaseInserter.insertNewUser(name, age, address, roleId, password, connection);
+        try {
+          id = DatabaseInserter.insertNewUser(name, age, address, roleId, password, connection);
+        } catch (DatabaseInsertException e) {
+          return -1;
+        }
         try {
           // try to close the connection
           connection.close();
@@ -150,8 +169,7 @@ public class DatabaseInsertHelper extends DatabaseInserter {
    * @throws ConnectionFailedException If database was not successfully connected to.
    */
   public static boolean insertRole(String role) throws ConnectionFailedException {
-    // set that the role was inserted as false for default
-    boolean added = false;
+    int added = -1;
     // ensure the role is in the enum
     if (RolesContains.contains(role)) {
       // connect to the database
@@ -170,7 +188,11 @@ public class DatabaseInsertHelper extends DatabaseInserter {
         }
         // try to add a new role to the database if its not there, seeing if it worked
         if (unique) {
-          added = DatabaseInserter.insertRole(role.toUpperCase(), connection);
+          try {
+            added = DatabaseInserter.insertRole(role.toUpperCase(), connection);
+          } catch (DatabaseInsertException e) {
+            return false;
+          } 
         }
         try {
           // try to close the connection
@@ -184,7 +206,11 @@ public class DatabaseInsertHelper extends DatabaseInserter {
       }
     } 
     // return whether it was added successfully
-    return added;
+    if (added != -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
   
   /**
@@ -196,8 +222,7 @@ public class DatabaseInsertHelper extends DatabaseInserter {
    */
   public static boolean insertUserAccount(int userId, int accountId) throws 
       ConnectionFailedException {
-    // set that the userAccount was added as false by default
-    boolean added = false;
+    int added = -1;
     // check that the userId and accountId exist in the table
     try {
       // ensure the user Id exists
@@ -211,7 +236,11 @@ public class DatabaseInsertHelper extends DatabaseInserter {
         // ensure the connection was successful
         if (connection != null) {
           // add a new userAccount to the database, seeing if it worked
-          added = DatabaseInserter.insertUserAccount(userId, accountId, connection);
+          try {
+            added = DatabaseInserter.insertUserAccount(userId, accountId, connection);
+          } catch (DatabaseInsertException e) {
+            return false;
+          } 
           connection.close();
         } else {
           // throw Connection FailedException if the database was not connected to
@@ -222,7 +251,11 @@ public class DatabaseInsertHelper extends DatabaseInserter {
       e.printStackTrace();
     }
     // return if the account was added properly
-    return added;
+    if (added != -1) {
+      return true;
+    } else {
+      return false;
+    }
   }
   
 }
