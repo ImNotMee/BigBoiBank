@@ -141,15 +141,23 @@ public abstract class BankServiceSystems {
     }
   }
   
+  /**
+   * Print the name of the current customer.
+   */
   public void printCustomerName() {
     System.out.println("Name: " + this.currentCustomer.getName());
   }
   
+  /**
+   * Print the address of the current customer.
+   */
   public void printCustomerAddress() {
-    System.out.println("Address: " + this.currentCustomer.getAddress());
-    
+    System.out.println("Address: " + this.currentCustomer.getAddress());  
   }
   
+  /**
+   * Print the accounts and their details of the current customer.
+   */
   public void printCustomerAccounts() {
     List<Account> accounts = this.currentCustomer.getAccounts();
     // ensure there is at least one account
@@ -160,9 +168,6 @@ public abstract class BankServiceSystems {
     } else {
       System.out.println("This Customer has no accounts.");
     }
-    
   }
-  
-  
   
 }

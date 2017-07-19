@@ -1,13 +1,12 @@
 package com.bank.machines;
 
-import java.math.BigDecimal;
-
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
 import com.bank.users.Customer;
 
+import java.math.BigDecimal;
 
 public class AutomatedTellerMachine extends BankServiceSystems {
 
@@ -39,7 +38,7 @@ public class AutomatedTellerMachine extends BankServiceSystems {
     this.currentCustomer = (Customer) DatabaseSelectHelper.getUserDetails(customerId);
   }
 
- /**
+  /**
    * Withdraw money from a given account.
    * 
    * @param amount The amount of money to be withdrawn.
