@@ -6,7 +6,6 @@ import com.bank.databasehelper.DatabaseSelectHelper;
 
 public class RestrictedSavingsAccount extends Account {
 
-  private int type = -1;
   private BigDecimal interestRate = BigDecimal.ZERO;
   
   /**
@@ -17,10 +16,10 @@ public class RestrictedSavingsAccount extends Account {
    *        will not be set.
    * @throws ConnectionFailedException If connection can not be made to the database.
    */
-  public RestrictedSavingsAccount(int id, String name, BigDecimal balance) throws ConnectionFailedException {
+  public RestrictedSavingsAccount(int id, String name, BigDecimal balance) throws 
+      ConnectionFailedException {
     this.setId(id);
-    // tries to get the type of account from the database
-    this.type = DatabaseSelectHelper.getAccountType(id);
+    this.setType(this.enumMap.getAccountId("RESTRICTEDSAVING"));;
     this.setName(name);
     this.setBalance(balance);
   }
@@ -32,7 +31,7 @@ public class RestrictedSavingsAccount extends Account {
    */
   public void findAndSetInterestRate() throws ConnectionFailedException {
     // tries to set the interest rate of the ChequingAccount
-    interestRate = DatabaseSelectHelper.getInterestRate(this.type);
+    interestRate = DatabaseSelectHelper.getInterestRate(this.getType());
   }
   
   /**

@@ -17,7 +17,7 @@ public abstract class User {
   private int age = -1;
   private String address = "";
   private int roleId = -1;
-  protected boolean authenticated;
+  protected boolean authenticated = false;
   private List<Account> accounts = new ArrayList<Account>();
   protected RolesEnumMap enumMap = new RolesEnumMap();
   

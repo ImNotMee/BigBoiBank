@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 
 public class ChequingAccount extends Account {
  
-  private int type = -1;
   private BigDecimal interestRate = BigDecimal.ZERO;
   
   /**
@@ -20,8 +19,7 @@ public class ChequingAccount extends Account {
    */
   public ChequingAccount(int id, String name, BigDecimal balance) throws ConnectionFailedException {
     this.setId(id);
-    // tries to get the type of account from the database and sets it
-    this.type = DatabaseSelectHelper.getAccountType(id);
+    this.setType(this.enumMap.getAccountId("CHEQUING"));;
     this.setName(name);
     this.setBalance(balance);
   }
@@ -33,7 +31,7 @@ public class ChequingAccount extends Account {
    */
   public void findAndSetInterestRate() throws ConnectionFailedException {
     // tries to set the interest rate of the ChequingAccount
-    interestRate = DatabaseSelectHelper.getInterestRate(this.type);
+    interestRate = DatabaseSelectHelper.getInterestRate(this.getType());
   }
   
   /**
