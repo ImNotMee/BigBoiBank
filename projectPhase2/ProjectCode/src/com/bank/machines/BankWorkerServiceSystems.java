@@ -11,6 +11,8 @@ import com.bank.generics.RolesEnumMap;
 import com.bank.users.Customer;
 import com.bank.users.User;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 
 public abstract class BankWorkerServiceSystems extends BankServiceSystems {
@@ -133,5 +135,22 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
   public void deAuthenticateCustomer() {
     this.currentCustomer = null;
     this.currentCustomerAuthenticated = false;
+  }
+  
+  /**
+   * This logs off the current customer and changes the current customer and authenticates
+   * @param customer
+   */
+  public void changeCurrentCustomer(Customer customer){
+	  this.setCurrentCustomer(customer);
+	  BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+	  try {
+		String password = inputReader.readLine();
+		this.authenticateCurrentCustomer(password);
+	} catch (Exception e) {
+		System.out.println("Invalid Input");
+	}
+	  
+	  
   }
 }
