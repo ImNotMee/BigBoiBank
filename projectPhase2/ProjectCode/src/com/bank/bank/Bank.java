@@ -4,6 +4,7 @@ import com.bank.accounts.Account;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
+import com.bank.exceptions.InsufficientFundsException;
 import com.bank.generics.AccountTypes;
 import com.bank.generics.Roles;
 import com.bank.machines.AdminTerminal;
@@ -387,8 +388,8 @@ public class Bank {
                 System.out.print("Input the password of the Customer: ");
                 String password = inputReader.readLine();
                 // input the Customer into the database
-                adminTerminal.makeNewAdmin(tellerName, Integer.valueOf(tellerAge), 
-                    tellerAddress, password);
+                adminTerminal.makeNewUser(tellerName, Integer.valueOf(tellerAge), 
+                    tellerAddress, password, "TELLER");
                 // show all the current customers
               } else if (adminOption.equals("12")) {
                 List<User> customers = adminTerminal.listUsers("CUSTOMER");

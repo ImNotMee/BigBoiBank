@@ -46,6 +46,25 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     }
     return -1;
   }
+  
+  /**
+   * Makes a new User.
+   * 
+   * @param name name of the new user.
+   * @param age the age of the new user.
+   * @param address the address of the new user.
+   * @param password the password of the new user.
+   * @return the id of the user created.
+   * @throws ConnectionFailedException If the connection fails.
+   */
+  public int makeNewUser(String name, int age, String address, String password, String userType)
+      throws ConnectionFailedException {
+    if (this.currentUserAuthenticated) {
+      return DatabaseInsertHelper.insertNewUser(name, age, address, this.enumMap.getRoleId(
+          userType.toUpperCase()), password);
+    }
+    return -1;
+  }
 
   /**
    * A method that returns a list of users given the name of the role.
@@ -59,16 +78,16 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     if (this.currentUserAuthenticated) {
       // Get the role Id of the roleName and capitalize it in case they're a bit slow
       int roleId = this.enumMap.getRoleId(roleName.toUpperCase());
-      // Find all the users in the database of the given role
+      // Find all the users in the database the given role
       int currId = 1;
-      int currUserRoleId = DatabaseSelectHelper.getUserRole(currId);
-      while (currUserRoleId != -1) {
+      User user = DatabaseSelectHelper.getUserDetails(currId);
+      while (user != null) {
         // this means there are still users in the database
-        if (currUserRoleId == roleId) {
+        if (user.getRoleId() == roleId) {
           users.add(DatabaseSelectHelper.getUserDetails(currId));
         }
         currId++;
-        currUserRoleId = DatabaseSelectHelper.getUserRole(currId);
+        user = DatabaseSelectHelper.getUserDetails(currId);
       }
     }
     return users;
