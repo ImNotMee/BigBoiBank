@@ -5,7 +5,6 @@ import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.RolesEnumMap;
 import com.bank.users.Admin;
-import com.bank.users.Teller;
 import com.bank.users.User;
 
 import java.util.ArrayList;
@@ -26,25 +25,6 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     this.currentUser = (Admin) DatabaseSelectHelper.getUserDetails(adminId);
     // ensure the customer has the correct password
     this.currentUserAuthenticated = currentUser.authenticate(password);
-  }
-
-  /**
-   * Makes a new Admin.
-   * 
-   * @param name name of the new admin.
-   * @param age the age of the new admin.
-   * @param address the address of the new admin.
-   * @param password the password of the new admin.
-   * @return the id of the admin created.
-   * @throws ConnectionFailedException If the connection fails.
-   */
-  public int makeNewAdmin(String name, int age, String address, String password)
-      throws ConnectionFailedException {
-    if (this.currentUserAuthenticated) {
-      return DatabaseInsertHelper.insertNewUser(name, age, address, this.enumMap.getRoleId("ADMIN"),
-          password);
-    }
-    return -1;
   }
   
   /**
@@ -91,20 +71,5 @@ public class AdminTerminal extends BankWorkerServiceSystems {
       }
     }
     return users;
-  }
-
-  /**
-   * A method that deauthenciates the current admin using this terminal.
-   * 
-   * @return a boolean representing if the action is successful.
-   */
-  public boolean deauthenciateAdmin() {
-    boolean success = false;
-    if (this.currentUserAuthenticated) {
-      this.currentUserAuthenticated = false;
-      this.currentUser = null;
-      success = true;
-    }
-    return success;
   }
 }

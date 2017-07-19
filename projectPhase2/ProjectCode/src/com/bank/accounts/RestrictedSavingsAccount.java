@@ -1,8 +1,9 @@
 package com.bank.accounts;
 
-import java.math.BigDecimal;
-import com.bank.exceptions.ConnectionFailedException;
 import com.bank.databasehelper.DatabaseSelectHelper;
+import com.bank.exceptions.ConnectionFailedException;
+
+import java.math.BigDecimal;
 
 public class RestrictedSavingsAccount extends Account {
 

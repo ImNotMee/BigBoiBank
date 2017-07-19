@@ -95,6 +95,9 @@ public abstract class Account {
     this.type = accountType;
   }
   
+  /**
+   * Return a string of the Account with the type, name and balance.
+   */
   public String toString() {
     String info = "";
     try {
