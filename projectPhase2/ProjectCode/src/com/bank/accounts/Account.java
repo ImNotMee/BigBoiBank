@@ -3,6 +3,7 @@ package com.bank.accounts;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
+import com.bank.generics.AccountTypesEnumMap;
 
 import java.math.BigDecimal;
 
@@ -11,6 +12,7 @@ public abstract class Account {
   private String name = "";
   private BigDecimal balance = null;
   private int type = -1;
+  protected AccountTypesEnumMap enumMap = new AccountTypesEnumMap();
   
   /**
    * Get the id of the Account.
@@ -87,6 +89,10 @@ public abstract class Account {
    */
   public int getType() {
     return this.type;
+  }
+  
+  public void setType(int accountType) {
+    this.type = accountType;
   }
   
   public String toString() {
