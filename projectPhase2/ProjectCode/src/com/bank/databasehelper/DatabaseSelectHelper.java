@@ -125,7 +125,7 @@ public class DatabaseSelectHelper extends DatabaseSelector {
         user = makeUser(userId, results.getString("NAME"), results.getInt("AGE"), 
             results.getString("ADDRESS"), role);
       } catch (SQLException e) {
-        e.printStackTrace();
+        user = null;
       }
       // ensure the connection closes
       try {
