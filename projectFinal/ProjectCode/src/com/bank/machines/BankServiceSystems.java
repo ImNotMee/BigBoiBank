@@ -177,8 +177,7 @@ public abstract class BankServiceSystems {
    */
   public BigDecimal getTotalBalance(User user) throws ConnectionFailedException {
 	List<Account> userAccounts = this.listCustomerAccounts();
-	BigDecimal totalBalance = null;
-	totalBalance = BigDecimal.valueOf(0);
+	BigDecimal totalBalance = BigDecimal.ZERO;;
 	
 	
 	if (userAccounts != null) {

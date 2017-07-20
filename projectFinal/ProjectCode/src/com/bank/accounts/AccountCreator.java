@@ -2,7 +2,6 @@ package com.bank.accounts;
 
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
-import com.bank.generics.AccountTypes;
 
 import java.math.BigDecimal;
 
@@ -20,12 +19,14 @@ public abstract class AccountCreator {
       throws ConnectionFailedException {
     // finds the account type associated with the id
     String type = DatabaseSelectHelper.getAccountTypeName(id);
-    if (type.equals(AccountTypes.CHEQUING)) {
+    if (type.equals("CHEQUING")) {
       return new ChequingAccount(id, name, balance);
-    } else if (type.equals(AccountTypes.SAVING)) {
+    } else if (type.equals("SAVING")) {
       return new SavingsAccount(id, name, balance);
-    } else if (type.equals(AccountTypes.TFSA)) {
+    } else if (type.equals("TFSA")) {
       return new TaxFreeSavingsAccount(id, name, balance);
+    } else if (type.equals("BALANCEOWING")){
+      return new BalanceOwingAccount(id, name, balance);
     } else {
       return null;
     }
