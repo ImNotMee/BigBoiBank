@@ -78,8 +78,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
 	  String rolename = "CUSTOMER";
 	  
 	  List<User> allUsers = this.listUsers(rolename);
-	  BigDecimal totalBalance;
-	  totalBalance = BigDecimal.valueOf(0);
+	  BigDecimal totalBalance = BigDecimal.ZERO;
 	  
 	  if(allUsers != null) {
 		  

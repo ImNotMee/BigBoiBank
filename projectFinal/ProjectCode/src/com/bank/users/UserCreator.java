@@ -2,7 +2,6 @@ package com.bank.users;
 
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
-import com.bank.generics.Roles;
 
 
 public abstract class UserCreator {
@@ -19,11 +18,11 @@ public abstract class UserCreator {
   public static User makeUser(int id, String name, int age, String address) 
       throws ConnectionFailedException {
     String type = DatabaseSelectHelper.getRole(id);
-    if (type.equals(Roles.ADMIN)) {
+    if (type.equals("ADMIN")) {
       return new Admin(id, name, age, address);
-    } else if (type.equals(Roles.CUSTOMER)) {
+    } else if (type.equals("CUSTOMER")) {
       return new Customer(id, name, age, address);
-    } else if (type.equals(Roles.TELLER)) {
+    } else if (type.equals("TELLER")) {
       return new Teller(id, name, age, address);
     } else {
       return null;

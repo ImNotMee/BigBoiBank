@@ -1,5 +1,5 @@
 package com.bank.generics;
 
 public enum AccountTypes {
-  CHEQUING, SAVING, TFSA, RESTRICTEDSAVING;
+  CHEQUING, SAVING, TFSA, RESTRICTEDSAVING, BALANCEOWING;
 }
