@@ -7,6 +7,7 @@ import com.bank.generics.RolesEnumMap;
 import com.bank.users.Admin;
 import com.bank.users.User;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,5 +72,24 @@ public class AdminTerminal extends BankWorkerServiceSystems {
       }
     }
     return users;
+  }
+  
+  public BigDecimal getTotalBalanceAllUsers() throws ConnectionFailedException {
+	  String rolename = "CUSTOMER";
+	  
+	  List<User> allUsers = this.listUsers(rolename);
+	  BigDecimal totalBalance;
+	  totalBalance = BigDecimal.valueOf(0);
+	  
+	  if(allUsers != null) {
+		  
+	  
+		  for(User curruser : allUsers){
+			  totalBalance.add(this.getTotalBalance(curruser));
+		  }
+	  } else {
+		  System.out.println("Customer does not have any accounts");
+	  }
+	  return totalBalance;
   }
 }
