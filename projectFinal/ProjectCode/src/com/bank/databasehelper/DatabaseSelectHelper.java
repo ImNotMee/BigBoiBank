@@ -1,15 +1,11 @@
 package com.bank.databasehelper;
 
 import com.bank.accounts.Account;
-import com.bank.accounts.ChequingAccount;
-import com.bank.accounts.SavingsAccount;
-import com.bank.accounts.TaxFreeSavingsAccount;
+import com.bank.accounts.AccountCreator;
 import com.bank.database.DatabaseSelector;
 import com.bank.exceptions.ConnectionFailedException;
-import com.bank.users.Admin;
-import com.bank.users.Customer;
-import com.bank.users.Teller;
 import com.bank.users.User;
+import com.bank.users.UserCreator;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -119,11 +115,9 @@ public class DatabaseSelectHelper extends DatabaseSelector {
       try {
         // try to get the User details of the given userId
         ResultSet results = DatabaseSelector.getUserDetails(userId, connection);
-        // try to get the given role of the id
-        String role = DatabaseSelectHelper.getRole(results.getInt("ROLEID"));
         // try to create the new user
-        user = makeUser(userId, results.getString("NAME"), results.getInt("AGE"), 
-            results.getString("ADDRESS"), role);
+        user = UserCreator.makeUser(userId, results.getString("NAME"), results.getInt("AGE"), 
+            results.getString("ADDRESS"));
       } catch (SQLException e) {
         user = null;
       }
@@ -139,30 +133,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
     }
     // return the user created, or null if something given was invalid
     return user;
-  }
-  
-  /**
-   * Create a User with the given information.
-   * @param id The id of the User.
-   * @param name The name of the User.
-   * @param age The age of the User.
-   * @param address The address of the User.
-   * @param role An int representing the role of the User.
-   * @return The user created if successful, null otherwise.
-   * @throws ConnectionFailedException If database was not successfully connected to.
-   */
-  private static User makeUser(int id, String name, int age, String address, String role) 
-      throws ConnectionFailedException {
-    // if role is an Admin create and return one
-    if (role.equals("ADMIN")) {
-      return new Admin(id, name, age, address);
-    // else if the role is a Customer create and return one
-    } else if (role.equals("CUSTOMER")) {
-      return new Customer(id, name, age, address);
-    // otherwise create and return a Teller
-    } else {
-      return new Teller(id, name, age, address);
-    }
   }
  
   /**
@@ -227,11 +197,9 @@ public class DatabaseSelectHelper extends DatabaseSelector {
       try {
         // try to get the Account details of the given accountId
         ResultSet results = DatabaseSelector.getAccountDetails(accountId, connection);
-        // try to get the type of the Account
-        String type = DatabaseSelectHelper.getAccountTypeName(results.getInt("TYPE"));
         // try to create the new Account
-        account = makeAccount(accountId, results.getString("NAME"), results.getString("BALANCE"), 
-            type);
+        account = AccountCreator.createAccount(accountId, results.getString("NAME"), 
+            new BigDecimal(results.getString("BALANCE")));
       } catch (SQLException e) {
         // show what the error stack was
         e.printStackTrace();
@@ -246,29 +214,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
     } else {
       // throw Connection FailedException if the database was not connected to
       throw new ConnectionFailedException("Unable to connect to the database.");
-    }
-  }
-  
-  /**
-   * Create and return an Account with the given information.
-   * @param id The id of the account.
-   * @param name The name of the account.
-   * @param balance The balance of the account.
-   * @param type An integer representing the type of account.
-   * @return An Account with the given information.
-   * @throws ConnectionFailedException If database was not successfully connected to.
-   */
-  private static Account makeAccount(int id, String name, String balance, String type) 
-      throws ConnectionFailedException {
-    // if type is Chequing create and return a ChequingAccount
-    if (type.equals("CHEQUING")) {
-      return new ChequingAccount(id, name, new BigDecimal(balance));
-    // else if the role is Savings create and return a SavingsAccount
-    } else if (type.equals("SAVINGS")) {
-      return new SavingsAccount(id, name, new BigDecimal(balance));
-    // otherwise create and return a TFSA Account
-    } else {
-      return new TaxFreeSavingsAccount(id, name, new BigDecimal(balance));
     }
   }
  
