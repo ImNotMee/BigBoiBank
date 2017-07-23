@@ -6,13 +6,12 @@ import com.bank.accounts.SavingsAccount;
 import com.bank.accounts.TaxFreeSavingsAccount;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
+import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.RolesEnumMap;
 import com.bank.users.Customer;
 import com.bank.users.User;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 
 public abstract class BankWorkerServiceSystems extends BankServiceSystems {
@@ -138,19 +137,37 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
   }
   
   /**
-   * This logs off the current customer and changes the current customer and authenticates
-   * @param customer
+   * Update a user's name in the database.
+   * @param name The new name of the User.
+   * @param id The id of the User.
+   * @return Whether the update was successful.
+   * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public void changeCurrentCustomer(Customer customer){
-	  this.setCurrentCustomer(customer);
-	  BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
-	  try {
-		String password = inputReader.readLine();
-		this.authenticateCurrentCustomer(password);
-	} catch (Exception e) {
-		System.out.println("Invalid Input");
-	}
-	  
-	  
+  public boolean updateUserName(String name, int id) throws ConnectionFailedException {
+    return DatabaseUpdateHelper.updateUserName(name, id);
   }
+  
+  /**
+   * Update a user's address in the database.
+   * @param address The new address of the User.
+   * @param id The id of the User.
+   * @return Whether the update was successful.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public boolean updateUserAddress(String address, int id) throws ConnectionFailedException {
+    return DatabaseUpdateHelper.updateUserAddress(address, id);
+  }
+  
+  /**
+   * Update a user's age in the database.
+   * @param age The new age of the User.
+   * @param id The id of the User.
+   * @return Whether the update was successful.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public boolean updateUserAge(int age, int id) throws ConnectionFailedException {
+    return DatabaseUpdateHelper.updateUserAge(age, id);
+  }
+  
+
 }
