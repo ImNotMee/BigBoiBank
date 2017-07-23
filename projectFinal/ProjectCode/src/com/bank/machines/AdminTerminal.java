@@ -2,6 +2,7 @@ package com.bank.machines;
 
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
+import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.RolesEnumMap;
 import com.bank.users.Admin;
@@ -74,10 +75,8 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     return users;
   }
   
-  public BigDecimal getTotalBalanceAllUsers() throws ConnectionFailedException {
-	  String rolename = "CUSTOMER";
-	  
-	  List<User> allUsers = this.listUsers(rolename);
+  public BigDecimal getTotalBalanceAllUsers() throws ConnectionFailedException {	  
+	  List<User> allUsers = this.listUsers("CUSTOMER");
 	  BigDecimal totalBalance = BigDecimal.ZERO;
 	  
 	  if(allUsers != null) {
@@ -90,5 +89,16 @@ public class AdminTerminal extends BankWorkerServiceSystems {
 		  System.out.println("Customer does not have any accounts");
 	  }
 	  return totalBalance;
+  }
+  
+  public boolean promoteTellerToAdmin(int id) throws ConnectionFailedException {
+    // ensure the given id is a teller
+    if (DatabaseSelectHelper.getRole(id).equals("TELLER")) {
+      // return whether the update was successful
+      return DatabaseUpdateHelper.updateUserRole(this.enumMap.getRoleId("ADMIN"), id);
+    } else {
+      return false;
+    }
+   
   }
 }
