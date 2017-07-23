@@ -1,6 +1,5 @@
 package com.bank.accounts;
 
-import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 
 import java.math.BigDecimal;
@@ -15,10 +14,8 @@ public abstract class AccountCreator {
    * @return the account created or null if an invalid account type is given
    * @throws ConnectionFailedException if the database can not be connected to
    */
-  public static Account createAccount(int id, String name, BigDecimal balance) 
+  public static Account createAccount(int id, String name, BigDecimal balance, String type) 
       throws ConnectionFailedException {
-    // finds the account type associated with the id
-    String type = DatabaseSelectHelper.getAccountTypeName(id);
     if (type.equals("CHEQUING")) {
       return new ChequingAccount(id, name, balance);
     } else if (type.equals("SAVING")) {

@@ -62,6 +62,8 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
         createdAndRegistered = DatabaseInsertHelper.insertUserAccount(this.currentCustomer.getId(), 
             accountId);
       }
+      // give the customer the account
+      currentCustomer.addAccount(DatabaseSelectHelper.getAccountDetails(accountId));
     }
     // return whether the account was created and registered to the current Customer
     return createdAndRegistered;

@@ -3,6 +3,7 @@ package com.bank.bank;
 import com.bank.accounts.Account;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
+import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
@@ -85,7 +86,7 @@ public class Bank {
         
         currentInput = inputReader.readLine();
         if (currentInput.equals("1")) {
-          System.out.print("You are in admin mode, please enter your admin ID:");
+          System.out.print("You are in admin mode, please enter your admin ID: ");
           String adminId = inputReader.readLine();
           // loop until a valid Id is given
           while (!adminId.matches("^[0-9]*$")  || adminId.length() == 0) {
@@ -121,7 +122,9 @@ public class Bank {
                   + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
                   + "\n9 - List Customer Accounts\n10 - Make new Admin\n11 - Make new Teller"
                   + "\n12 - View current Customers\n13 - View current Tellers"
-                  + "\n14 - View current Admins\n15 - Exit");
+                  + "\n14 - View current Admins\n15 - Promote Teller to Admin"
+                  + "\n16 - Update User Name\n17 - Update User Address\n18 - Update User Age"
+                  + "n\19 - Exit");
               adminOption = inputReader.readLine();
               // authenticate the current Customer
               if (adminOption.equals("1")) {
@@ -162,8 +165,20 @@ public class Bank {
                 viewUsersOption(adminTerminal, "TELLER");
               } else if (adminOption.equals("14")) {
                 viewUsersOption(adminTerminal, "ADMIN");
+                // promote a teller to an admin
+              } else if (adminOption.equals("15")) {
+                promoteTellerOption(adminTerminal, inputReader);
+                // update a user's name
+              } else if (adminOption.equals("16")) {
+                updateNameOption(adminTerminal, inputReader);
+                // update a user's address
+              } else if (adminOption.equals("17")) {
+                updateAddressOption(adminTerminal, inputReader);
+                // update a user's age
+              } else if (adminOption.equals("18")) {
+                updateAgeOption(adminTerminal, inputReader);
               }
-            } while (!adminOption.equals("15"));
+            } while (!adminOption.equals("19"));
             try {
               connection.close();
             } catch (Exception e) {
@@ -207,7 +222,8 @@ public class Bank {
               System.out.println("1 - Set and authenticate new Customer\n2 - Make new Customer"
                   + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
                   + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
-                  + "\n9 - See Customer Accounts\n10 - exit");
+                  + "\n9 - See Customer Accounts\n10 - Update User Name\n11 - Update User Address"
+                  + "n\12 - Update User Age\n13 - Exit");
               tellerOption = inputReader.readLine();
               // authenticate the current Customer
               if (tellerOption.equals("1")) {
@@ -236,8 +252,17 @@ public class Bank {
                 //list the accounts of the customer
               } else if (tellerOption.equals("9")) {
                 listCustomerAccountsOption(tellerTerminal);
+                // update a user's name
+              } else if (tellerOption.equals("10")) {
+                updateNameOption(tellerTerminal, inputReader);
+                // update a user's address
+              } else if (tellerOption.equals("11")) {
+                updateAddressOption(tellerTerminal, inputReader);
+                // update a user's age
+              } else if (tellerOption.equals("12")) {
+                updateAgeOption(tellerTerminal, inputReader);
               }
-            } while (!tellerOption.equals("10"));
+            } while (!tellerOption.equals("13"));
           } else {
             System.out.println("Teller was not authenticated");
           }          
@@ -353,7 +378,7 @@ public class Bank {
       }
     }
     // ask for the account id of the current customer
-    System.out.print("Input the ID of the Account you would like to deposit to.");
+    System.out.print("Input the ID of the Account you would like to deposit to: ");
     String accountId = inputReader.readLine();
     // loop until a valid number is given
     while (!accountId.matches("^[0-9]*$") || accountId.length() == 0) {
@@ -385,7 +410,7 @@ public class Bank {
       throws ConnectionFailedException, IOException {
     // ask for the account id of the current customer
     System.out.print("Input the ID of the Account you would like to check the balance "
-        + "for");
+        + "for: ");
     String accountId = inputReader.readLine();
     // loop until a valid number is given
     while (!accountId.matches("^[0-9]*$") || accountId.length() == 0) {
@@ -422,7 +447,7 @@ public class Bank {
       }
     }
     // ask for the account id of the current customer
-    System.out.print("Input the ID of the Account you would like to withdraw from ");
+    System.out.print("Input the ID of the Account you would like to withdraw from: ");
     String accountId = inputReader.readLine();
     // loop until a valid number is given
     while (!accountId.matches("^[0-9]*$") || accountId.length() == 0) {
@@ -469,7 +494,7 @@ public class Bank {
     if (user instanceof Customer) {
       machine.setCurrentCustomer((Customer) user);
       // try to authenticate the password
-      System.out.print("Please input the password of the Customer.");
+      System.out.print("Please input the password of the Customer:");
       String customerPassword = inputReader.readLine();
       // try to authenticate the current customer
       machine.authenticateCurrentCustomer(customerPassword);
@@ -568,7 +593,7 @@ public class Bank {
     // ensure customer and teller are authenticated
     if (machine.makeNewAccount(name, new BigDecimal(balance), 
          Integer.valueOf(typeId))) {
-      // state the id of the created Customer
+      // state the id of the created account
       System.out.println("Account successfully added with ID: " 
           + String.valueOf(machine.listCustomerAccounts().get(
               machine.listCustomerAccounts().size() - 1).getId()));
@@ -588,7 +613,7 @@ public class Bank {
       BufferedReader inputReader) throws ConnectionFailedException, IOException {
     // ask for the account id of the current customer
     System.out.print("Input the ID of the Account you would like to add interest to, "
-        + "for the current Customer.");
+        + "for the current Customer: ");
     String accountId = inputReader.readLine();
     // loop until a valid number is given
     while (!accountId.matches("^[0-9]*$") || accountId.length() == 0) {
@@ -706,6 +731,134 @@ public class Bank {
       System.out.println(currCustomer.toString());
     }
   }
+
+  /**
+   * Promotes a teller to an admin.
+   * @param machine The bank machine to promote the teller from
+   * @param inputReader Used to read input from the user
+   * @throws ConnectionFailedException If the database can not be connected to
+   * @throws IOException If there is an error with the input or output
+   */
+  private static void promoteTellerOption(AdminTerminal machine, BufferedReader inputReader) 
+      throws ConnectionFailedException, IOException {
+    System.out.print("Input the ID of the teller you would like to promote to an Admin: ");
+    String tellerId = inputReader.readLine();
+    // loop until a valid number is given
+    while (!tellerId.matches("^[0-9]*$")  || tellerId.length() == 0) {
+      System.out.print("Invalid ID. Please try again: ");
+      tellerId = inputReader.readLine();
+    }
+    User user = DatabaseSelectHelper.getUserDetails(Integer.valueOf(tellerId));
+    if (user instanceof Teller) {
+      if (machine.promoteTellerToAdmin(Integer.valueOf(tellerId))) {
+        System.out.println("Teller successfully promoted to admin.");
+      } else {
+        System.out.println("Teller was not successfully promoted to admin.");
+      }
+    } else {
+      System.out.println("The given ID does not belong to a teller");
+    }
+  }
+  
+  /**
+   * Change the name of a User in the database.
+   * @param machine The machine to change the name on.
+   * @param inputReader Used to read input from the user.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with the input or output.
+   */
+  private static void updateNameOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
+      throws ConnectionFailedException, IOException 
+    {
+    System.out.print("Input the ID of the User who's name you would like to change: ");
+    String id = inputReader.readLine();
+    while (!id.matches("^[0-9]*$")  || id.length() == 0) {
+      System.out.print("Invalid ID. Please try again: ");
+      id = inputReader.readLine();
+    } 
+    if (DatabaseSelectHelper.getUserDetails(Integer.valueOf(id)) != null) {
+      System.out.print("Input the new name of the User: ");
+      String name = inputReader.readLine();
+      if (DatabaseUpdateHelper.updateUserName(name, Integer.valueOf(id))) {
+        System.out.println("Name successfully updated.");
+      } else {
+        System.out.println("The name was not successfully updated.");
+      }
+    } else {
+      System.out.println("ID does not exist in the database.");
+    }
+  }
+  
+  /**
+   * Change the address of a User in the database.
+   * @param machine The machine to change the address on.
+   * @param inputReader Used to read input from the user.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with the input or output.
+   */
+  private static void updateAddressOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
+      throws ConnectionFailedException, IOException 
+    {
+    System.out.print("Input the ID of the User who's address you would like to change: ");
+    String id = inputReader.readLine();
+    while (!id.matches("^[0-9]*$")  || id.length() == 0) {
+      System.out.print("Invalid ID. Please try again: ");
+      id = inputReader.readLine();
+    } 
+    if (DatabaseSelectHelper.getUserDetails(Integer.valueOf(id)) != null) {
+      System.out.print("Input the new age of the User (100 character limit): ");
+      String age = inputReader.readLine();
+      // loop until a valid number is given
+      while (!age.matches("^[0-9]*$") || age.length() == 0 
+          || Integer.valueOf(age) == 0) {
+        System.out.print("Invalid age. Please try again: ");
+        age = inputReader.readLine();
+      }
+      if (DatabaseUpdateHelper.updateUserAge(Integer.valueOf(age), Integer.valueOf(id))) {
+        System.out.println("Age successfully updated.");
+      } else {
+        System.out.println("The age was not successfully updated.");
+      }
+    } else {
+      System.out.println("ID does not exist in the database.");
+    }
+  }
+  
+  /**
+   * Change the age of a User in the database.
+   * @param machine The machine to change the age on.
+   * @param inputReader Used to read input from the user.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with the input or output.
+   */
+  private static void updateAgeOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
+      throws ConnectionFailedException, IOException 
+    {
+    System.out.print("Input the ID of the User who's age you would like to change: ");
+    String id = inputReader.readLine();
+    while (!id.matches("^[0-9]*$")  || id.length() == 0) {
+      System.out.print("Invalid ID. Please try again: ");
+      id = inputReader.readLine();
+    } 
+    if (DatabaseSelectHelper.getUserDetails(Integer.valueOf(id)) != null) {
+      System.out.print("Input the new address of the User (100 character limit): ");
+      String address = inputReader.readLine();
+      // loop until the length is valid
+      while (address.length() > 100) {
+        System.out.print("Address is too long! Input the address of the Teller (100 "
+            + "character limit): ");
+        address = inputReader.readLine();
+      }
+      if (DatabaseUpdateHelper.updateUserAddress(address, Integer.valueOf(id))) {
+        System.out.println("Address successfully updated.");
+      } else {
+        System.out.println("The address was not successfully updated.");
+      }
+    } else {
+      System.out.println("ID does not exist in the database.");
+    }
+  }
+  
   
   /**
    * Initialize all the roles in the Roles Table. Reads from the Roles Enum.
