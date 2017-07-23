@@ -707,6 +707,28 @@ public class Bank {
     }
   }
   
+  private static void promoteTellerOption(AdminTerminal machine, BufferedReader inputReader) {
+    System.out.print("Input the ID of the teller you would like to promote to an Admin.");
+    String tellerId = inputReader.readLine();
+    // loop until a valid number is given
+    while (!tellerId.matches("^[0-9]*$")  || tellerId.length() == 0) {
+      System.out.print("Invalid ID. Please try again: ");
+      tellerId = inputReader.readLine();
+    }
+    User user = DatabaseSelectHelper.getUserDetails(Integer.valueOf(tellerId));
+    // check that the User is a teller
+    if (user instanceof Teller) {
+      machine.p
+      // try to authenticate the password
+      System.out.print("Please input the password of the Customer.");
+      String customerPassword = inputReader.readLine();
+      // try to authenticate the current customer
+      machine.authenticateCurrentCustomer(customerPassword);
+    } else {
+      System.out.println("The given ID does not belong to a customer");
+    }
+  }
+  
   /**
    * Initialize all the roles in the Roles Table. Reads from the Roles Enum.
    * @param connection The connection to the database.

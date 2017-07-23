@@ -92,13 +92,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
   }
   
   public boolean promoteTellerToAdmin(int id) throws ConnectionFailedException {
-    // ensure the given id is a teller
-    if (DatabaseSelectHelper.getRole(id).equals("TELLER")) {
-      // return whether the update was successful
       return DatabaseUpdateHelper.updateUserRole(this.enumMap.getRoleId("ADMIN"), id);
-    } else {
-      return false;
     }
    
-  }
 }

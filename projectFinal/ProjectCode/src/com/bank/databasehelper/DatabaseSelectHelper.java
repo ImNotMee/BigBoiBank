@@ -115,9 +115,10 @@ public class DatabaseSelectHelper extends DatabaseSelector {
       try {
         // try to get the User details of the given userId
         ResultSet results = DatabaseSelector.getUserDetails(userId, connection);
+        String role = DatabaseSelectHelper.getRole(results.getInt("ROLEID"));
         // try to create the new user
         user = UserCreator.makeUser(userId, results.getString("NAME"), results.getInt("AGE"), 
-            results.getString("ADDRESS"));
+            results.getString("ADDRESS"), role);
       } catch (SQLException e) {
         user = null;
       }
@@ -197,9 +198,10 @@ public class DatabaseSelectHelper extends DatabaseSelector {
       try {
         // try to get the Account details of the given accountId
         ResultSet results = DatabaseSelector.getAccountDetails(accountId, connection);
+        String type = DatabaseSelectHelper.getAccountTypeName(results.getInt("TYPE"));
         // try to create the new Account
         account = AccountCreator.createAccount(accountId, results.getString("NAME"), 
-            new BigDecimal(results.getString("BALANCE")));
+            new BigDecimal(results.getString("BALANCE")), type);
       } catch (SQLException e) {
         // show what the error stack was
         e.printStackTrace();
