@@ -155,6 +155,7 @@ public class DatabaseUpdateHelper extends DatabaseUpdater {
     // return whether the user role was updated successfully
     return complete;
   }
+  
 
   /**
    * Use this to update user's address.
@@ -187,6 +188,45 @@ public class DatabaseUpdateHelper extends DatabaseUpdater {
     }
     // return whether the address was updated successfully
     return complete;
+  }
+  public static boolean updateUserPassword(String password, int id) throws ConnectionFailedException {
+	  boolean complete = false;
+	  if (id > 0) {
+        Connection connection = DatabaseDriverHelper.connectOrCreateDataBase();
+        if(connection != null) {
+        	complete = DatabaseUpdater.updateUserPassword(password, id, connection);
+        	try {
+        		connection.close();
+        	} catch(SQLException e) {
+        		System.out.println("Look like it was closed already!");
+        	}
+        } else {
+        	throw new ConnectionFailedException("Unable to connect to the database.");
+        	
+        }
+		
+	  }
+	 return complete;
+  }
+  
+  public static boolean updateUserMessageState(int id) throws ConnectionFailedException {
+	boolean complete = false;
+	if (id > 0) {
+		Connection connection = DatabaseDriverHelper.connectOrCreateDataBase();
+		if(connection != null) {
+			complete = DatabaseUpdater.updateUserMessageState(id, connection);
+			try {
+				connection.close();
+			} catch(SQLException e) {
+				System.out.println("Look like It was closed already!");
+			}
+		} else {
+			throw new ConnectionFailedException("Unable to connect to the database.");
+			
+		}
+	}
+	return complete;
+	  
   }
 
   /**
