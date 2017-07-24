@@ -122,4 +122,34 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     
   }
    
+  /**
+   * Get all the ids of the messages the admin can view.
+   * @return The ids of all the messages.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public List<Integer> getMessageIds() throws ConnectionFailedException {
+    List<Integer> messageIds = new ArrayList<>();
+    if (this.currentUserAuthenticated) {
+      int currId = 1;
+      String message = DatabaseSelectHelper.getSpecificMessage(currId);
+      while (message != null) {
+        messageIds.add(currId);
+        currId++;
+        message = DatabaseSelectHelper.getSpecificMessage(currId);
+      }
+    }
+    return messageIds;
+  }
+  
+  /**
+   * Get all the ids of the messages the admin can view.
+   * @return The ids of all the messages.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public List<Integer> getAdminMessageIds() throws ConnectionFailedException {
+    if (this.currentUserAuthenticated) {
+      return DatabaseSelectHelper.getMessageIds(this.currentUser.getId());
+    }
+    return null;
+  }
 }

@@ -193,6 +193,16 @@ public abstract class BankServiceSystems {
   }
   
   /**
+   * Get all the ids of the messages for the given user.
+   * @param id The id of the user to get the messages for.
+   * @return The ids of all the messages.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public List<Integer> getMessageIds() throws ConnectionFailedException {
+    return DatabaseSelectHelper.getMessageIds(this.currentCustomer.getId());
+  }
+  
+  /**
    * Get a specific message.
    * @param messageId The id of the message to get.
    * @return The message.
@@ -200,5 +210,15 @@ public abstract class BankServiceSystems {
    */
   public String getMessage(int messageId) throws ConnectionFailedException {
     return DatabaseSelectHelper.getSpecificMessage(messageId);
+  }
+  
+  /**
+   * Update a message status to read.
+   * @param messageId The id of the message which status is to be update.
+   * @return True if the message status is successfully updated.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public boolean updateMessageStatus(int messageId) throws ConnectionFailedException {
+    return DatabaseUpdateHelper.updateUserMessageState(messageId);
   }
 }

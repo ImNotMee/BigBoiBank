@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -122,8 +123,9 @@ public class Bank {
                   + "\n9 - List Customer Accounts\n10 - Make new Admin\n11 - Make new Teller"
                   + "\n12 - View current Customers\n13 - View current Tellers"
                   + "\n14 - View current Admins\n15 - Promote Teller to Admin"
-                  + "\n16 - Update User Name\n17 - Update User Address\n18 - Update User Age"
-                  + "n\19 - Exit");
+                  + "\n16 - Update Customer Name\n17 - Update Customer Address"
+                  + "\n18 - Update Customer Agen\n19 - Update Customer Password"
+                  + "\n20 - See Available Message Idsn\n21 - See Specific Message\n22 - Exit");
               adminOption = inputReader.readLine();
               // authenticate the current Customer
               if (adminOption.equals("1")) {
@@ -167,17 +169,26 @@ public class Bank {
                 // promote a teller to an admin
               } else if (adminOption.equals("15")) {
                 promoteTellerOption(adminTerminal, inputReader);
-                // update a user's name
+                // update the customer's name
               } else if (adminOption.equals("16")) {
                 updateNameOption(adminTerminal, inputReader);
-                // update a user's address
+                // update the customer's address
               } else if (adminOption.equals("17")) {
                 updateAddressOption(adminTerminal, inputReader);
-                // update a user's age
+                // update the customer's age
               } else if (adminOption.equals("18")) {
                 updateAgeOption(adminTerminal, inputReader);
+                // update the customer's password
+              } else if (adminOption.equals("19")) {
+                updatePasswordOption(adminTerminal, inputReader);
+                // see available message id's
+              } else if (adminOption.equals("20")) {
+                viewMessageIds(adminTerminal);
+                // see a specific message
+              } else if (adminOption.equals("21")) {
+                viewSpecificMessage(adminTerminal, inputReader);
               }
-            } while (!adminOption.equals("19"));
+            } while (!adminOption.equals("22"));
             try {
               connection.close();
             } catch (Exception e) {
@@ -221,8 +232,10 @@ public class Bank {
               System.out.println("1 - Set and authenticate new Customer\n2 - Make new Customer"
                   + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
                   + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
-                  + "\n9 - See Customer Accounts\n10 - Update User Name\n11 - Update User Address"
-                  + "n\12 - Update User Age\n13 - Exit");
+                  + "\n9 - See Customer Accounts\n10 - Update Customer Name"
+                  + "\n11 - Update Customer Addressn\n12 - Update Customer Age"
+                  + "\n13 - Update Customer Password\n14 - See Available Message Ids"
+                  + "\n15 - See Specific Message16 - Exit");
               tellerOption = inputReader.readLine();
               // authenticate the current Customer
               if (tellerOption.equals("1")) {
@@ -251,17 +264,26 @@ public class Bank {
                 //list the accounts of the customer
               } else if (tellerOption.equals("9")) {
                 listCustomerAccountsOption(tellerTerminal);
-                // update a user's name
+                // update the customer's name
               } else if (tellerOption.equals("10")) {
                 updateNameOption(tellerTerminal, inputReader);
-                // update a user's address
+                // update the customer's address
               } else if (tellerOption.equals("11")) {
                 updateAddressOption(tellerTerminal, inputReader);
-                // update a user's age
+                // update the customer's age
               } else if (tellerOption.equals("12")) {
                 updateAgeOption(tellerTerminal, inputReader);
+                // update the customer's password
+              } else if (tellerOption.equals("13")) {
+                updatePasswordOption(tellerTerminal, inputReader);
+                // view message id's
+              } else if (tellerOption.equals("14")) {
+                viewMessageIds(tellerTerminal);
+                // view a specific message
+              } else if (tellerOption.equals("15")) {
+                viewSpecificMessage(tellerTerminal, inputReader);
               }
-            } while (!tellerOption.equals("13"));
+            } while (!tellerOption.equals("16"));
           } else {
             System.out.println("Teller was not authenticated");
           }          
@@ -309,7 +331,8 @@ public class Bank {
           // see what the user wants to do
           do {
             System.out.println("1 - List Accounts and Balances\n2 - Make a deposit"
-                + "\n3 - Check balance\n4 - Make a withdrawal\n5 - Exit");
+                + "\n3 - Check balance\n4 - Make a withdrawal\n5 - See available message Ids"
+                + "n\6 - See specific message\n7 - Exit");
             customerOption = inputReader.readLine();
             // list accounts and balances
             if (customerOption.equals("1")) {
@@ -323,8 +346,13 @@ public class Bank {
               // make a withdrawal
             } else if (customerOption.equals("4")) {
               makeWithdrawalOption(automatedTellerMachine, inputReader);
-            } 
-          } while (!customerOption.equals("5"));
+            } else if (customerOption.equals("5")) {
+              viewMessageIds(automatedTellerMachine);
+              // view a specific message
+            } else if (customerOption.equals("6")) {
+              viewSpecificMessage(automatedTellerMachine, inputReader);
+            }
+          } while (!customerOption.equals("7"));
         }   
       } while (!currentInput.equals("0"));
       
@@ -778,45 +806,10 @@ public class Bank {
     if (DatabaseSelectHelper.getUserDetails(Integer.valueOf(id)) != null) {
       System.out.print("Input the new name of the User: ");
       String name = inputReader.readLine();
-      if (machine.updateUserName(name, Integer.valueOf(id))) {
+      if (machine.updateUserName(name)) {
         System.out.println("Name successfully updated.");
       } else {
         System.out.println("The name was not successfully updated.");
-      }
-    } else {
-      System.out.println("ID does not exist in the database.");
-    }
-  }
-  
-  /**
-   * Change the address of a User in the database.
-   * @param machine The machine to change the address on.
-   * @param inputReader Used to read input from the user.
-   * @throws ConnectionFailedException If the database can not be connected to.
-   * @throws IOException If there is an error with the input or output.
-   */
-  private static void updateAddressOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
-      throws ConnectionFailedException, IOException 
-    {
-    System.out.print("Input the ID of the User who's address you would like to change: ");
-    String id = inputReader.readLine();
-    while (!id.matches("^[0-9]*$")  || id.length() == 0) {
-      System.out.print("Invalid ID. Please try again: ");
-      id = inputReader.readLine();
-    } 
-    if (DatabaseSelectHelper.getUserDetails(Integer.valueOf(id)) != null) {
-      System.out.print("Input the new age of the User (100 character limit): ");
-      String age = inputReader.readLine();
-      // loop until a valid number is given
-      while (!age.matches("^[0-9]*$") || age.length() == 0 
-          || Integer.valueOf(age) == 0) {
-        System.out.print("Invalid age. Please try again: ");
-        age = inputReader.readLine();
-      }
-      if (machine.updateUserAge(Integer.valueOf(age), Integer.valueOf(id))) {
-        System.out.println("Age successfully updated.");
-      } else {
-        System.out.println("The age was not successfully updated.");
       }
     } else {
       System.out.println("ID does not exist in the database.");
@@ -833,38 +826,112 @@ public class Bank {
   private static void updateAgeOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
       throws ConnectionFailedException, IOException 
     {
-    System.out.print("Input the ID of the User who's age you would like to change: ");
+    System.out.print("Input the new age of the current Customer: ");
+    String age = inputReader.readLine();
+    // loop until a valid number is given
+    while (!age.matches("^[0-9]*$") || age.length() == 0 
+        || Integer.valueOf(age) == 0) {
+      System.out.print("Invalid age. Please try again: ");
+      age = inputReader.readLine();
+    }
+    if (machine.updateUserAge(Integer.valueOf(age))) {
+      System.out.println("Age successfully updated.");
+    } else {
+      System.out.println("The age was not successfully updated.");
+    }
+  }
+  
+  /**
+   * Change the age of a User in the database.
+   * @param machine The machine to change the age on.
+   * @param inputReader Used to read input from the user.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with the input or output.
+   */
+  private static void updateAddressOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
+      throws ConnectionFailedException, IOException 
+    {
+    System.out.print("Input the new address of the current Customer: ");
+    String address = inputReader.readLine();
+    // loop until the length is valid
+    while (address.length() > 100) {
+      System.out.print("Address is too long! Input the address of the Teller (100 "
+          + "character limit): ");
+      address = inputReader.readLine();
+    }
+    if (machine.updateUserAddress(address)) {
+      System.out.println("Address successfully updated.");
+    } else {
+      System.out.println("The address was not successfully updated.");
+    }
+  }
+  
+  /**
+   * Change the password of the current customer in the database.
+   * @param machine The machine to change the password on.
+   * @param inputReader Used to read input from the user.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with the input or output.
+   */
+  private static void updatePasswordOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
+      throws ConnectionFailedException, IOException 
+    {
+    System.out.print("Input the new password of the current Customer: ");
+    String password = inputReader.readLine();
+    if (machine.updateUserPassword(password)) {
+      System.out.println("Password successfully updated.");
+    } else {
+      System.out.println("The password was not successfully updated.");
+    }
+  }
+  
+  /**
+   * View message ids that the user can view.
+   * @param machine The machine to check for the message ids.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  private static void viewMessageIds(BankServiceSystems machine) 
+      throws ConnectionFailedException {
+    List<Integer> messageIds = machine.getMessageIds();
+    System.out.println("You can view messages with the following ids.");
+    String message = "";
+    for (Integer id : messageIds) {
+      message += id.toString() + ", ";
+    } 
+    message = message.substring(0, -2);
+    message += '.';
+    System.out.println("");
+  }
+  
+  /**
+   * View a specific message. If admin is viewing someone else's message, the view status is 
+   * unchanged. Otherwise it will be changed.
+   * @param machine The machine to view the messages from. 
+   * @param inputReader Used to read input from the user.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with the input or output.
+   */
+  private static void viewSpecificMessage(BankServiceSystems machine, BufferedReader inputReader) 
+    throws ConnectionFailedException, IOException {
+    List<Integer> messageIds = machine.getMessageIds();
+    List<Integer> adminMessageIds = new ArrayList<Integer>();
+    if (machine instanceof AdminTerminal) {
+      adminMessageIds = ((AdminTerminal) machine).getAdminMessageIds();
+    }
+    System.out.print("Input the id of the message you would like to view.");
     String id = inputReader.readLine();
     while (!id.matches("^[0-9]*$")  || id.length() == 0) {
       System.out.print("Invalid ID. Please try again: ");
       id = inputReader.readLine();
     } 
-    if (DatabaseSelectHelper.getUserDetails(Integer.valueOf(id)) != null) {
-      System.out.print("Input the new address of the User (100 character limit): ");
-      String address = inputReader.readLine();
-      // loop until the length is valid
-      while (address.length() > 100) {
-        System.out.print("Address is too long! Input the address of the Teller (100 "
-            + "character limit): ");
-        address = inputReader.readLine();
+    if (messageIds.contains(Integer.valueOf(id))) {
+      System.out.println(machine.getMessage(Integer.valueOf(id)));
+      if (!adminMessageIds.contains(Integer.valueOf(id))) {
+        machine.updateMessageStatus(Integer.valueOf(id));
       }
-      if (machine.updateUserAddress(address, Integer.valueOf(id))) {
-        System.out.println("Address successfully updated.");
-      } else {
-        System.out.println("The address was not successfully updated.");
-      }
+
     } else {
-      System.out.println("ID does not exist in the database.");
-    }
-  }
-  
-  
-  private static void viewMessageIds(AutomatedTellerMachine machine) 
-      throws ConnectionFailedException {
-    List<Integer> messageIds = machine.getMessageIds();
-    System.out.println("You can view messages with the following ids.");
-    for (Integer id : messageIds) {
-      System.out.print(id.toString());
+      System.out.println("You can not view that message.");
     }
   }
   
