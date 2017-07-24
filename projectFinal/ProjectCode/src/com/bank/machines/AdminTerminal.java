@@ -1,5 +1,6 @@
 package com.bank.machines;
 
+import com.bank.databasehelper.DatabaseBackUp;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
@@ -105,7 +106,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
    */
   public boolean backUpDatabase(String output) {
     try {
-      DatabaseBackUp db = new DatabaseBackup();
+      DatabaseBackUp db = new DatabaseBackUp();
       db.update();
       FileOutputStream outputStream = new FileOutputStream(output);
       ObjectOutputStream serialize = new ObjectOutputStream(outputStream);
