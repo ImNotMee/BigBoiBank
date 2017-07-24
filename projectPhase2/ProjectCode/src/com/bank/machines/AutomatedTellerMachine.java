@@ -1,5 +1,7 @@
 package com.bank.machines;
 
+import java.math.BigDecimal;
+
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.exceptions.IllegalAmountException;

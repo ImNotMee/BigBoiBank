@@ -8,6 +8,9 @@ import com.bank.generics.RolesEnumMap;
 import com.bank.users.Admin;
 import com.bank.users.User;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,5 +97,28 @@ public class AdminTerminal extends BankWorkerServiceSystems {
   public boolean promoteTellerToAdmin(int id) throws ConnectionFailedException {
       return DatabaseUpdateHelper.updateUserRole(this.enumMap.getRoleId("ADMIN"), id);
     }
+  
+  /**
+   * Creates the serialized  version.
+   * @param output where the file will be written to.
+   * @return true if it successfully wrote the ser file.
+   */
+  public boolean backUpDatabase(String output) {
+    try {
+      DatabaseBackUp db = new DatabaseBackup();
+      db.update();
+      FileOutputStream outputStream = new FileOutputStream(output);
+      ObjectOutputStream serialize = new ObjectOutputStream(outputStream);
+      serialize.writeObject(db);
+      serialize.close();
+      outputStream.close(); 
+      System.out.println("The DatabaseBackUp object has been sucessfully written to " + output);
+      return true;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return false;
+    
+  }
    
 }

@@ -203,8 +203,7 @@ public class DatabaseSelectHelper extends DatabaseSelector {
         account = AccountCreator.createAccount(accountId, results.getString("NAME"), 
             new BigDecimal(results.getString("BALANCE")), type);
       } catch (SQLException e) {
-        // show what the error stack was
-        e.printStackTrace();
+        account = null;
       } 
       // ensure the connection closes
       try {
