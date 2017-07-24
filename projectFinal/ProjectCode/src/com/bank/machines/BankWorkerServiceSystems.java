@@ -9,6 +9,7 @@ import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.RolesEnumMap;
+import com.bank.security.PasswordHelpers;
 import com.bank.users.Customer;
 import com.bank.users.User;
 
@@ -140,14 +141,19 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
   
   
   /**
-   * Update a user's name in the database.
+   * Update the current user's name in the database.
    * @param name The new name of the User.
-   * @param id The id of the User.
    * @return Whether the update was successful.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public boolean updateUserName(String name, int id) throws ConnectionFailedException {
-    return DatabaseUpdateHelper.updateUserName(name, id);
+  public boolean updateUserName(String name) throws ConnectionFailedException {
+    if (this.currentCustomer != null && this.currentCustomerAuthenticated && 
+        this.currentUserAuthenticated) {
+      return DatabaseUpdateHelper.updateUserName(name, this.currentCustomer.getId());
+    } else {
+      System.out.println("The current customer is not set or authenticated.");
+      return false;
+    }
   }
   
   /**
@@ -157,8 +163,14 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
    * @return Whether the update was successful.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public boolean updateUserAddress(String address, int id) throws ConnectionFailedException {
-    return DatabaseUpdateHelper.updateUserAddress(address, id);
+  public boolean updateUserAddress(String address) throws ConnectionFailedException {
+    if (this.currentCustomer != null && this.currentCustomerAuthenticated && 
+        this.currentUserAuthenticated) {
+      return DatabaseUpdateHelper.updateUserAddress(address, this.currentCustomer.getId());
+    } else {
+      System.out.println("The current customer is not set or authenticated.");
+      return false;
+    }
   }
   
   /**
@@ -168,11 +180,31 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
    * @return Whether the update was successful.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public boolean updateUserAge(int age, int id) throws ConnectionFailedException {
-    return DatabaseUpdateHelper.updateUserAge(age, id);
+  public boolean updateUserAge(int age) throws ConnectionFailedException {
+    if (this.currentCustomer != null && this.currentCustomerAuthenticated && 
+        this.currentUserAuthenticated) {
+      return DatabaseUpdateHelper.updateUserAge(age, this.currentCustomer.getId());
+    } else {
+      System.out.println("The current customer is not set or authenticated.");
+      return false;
+    }
   }
   
-  public boolean updateUserPassword(String password, int id) throws ConnectionFailedException{
-    return DatabaseUpdateHelper.updateUserPassword(password, id);  
+  /**
+   * Update a user's password, to a new HASHED password.
+   * @param password The unhashed version of a password
+   * @param id The id of the user who's password is to be update..
+   * @return True if the password was successfully updated.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public boolean updateUserPassword(String password) throws ConnectionFailedException{
+    if (this.currentCustomer != null && this.currentCustomerAuthenticated && 
+        this.currentUserAuthenticated) {
+    return DatabaseUpdateHelper.updateUserPassword(PasswordHelpers.passwordHash(password), 
+        this.currentCustomer.getId());  
+    } else {
+      System.out.println("The current customer is not set or authenticated.");
+      return false;
+    }
   }
 }
