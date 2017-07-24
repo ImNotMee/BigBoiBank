@@ -525,5 +525,5 @@ public class DatabaseSelectHelper extends DatabaseSelector {
     }
     return message;
   }
-  
-}
+
+ }

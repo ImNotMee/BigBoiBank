@@ -82,4 +82,9 @@ public class DatabaseBackUp implements Serializable {
     }
     return false;
   }
+  
+  public ArrayList<String> getUserNames() {
+    return this.userNames;
+  }
+  
 }
