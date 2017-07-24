@@ -7,6 +7,7 @@ import com.bank.exceptions.InsufficientFundsException;
 import com.bank.users.Customer;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class AutomatedTellerMachine extends BankServiceSystems {
 
@@ -61,5 +62,15 @@ public class AutomatedTellerMachine extends BankServiceSystems {
       success = super.makeWithdrawal(amount, accountId);
       return success;
     }
+  }
+  
+  /**
+   * Get all the ids of the messages for the given user.
+   * @param id The id of the user to get the messages for.
+   * @return The ids of all the messages.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public List<Integer> getMessageIds() throws ConnectionFailedException {
+    return DatabaseSelectHelper.getMessageIds(this.currentCustomer.getId());
   }
 }

@@ -13,6 +13,7 @@ import com.bank.users.Customer;
 import com.bank.users.User;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public abstract class BankWorkerServiceSystems extends BankServiceSystems {
   
@@ -170,5 +171,15 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
    */
   public boolean updateUserAge(int age, int id) throws ConnectionFailedException {
     return DatabaseUpdateHelper.updateUserAge(age, id);
+  }
+  
+  /**
+   * Get all the ids of the messages for the given user.
+   * @param id The id of the user to get the messages for.
+   * @return The ids of all the messages.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public List<Integer> getMessageIds() throws ConnectionFailedException {
+    return DatabaseSelectHelper.getMessageIds(this.currentUser.getId());
   }
 }

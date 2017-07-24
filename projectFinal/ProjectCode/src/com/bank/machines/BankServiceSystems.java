@@ -171,8 +171,9 @@ public abstract class BankServiceSystems {
   }
   
   /**
- * @return 
- * @throws ConnectionFailedException 
+   * Get the total amount of money in all of the user's accounts.
+   * @return The total amount in all of the user's accounts.
+   * @throws ConnectionFailedException 
    * 
    */
   public BigDecimal getTotalBalance(User user) throws ConnectionFailedException {
@@ -189,5 +190,15 @@ public abstract class BankServiceSystems {
 		System.out.println("This Customer has no accounts");
 	}
    return totalBalance;  
+  }
+  
+  /**
+   * Get a specific message.
+   * @param messageId The id of the message to get.
+   * @return The message.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public String getMessage(int messageId) throws ConnectionFailedException {
+    return DatabaseSelectHelper.getSpecificMessage(messageId);
   }
 }
