@@ -3,7 +3,6 @@ package com.bank.bank;
 import com.bank.accounts.Account;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
-import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
@@ -779,7 +778,7 @@ public class Bank {
     if (DatabaseSelectHelper.getUserDetails(Integer.valueOf(id)) != null) {
       System.out.print("Input the new name of the User: ");
       String name = inputReader.readLine();
-      if (DatabaseUpdateHelper.updateUserName(name, Integer.valueOf(id))) {
+      if (machine.updateUserName(name, Integer.valueOf(id))) {
         System.out.println("Name successfully updated.");
       } else {
         System.out.println("The name was not successfully updated.");
@@ -814,7 +813,7 @@ public class Bank {
         System.out.print("Invalid age. Please try again: ");
         age = inputReader.readLine();
       }
-      if (DatabaseUpdateHelper.updateUserAge(Integer.valueOf(age), Integer.valueOf(id))) {
+      if (machine.updateUserAge(Integer.valueOf(age), Integer.valueOf(id))) {
         System.out.println("Age successfully updated.");
       } else {
         System.out.println("The age was not successfully updated.");
@@ -849,7 +848,7 @@ public class Bank {
             + "character limit): ");
         address = inputReader.readLine();
       }
-      if (DatabaseUpdateHelper.updateUserAddress(address, Integer.valueOf(id))) {
+      if (machine.updateUserAddress(address, Integer.valueOf(id))) {
         System.out.println("Address successfully updated.");
       } else {
         System.out.println("The address was not successfully updated.");
