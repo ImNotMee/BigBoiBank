@@ -859,6 +859,15 @@ public class Bank {
   }
   
   
+  private static void viewMessageIds(AutomatedTellerMachine machine) 
+      throws ConnectionFailedException {
+    List<Integer> messageIds = machine.getMessageIds();
+    System.out.println("You can view messages with the following ids.");
+    for (Integer id : messageIds) {
+      System.out.print(id.toString());
+    }
+  }
+  
   /**
    * Initialize all the roles in the Roles Table. Reads from the Roles Enum.
    * @param connection The connection to the database.

@@ -467,11 +467,11 @@ public class DatabaseSelectHelper extends DatabaseSelector {
    * @return A list of all the messages.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public static List<String> getAllMessages(int userId) throws ConnectionFailedException {
+  public static List<Integer> getMessageIds(int userId) throws ConnectionFailedException {
     if (userId < 1) {
       return null;
     }
-    ArrayList<String> messages = new ArrayList<String>(); 
+    ArrayList<Integer> messageIds = new ArrayList<Integer>(); 
     Connection connection = DatabaseDriverHelper.connectOrCreateDataBase();
     // ensure the connection is successful
     if (connection != null) {
@@ -479,7 +479,7 @@ public class DatabaseSelectHelper extends DatabaseSelector {
         // try to get the Account details of the given accountId
         ResultSet results = DatabaseSelector.getAllMessages(userId, connection);
         while (results.next()) {
-          messages.add(results.getString("MESSAGE"));
+          messageIds.add(new Integer(results.getInt("ID")));
         }        
       } catch (SQLException e) {
         e.printStackTrace();
@@ -491,10 +491,39 @@ public class DatabaseSelectHelper extends DatabaseSelector {
         System.out.println("Looks like it was closed already!");
       } 
     } else {
-      // throw Connection FailedException if the database was not connected to
       throw new ConnectionFailedException("Unable to connect to the database.");
     }
-    return messages;
+    return messageIds;
+  }
+  
+  /**
+   * Get a message from the database.
+   * @param messageId The id of the message to get.
+   * @return The message.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public static String getSpecificMessage(int messageId) throws ConnectionFailedException {
+    if (messageId < 1) {
+      return null;
+    }
+    String message = null;
+    Connection connection = DatabaseDriverHelper.connectOrCreateDataBase();
+    if (connection != null) {
+      try {
+        message = DatabaseSelector.getSpecificMessage(messageId, connection);
+      } catch (SQLException e) {
+        message = null;
+      } 
+      // ensure the connection closes
+      try {
+        connection.close();
+      } catch (SQLException e) {
+        System.out.println("Looks like it was closed already!");
+      } 
+    } else {
+      throw new ConnectionFailedException("Unable to connect to the database.");
+    }
+    return message;
   }
   
 }
