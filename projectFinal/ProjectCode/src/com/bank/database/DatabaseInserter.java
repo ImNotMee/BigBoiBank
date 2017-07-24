@@ -131,13 +131,43 @@ public class DatabaseInserter {
    * @throws DatabaseInsertException on failure of insert.
    */
   protected static int insertUserAccount(int userId, int accountId, Connection connection) 
-      throws DatabaseInsertException  {
+      throws DatabaseInsertException {
     String sql = "INSERT INTO USERACCOUNT(USERID,ACCOUNTID) VALUES(?,?);";
     try {
       PreparedStatement preparedStatement = connection.prepareStatement(sql,
                                               Statement.RETURN_GENERATED_KEYS);
       preparedStatement.setInt(1, userId);
       preparedStatement.setInt(2, accountId);
+      int id = preparedStatement.executeUpdate();
+      if (id > 0) {
+        ResultSet uniqueKey = preparedStatement.getGeneratedKeys();
+        if (uniqueKey.next()) {
+          return uniqueKey.getInt(1);
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    throw new DatabaseInsertException();
+  }
+  
+  /**
+   * Insert a new message into the database.
+   * @param userId the id of the user whom the message is for.
+   * @param message the message to be left (max 512 characters).
+   * @param connection the connection to the database.
+   * @return the id of the inserted message.
+   * @throws DatabaseInsertException thrown on failure.
+   */
+  protected static int insertMessage(int userId, String message, Connection connection) 
+      throws DatabaseInsertException {
+    String sql = "INSERT INTO USERMESSAGES(USERID,MESSAGE,VIEWED) VALUES(?, ?, ?);";
+    try {
+      PreparedStatement preparedStatement = connection.prepareStatement(sql,
+                                              Statement.RETURN_GENERATED_KEYS);
+      preparedStatement.setInt(1, userId);
+      preparedStatement.setString(2, message);
+      preparedStatement.setInt(3, 0);
       int id = preparedStatement.executeUpdate();
       if (id > 0) {
         ResultSet uniqueKey = preparedStatement.getGeneratedKeys();

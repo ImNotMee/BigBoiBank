@@ -41,18 +41,30 @@ public class DatabaseSelector {
   }
   
   /**
-   * get the hashed version of the password.
-   * @param userId the user's id.
-   * @param connection the database connection.
-   * @return the hashed password to be checked against given password.
-   * @throws SQLException if a database issue occurs. 
+   * get the role of the given user.
+   * @param userId the id of the user.
+   * @param connection the connection to the database.
+   * @return the roleId for the user.
+   * @throws SQLException thrown if something goes wrong with the query.
    */
-  protected static String getPassword(int userId, Connection connection) throws SQLException {
-    String sql = "SELECT PASSWORD FROM USERPW WHERE USERID = ?";
+  protected static int getUserRole(int userId, Connection connection) throws SQLException {
+    String sql = "SELECT ROLEID FROM USERS WHERE ID = ?";
     PreparedStatement preparedStatement = connection.prepareStatement(sql);
     preparedStatement.setInt(1, userId);
     ResultSet results = preparedStatement.executeQuery();
-    return results.getString("PASSWORD");
+    return results.getInt("ROLEID");
+  }
+  
+  /**
+   * Return all users from the database.
+   * @param connection the connection to the database.
+   * @return a results set of all rows in the table.
+   * @throws SQLException thrown if there is an issue.
+   */
+  protected static ResultSet getUsersDetails(Connection connection) throws SQLException {
+    String sql = "SELECT * FROM USERS";
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    return preparedStatement.executeQuery();
   }
   
   /**
@@ -70,6 +82,21 @@ public class DatabaseSelector {
   }
  
   /**
+   * get the hashed version of the password.
+   * @param userId the user's id.
+   * @param connection the database connection.
+   * @return the hashed password to be checked against given password.
+   * @throws SQLException if a database issue occurs. 
+   */
+  protected static String getPassword(int userId, Connection connection) throws SQLException {
+    String sql = "SELECT PASSWORD FROM USERPW WHERE USERID = ?";
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.setInt(1, userId);
+    ResultSet results = preparedStatement.executeQuery();
+    return results.getString("PASSWORD");
+  }
+  
+  /**
    * return the id's of all of a user's accounts.
    * @param userId the id of the user.
    * @param connection the connection to the database.
@@ -83,6 +110,8 @@ public class DatabaseSelector {
     return preparedStatement.executeQuery();
   }
  
+  
+  
   /**
    * get the full details of an account.
    * @param accountId the id of the account
@@ -91,7 +120,7 @@ public class DatabaseSelector {
    * @throws SQLException thrown when something goes wrong with query.
    */
   protected static ResultSet getAccountDetails(int accountId, Connection connection) 
-      throws SQLException {
+       throws SQLException {
     String sql = "SELECT * FROM ACCOUNTS WHERE ID = ?";
     PreparedStatement preparedStatement = connection.prepareStatement(sql);
     preparedStatement.setInt(1, accountId);
@@ -158,21 +187,6 @@ public class DatabaseSelector {
   }
   
   /**
-   * get the role of the given user.
-   * @param userId the id of the user.
-   * @param connection the connection to the database.
-   * @return the roleId for the user.
-   * @throws SQLException thrown if something goes wrong with the query.
-   */
-  protected static int getUserRole(int userId, Connection connection) throws SQLException {
-    String sql = "SELECT ROLEID FROM USERS WHERE ID = ?";
-    PreparedStatement preparedStatement = connection.prepareStatement(sql);
-    preparedStatement.setInt(1, userId);
-    ResultSet results = preparedStatement.executeQuery();
-    return results.getInt("ROLEID");
-  }
-  
-  /**
    * Get the interest rate for an account.
    * @param accountType the type for the account.
    * @param connection the database connection.
@@ -187,4 +201,34 @@ public class DatabaseSelector {
     ResultSet results = preparedStatement.executeQuery();
     return new BigDecimal(results.getString("INTERESTRATE"));
   }
+  
+  /**
+   * Get all messages currently available to a user.
+   * @param userId the user whose messages are being retrieved.
+   * @param connection connection to database.
+   * @return a result set containing all messages.
+   * @throws SQLException if something goes wrong.
+   */
+  protected static ResultSet getAllMessages(int userId, Connection connection) throws SQLException {
+    String sql = "SELECT * FROM USERMESSAGES WHERE USERID = ?";
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.setInt(1, userId);
+    return preparedStatement.executeQuery();
+  }
+  
+  /**
+   * Get a specific message from the database.
+   * @param messageId the id of the message.
+   * @param connection connection to the database.
+   * @return the message from the database as a string.
+   * @throws SQLException if something goes wrong.
+   */
+  protected static String getSpecificMessage(int messageId, Connection connection) 
+      throws SQLException {
+    String sql = "SELECT MESSAGE FROM USERMESSAGES WHERE ID = ?";
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    preparedStatement.setInt(1, messageId);
+    return preparedStatement.executeQuery().getString("MESSAGE");
+  }
+  
 }
