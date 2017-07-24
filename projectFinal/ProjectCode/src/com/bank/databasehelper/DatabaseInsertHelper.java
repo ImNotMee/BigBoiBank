@@ -258,4 +258,41 @@ public class DatabaseInsertHelper extends DatabaseInserter {
     }
   }
   
+  /**
+   * Insert a message into the database in the USERMESSAGE table.
+   * @param userId the id of who the message is meant for.
+   * @param message The message.
+   * @return The id of the inserted message.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public static int insertMessage(int userId, String message) throws ConnectionFailedException {
+    // set the default id to return as -1
+    int id = -1;
+    // ensure the user exists and the message length is no longer then 512
+    if (DatabaseSelectHelper.getUserRole(userId) != -1 && message.length() <= 512) {
+      // connect to the database
+      Connection connection = DatabaseDriverHelper.connectOrCreateDataBase();
+      // ensure the connection exists
+      if (connection != null) {
+        // insert the message
+        try {
+          id = DatabaseInserter.insertMessage(userId, message, connection);
+        } catch (DatabaseInsertException e) {
+          return -1;
+        }
+        try {
+          // try to close the connection
+          connection.close();
+        } catch (SQLException e) {
+          System.out.println("Looks like it was closed already!");
+        }
+      } else {
+        // throw Connection FailedException if the database was not connected to
+        throw new ConnectionFailedException("Unable to connect to the database.");
+      }
+    }
+    // return the id of the added user or -1 if not added 
+    return id;
+  }
+  
 }

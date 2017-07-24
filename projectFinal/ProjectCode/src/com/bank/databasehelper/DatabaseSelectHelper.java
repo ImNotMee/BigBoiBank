@@ -462,4 +462,40 @@ public class DatabaseSelectHelper extends DatabaseSelector {
     return userRole;
   }
   
+  /**
+   * Get all messages for the user with the given id.
+   * @param userId the id of user who's messages we are getting.
+   * @return A list of all the messages.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public static List<String> getAllMessages(int userId) throws ConnectionFailedException {
+    if (userId < 1) {
+      return null;
+    }
+    ArrayList<String> messages = new ArrayList<String>(); 
+    Connection connection = DatabaseDriverHelper.connectOrCreateDataBase();
+    // ensure the connection is successful
+    if (connection != null) {
+      try {
+        // try to get the Account details of the given accountId
+        ResultSet results = DatabaseSelector.getAllMessages(userId, connection);
+        while (results.next()) {
+          messages.add(results.getString("MESSAGE"));
+        }        
+      } catch (SQLException e) {
+        e.printStackTrace();
+      } 
+      // ensure the connection closes
+      try {
+        connection.close();
+      } catch (SQLException e) {
+        System.out.println("Looks like it was closed already!");
+      } 
+    } else {
+      // throw Connection FailedException if the database was not connected to
+      throw new ConnectionFailedException("Unable to connect to the database.");
+    }
+    return messages;
+  }
+  
 }
