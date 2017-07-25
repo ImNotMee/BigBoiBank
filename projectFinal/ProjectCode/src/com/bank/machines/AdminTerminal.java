@@ -1,5 +1,6 @@
 package com.bank.machines;
 
+import com.bank.accounts.Account;
 import com.bank.databasehelper.DatabaseBackUp;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
@@ -79,22 +80,29 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     return users;
   }
   
-  public BigDecimal getTotalBalanceAllUsers() throws ConnectionFailedException {	  
-	  List<User> allUsers = this.listUsers("CUSTOMER");
-	  BigDecimal totalBalance = BigDecimal.ZERO;
-	  
-	  if(allUsers != null) {
-		  
-	  
-		  for(User curruser : allUsers){
-			  totalBalance.add(this.getTotalBalance(curruser));
-		  }
-	  } else {
-		  System.out.println("Customer does not have any accounts");
-	  }
-	  return totalBalance;
+  /**
+   * Get the total balance of all the accounts in the bank.
+   * @return The total balance of all the accounts in the bank.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public BigDecimal getTotalBankBalance() throws ConnectionFailedException {	  
+    BigDecimal totalBalance = BigDecimal.ZERO;
+    int currId = 1;
+    Account account = DatabaseSelectHelper.getAccountDetails(currId);
+    while (account != null) {
+      totalBalance.add(account.getBalance());
+      currId ++;
+      account = DatabaseSelectHelper.getAccountDetails(currId);
+    }
+    return totalBalance;
   }
   
+  /**
+   * Promote a teller to an admin.
+   * @param id The id of the teller to promote.
+   * @return
+   * @throws ConnectionFailedException
+   */
   public boolean promoteTellerToAdmin(int id) throws ConnectionFailedException {
       return DatabaseUpdateHelper.updateUserRole(this.enumMap.getRoleId("ADMIN"), id);
     }
