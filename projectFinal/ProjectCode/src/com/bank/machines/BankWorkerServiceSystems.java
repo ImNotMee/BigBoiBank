@@ -144,22 +144,28 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
   }
   
   /**
-   * Get the total amount of money in all of the user's accounts.
+   * Get the total amount of money in all of the current customer's accounts.
    * @return The total amount in all of the user's accounts.
    * @throws ConnectionFailedException If the database can not be connected to.
    * 
    */
-  public BigDecimal getTotalBalance(User user) throws ConnectionFailedException {
-  List<Account> userAccounts = this.listCustomerAccounts();
-  BigDecimal totalBalance = BigDecimal.ZERO;
-  if (userAccounts != null) {
-    for (Account currAccount: userAccounts) {     
-      totalBalance.add(currAccount.getBalance());
+  public BigDecimal getTotalBalance() throws ConnectionFailedException {
+  if (this.currentCustomer != null && this.currentCustomerAuthenticated) {
+    List<Account> userAccounts = this.listCustomerAccounts();
+    BigDecimal totalBalance = BigDecimal.ZERO;
+    if (userAccounts != null) {
+      for (Account currAccount: userAccounts) {     
+        totalBalance.add(currAccount.getBalance());
+      }
+    } else {
+      System.out.println("This Customer has no accounts");
     }
+     return totalBalance;  
   } else {
-    System.out.println("This Customer has no accounts");
+    System.out.println("The customer is not authenticated or set.");
+    return BigDecimal.ZERO;
   }
-   return totalBalance;  
+    
   }
   
   /**

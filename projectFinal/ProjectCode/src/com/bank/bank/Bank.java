@@ -112,14 +112,15 @@ public class Bank {
               System.out.println("1 - Set and authenticate new Customer\n2 - Make new Customer"
                   + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
                   + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
-                  + "\n9 - List Customer Accounts\n10 - Make new Admin\n11 - Make new Teller"
-                  + "\n12 - View current Customers\n13 - View current Tellers"
-                  + "\n14 - View current Admins\n15 - Promote Teller to Admin"
-                  + "\n16 - Update Customer Name\n17 - Update Customer Address"
-                  + "\n18 - Update Customer Age\n19 - Update Customer Password"
-                  + "\n20 - See Available Message Ids\n21 - See Customer Message Ids"
-                  + "\n22 - See Specific Message\n23 - Leave Message\n24 - Transfer funds"
-                  + "\n25 - backtheFup\n26 - Exit");
+                  + "\n9 - List Customer Accounts\n10 - View balance of Customer Accounts"
+                  + "\n11 - Make new Admin\n12 - Make new Teller\n13 - View current Customers"
+                  + "\n14 - View current Tellers\n15 - View current Admins"
+                  + "\n16 - Promote Teller to Admin\n17 - Update Customer Name"
+                  + "\n18 - Update Customer Address\n19 - Update Customer Age"
+                  + "\n20 - Update Customer Password\n21 - See Available Message Ids"
+                  + "\n22 - See Customer Message Ids\n23 - See Specific Message"
+                  + "\n24 - Leave Message\n25 - Transfer funds\n26 - Back up Database"
+                  + "\n27 - View money in bank\n28 - Exit");
               adminOption = inputReader.readLine();
               // authenticate the current Customer
               if (adminOption.equals("1")) {
@@ -148,53 +149,60 @@ public class Bank {
                 // list the accounts of the customer
               } else if (adminOption.equals("9")) {
                 listCustomerAccountsOption(adminTerminal);
-                // make a new admin
+                // see the total money of the current customer
               } else if (adminOption.equals("10")) {
-                makeNewAdminOption(adminTerminal, inputReader);
+                viewCustomerTotalBalance(adminTerminal);
+                // make a new admin
               } else if (adminOption.equals("11")) {
+                makeNewAdminOption(adminTerminal, inputReader);
+                // make a new teller
+              } else if (adminOption.equals("12")) {
                 makeNewTellerOption(adminTerminal, inputReader);
                 // show all the current customers
-              } else if (adminOption.equals("12")) {
-                viewUsersOption(adminTerminal, "CUSTOMER");
               } else if (adminOption.equals("13")) {
-                viewUsersOption(adminTerminal, "TELLER");
+                viewUsersOption(adminTerminal, "CUSTOMER");
               } else if (adminOption.equals("14")) {
+                viewUsersOption(adminTerminal, "TELLER");
+              } else if (adminOption.equals("15")) {
                 viewUsersOption(adminTerminal, "ADMIN");
                 // promote a teller to an admin
-              } else if (adminOption.equals("15")) {
+              } else if (adminOption.equals("16")) {
                 promoteTellerOption(adminTerminal, inputReader);
                 // update the customer's name
-              } else if (adminOption.equals("16")) {
+              } else if (adminOption.equals("17")) {
                 updateNameOption(adminTerminal, inputReader);
                 // update the customer's address
-              } else if (adminOption.equals("17")) {
+              } else if (adminOption.equals("18")) {
                 updateAddressOption(adminTerminal, inputReader);
                 // update the customer's age
-              } else if (adminOption.equals("18")) {
+              } else if (adminOption.equals("19")) {
                 updateAgeOption(adminTerminal, inputReader);
                 // update the customer's password
-              } else if (adminOption.equals("19")) {
+              } else if (adminOption.equals("20")) {
                 updatePasswordOption(adminTerminal, inputReader);
                 // see available message id's
-              } else if (adminOption.equals("20")) {
+              } else if (adminOption.equals("21")) {
                 viewUserMessageIds(adminTerminal);
                 // view message id's the customer can view
-              } else if (adminOption.equals("21")) {
+              } else if (adminOption.equals("22")) {
                 viewCustomerMessageIds(adminTerminal);
                 // see a specific message
-              } else if (adminOption.equals("22")) {
+              } else if (adminOption.equals("23")) {
                 viewSpecificMessage(adminTerminal, inputReader);
                 // leave a message
-              } else if (adminOption.equals("23")) {
+              } else if (adminOption.equals("24")) {
                 leaveMessage(adminTerminal, inputReader);
                 // transfer funds between 2 accounts
-              } else if (adminOption.equals("24")) {
+              } else if (adminOption.equals("25")) {
                 transferFundsOption(adminTerminal, inputReader);
                 // back up the database
-              } else if (adminOption.equals("25")) {
+              } else if (adminOption.equals("26")) {
                 backUpDatabase(adminTerminal);
+                // see total money in the bank
+              } else if (adminOption.equals("27")) {
+                viewBankTotalBalance(adminTerminal);
               }
-            } while (!adminOption.equals("256"));
+            } while (!adminOption.equals("28"));
             try {
               connection.close();
             } catch (Exception e) {
@@ -821,21 +829,12 @@ public class Bank {
       throws ConnectionFailedException, IOException 
     {
     System.out.print("Input the ID of the User who's name you would like to change: ");
-    String id = inputReader.readLine();
-    while (!id.matches("^[0-9]*$")  || id.length() == 0) {
-      System.out.print("Invalid ID. Please try again: ");
-      id = inputReader.readLine();
-    } 
-    if (DatabaseSelectHelper.getUserDetails(Integer.valueOf(id)) != null) {
-      System.out.print("Input the new name of the User: ");
-      String name = inputReader.readLine();
-      if (machine.updateUserName(name)) {
-        System.out.println("Name successfully updated.");
-      } else {
-        System.out.println("The name was not successfully updated.");
-      }
+    System.out.print("Input the new name of the User: ");
+    String name = inputReader.readLine();
+    if (machine.updateUserName(name)) {
+      System.out.println("Name successfully updated.");
     } else {
-      System.out.println("ID does not exist in the database.");
+      System.out.println("The name was not successfully updated.");
     }
   }
   
@@ -1121,6 +1120,23 @@ public class Bank {
     } else {
       System.out.println("Dont kill all hoomans");
     }
+  }
+  
+  /**
+   * View the total amount of money of the current customer.
+   * @param machine The machine to get the total balance from.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  private static void viewCustomerTotalBalance(BankWorkerServiceSystems machine) 
+      throws ConnectionFailedException {
+    BigDecimal totalBalance = machine.getTotalBalance();
+    System.out.println("The total balance the current customer has is " + totalBalance.toString());
+  }
+  
+  private static void viewBankTotalBalance(AdminTerminal machine) throws ConnectionFailedException {
+    BigDecimal totalBalance = machine.getTotalBankBalance();
+    System.out.println("The total amount of money in the bank is: " + totalBalance.toString());
+    
   }
   
   /**
