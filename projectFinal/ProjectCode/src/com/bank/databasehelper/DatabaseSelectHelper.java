@@ -462,7 +462,7 @@ public class DatabaseSelectHelper extends DatabaseSelector {
   }
   
   /**
-   * Get all messages for the user with the given id.
+   * Get all messageIds for the user with the given id.
    * @param userId the id of user who's messages we are getting.
    * @return A list of all the messages.
    * @throws ConnectionFailedException If the database can not be connected to.
@@ -525,5 +525,4 @@ public class DatabaseSelectHelper extends DatabaseSelector {
     }
     return message;
   }
-
  }
