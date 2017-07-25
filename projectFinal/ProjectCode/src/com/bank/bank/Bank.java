@@ -125,7 +125,8 @@ public class Bank {
                   + "\n14 - View current Admins\n15 - Promote Teller to Admin"
                   + "\n16 - Update Customer Name\n17 - Update Customer Address"
                   + "\n18 - Update Customer Agen\n19 - Update Customer Password"
-                  + "\n20 - See Available Message Idsn\n21 - See Specific Message\n22 - Exit");
+                  + "\n20 - See Available Message Idsn\n21 - See Specific Message"
+                  + "\n22 - Transfer funds\n23 - Exit");
               adminOption = inputReader.readLine();
               // authenticate the current Customer
               if (adminOption.equals("1")) {
@@ -187,8 +188,11 @@ public class Bank {
                 // see a specific message
               } else if (adminOption.equals("21")) {
                 viewSpecificMessage(adminTerminal, inputReader);
+                // transfer funds between 2 accounts
+              } else if (adminOption.equals("22")) {
+                transferFundsOption(adminTerminal, inputReader);
               }
-            } while (!adminOption.equals("22"));
+            } while (!adminOption.equals("23"));
             try {
               connection.close();
             } catch (Exception e) {
@@ -235,7 +239,7 @@ public class Bank {
                   + "\n9 - See Customer Accounts\n10 - Update Customer Name"
                   + "\n11 - Update Customer Addressn\n12 - Update Customer Age"
                   + "\n13 - Update Customer Password\n14 - See Available Message Ids"
-                  + "\n15 - See Specific Message16 - Exit");
+                  + "\n15 - See Specific Message\n16 - Transfer funds\n17 - Exit");
               tellerOption = inputReader.readLine();
               // authenticate the current Customer
               if (tellerOption.equals("1")) {
@@ -282,8 +286,11 @@ public class Bank {
                 // view a specific message
               } else if (tellerOption.equals("15")) {
                 viewSpecificMessage(tellerTerminal, inputReader);
+                // transfer funds between 2 accounts
+              } else if (tellerOption.equals("16")) {
+                transferFundsOption(tellerTerminal, inputReader);
               }
-            } while (!tellerOption.equals("16"));
+            } while (!tellerOption.equals("17"));
           } else {
             System.out.println("Teller was not authenticated");
           }          
@@ -332,7 +339,7 @@ public class Bank {
           do {
             System.out.println("1 - List Accounts and Balances\n2 - Make a deposit"
                 + "\n3 - Check balance\n4 - Make a withdrawal\n5 - See available message Ids"
-                + "n\6 - See specific message\n7 - Exit");
+                + "\n6 - See specific message\n7 - Transfer funds\n8 - Exit");
             customerOption = inputReader.readLine();
             // list accounts and balances
             if (customerOption.equals("1")) {
@@ -351,8 +358,11 @@ public class Bank {
               // view a specific message
             } else if (customerOption.equals("6")) {
               viewSpecificMessage(automatedTellerMachine, inputReader);
+              // transfer funds between 2 accounts
+            } else if (customerOption.equals("7")) {
+              transferFundsOption(automatedTellerMachine, inputReader);
             }
-          } while (!customerOption.equals("7"));
+          } while (!customerOption.equals("8"));
         }   
       } while (!currentInput.equals("0"));
       
@@ -421,7 +431,7 @@ public class Bank {
       System.out.println("Illegal amount to deposit.");
     }
     if (success) {
-      System.out.println("Desposit of " + deposit.toString() + " was successful. New "
+      System.out.println("Deposit of " + deposit.toString() + " was successful. New "
           + "balance: " + machine.checkBalance(Integer.valueOf(accountId)).toString());
     }
   }
@@ -968,7 +978,7 @@ public class Bank {
     }
   }
 
-  private static void transferFundsOption(BankWorkerServiceSystems machine,
+  private static void transferFundsOption(BankServiceSystems machine,
       BufferedReader inputReader) throws ConnectionFailedException, IOException {
     // ask for the id of the account to transfer to
     System.out.print("Input the ID of the account you want to transfer funds to: ");
