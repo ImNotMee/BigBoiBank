@@ -127,7 +127,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
    * @return The ids of all the messages.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public List<Integer> getMessageIds() throws ConnectionFailedException {
+  public List<Integer> getUserMessageIds() throws ConnectionFailedException {
     List<Integer> messageIds = new ArrayList<>();
     if (this.currentUserAuthenticated) {
       int currId = 1;

@@ -162,35 +162,19 @@ public abstract class BankServiceSystems {
     List<Account> accounts = this.currentCustomer.getAccounts();
     // ensure there is at least one account
     if (accounts != null) {
-      for (Account currAccount : accounts) {
+      int account = 1;
+      for (Account currAccount : accounts) {        
+        System.out.println("Account " + String.valueOf(account));
+        System.out.println("--------------");
         System.out.println(currAccount.toString());
+        account++;
       }
     } else {
       System.out.println("This Customer has no accounts.");
     }
   }
   
-  /**
-   * Get the total amount of money in all of the user's accounts.
-   * @return The total amount in all of the user's accounts.
-   * @throws ConnectionFailedException 
-   * 
-   */
-  public BigDecimal getTotalBalance(User user) throws ConnectionFailedException {
-	List<Account> userAccounts = this.listCustomerAccounts();
-	BigDecimal totalBalance = BigDecimal.ZERO;;
-	
-	
-	if (userAccounts != null) {
-		for (Account currAccount: userAccounts) {
-			totalBalance.add(currAccount.getBalance());
-			
-	  }
-	} else {
-		System.out.println("This Customer has no accounts");
-	}
-   return totalBalance;  
-  }
+ 
   
   /**
    * Get all the ids of the messages for the given user.
@@ -198,7 +182,7 @@ public abstract class BankServiceSystems {
    * @return The ids of all the messages.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public List<Integer> getMessageIds() throws ConnectionFailedException {
+  public List<Integer> getCustomerMessageIds() throws ConnectionFailedException {
     return DatabaseSelectHelper.getMessageIds(this.currentCustomer.getId());
   }
   

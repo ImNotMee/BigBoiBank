@@ -2,8 +2,10 @@ package com.bank.machines;
 
 import java.util.List;
 
+import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.ConnectionFailedException;
+import com.bank.users.Customer;
 import com.bank.users.Teller;
 
 public class TellerTerminal extends BankWorkerServiceSystems {
@@ -28,7 +30,27 @@ public class TellerTerminal extends BankWorkerServiceSystems {
    * @return The ids of all the messages.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public List<Integer> getMessageIds() throws ConnectionFailedException {
+  public List<Integer> getUserMessageIds() throws ConnectionFailedException {
     return DatabaseSelectHelper.getMessageIds(this.currentUser.getId());
+  }
+  
+  /**
+   * Leave a new message for a user.
+   * @param message The message for the user.
+   * @param userId The id of the user who the message is for.
+   * @return The id of the message, or -1 if it was unsuccessful.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  @Override
+  public int leaveMessage(String message, int userId) throws ConnectionFailedException {
+    if (this.currentCustomer != null && this.currentUserAuthenticated) {
+      // tellers can only leave messages for Customers
+      if (DatabaseSelectHelper.getUserDetails(userId) instanceof Customer) {
+        
+      }
+      return DatabaseInsertHelper.insertMessage(userId, message);
+    } else {
+      return -1;
+    }
   }
 }

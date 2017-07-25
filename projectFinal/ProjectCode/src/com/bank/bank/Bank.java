@@ -124,9 +124,10 @@ public class Bank {
                   + "\n12 - View current Customers\n13 - View current Tellers"
                   + "\n14 - View current Admins\n15 - Promote Teller to Admin"
                   + "\n16 - Update Customer Name\n17 - Update Customer Address"
-                  + "\n18 - Update Customer Agen\n19 - Update Customer Password"
-                  + "\n20 - See Available Message Idsn\n21 - See Specific Message"
-                  + "\n22 - Transfer funds\n23 - Exit");
+                  + "\n18 - Update Customer Age\n19 - Update Customer Password"
+                  + "\n20 - See Available Message Ids\21 - See Customer Message Ids"
+                  + "\n22 - See Specific Message\23 - Leave Message\n24 - Transfer funds"
+                  + "\n25 - Exit");
               adminOption = inputReader.readLine();
               // authenticate the current Customer
               if (adminOption.equals("1")) {
@@ -184,15 +185,21 @@ public class Bank {
                 updatePasswordOption(adminTerminal, inputReader);
                 // see available message id's
               } else if (adminOption.equals("20")) {
-                viewMessageIds(adminTerminal);
-                // see a specific message
+                viewUserMessageIds(adminTerminal);
+                // view message id's the customer can view
               } else if (adminOption.equals("21")) {
-                viewSpecificMessage(adminTerminal, inputReader);
-                // transfer funds between 2 accounts
+                viewCustomerMessageIds(adminTerminal);
+                // see a specific message
               } else if (adminOption.equals("22")) {
+                viewSpecificMessage(adminTerminal, inputReader);
+                // leave a message
+              } else if (adminOption.equals("23")) {
+                leaveMessage(adminTerminal, inputReader);
+                // transfer funds between 2 accounts
+              } else if (adminOption.equals("24")) {
                 transferFundsOption(adminTerminal, inputReader);
               }
-            } while (!adminOption.equals("23"));
+            } while (!adminOption.equals("25"));
             try {
               connection.close();
             } catch (Exception e) {
@@ -237,9 +244,10 @@ public class Bank {
                   + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
                   + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
                   + "\n9 - See Customer Accounts\n10 - Update Customer Name"
-                  + "\n11 - Update Customer Addressn\n12 - Update Customer Age"
+                  + "\n11 - Update Customer Address\n12 - Update Customer Age"
                   + "\n13 - Update Customer Password\n14 - See Available Message Ids"
-                  + "\n15 - See Specific Message\n16 - Transfer funds\n17 - Exit");
+                  + "\n15 - See Customer Message Ids\n16 - See Specific Message\n17 - Leave Message"
+                  + "\n18 - Transfer funds\n19 - Exit");
               tellerOption = inputReader.readLine();
               // authenticate the current Customer
               if (tellerOption.equals("1")) {
@@ -280,17 +288,23 @@ public class Bank {
                 // update the customer's password
               } else if (tellerOption.equals("13")) {
                 updatePasswordOption(tellerTerminal, inputReader);
-                // view message id's
+                // view message id's the current user can see
               } else if (tellerOption.equals("14")) {
-                viewMessageIds(tellerTerminal);
-                // view a specific message
+                viewUserMessageIds(tellerTerminal);
+                // view message id's the customer can view
               } else if (tellerOption.equals("15")) {
-                viewSpecificMessage(tellerTerminal, inputReader);
-                // transfer funds between 2 accounts
+                viewCustomerMessageIds(tellerTerminal);
+                // view a specific message
               } else if (tellerOption.equals("16")) {
+                viewSpecificMessage(tellerTerminal, inputReader);
+                // leave a message
+              } else if (tellerOption.equals("17")) {
+                leaveMessage(tellerTerminal, inputReader);
+                // transfer funds between 2 accounts
+              } else if (tellerOption.equals("18")) {
                 transferFundsOption(tellerTerminal, inputReader);
               }
-            } while (!tellerOption.equals("17"));
+            } while (!tellerOption.equals("19"));
           } else {
             System.out.println("Teller was not authenticated");
           }          
@@ -354,7 +368,7 @@ public class Bank {
             } else if (customerOption.equals("4")) {
               makeWithdrawalOption(automatedTellerMachine, inputReader);
             } else if (customerOption.equals("5")) {
-              viewMessageIds(automatedTellerMachine);
+              viewCustomerMessageIds(automatedTellerMachine);
               // view a specific message
             } else if (customerOption.equals("6")) {
               viewSpecificMessage(automatedTellerMachine, inputReader);
@@ -764,8 +778,12 @@ public class Bank {
   private static void viewUsersOption(AdminTerminal machine, String type) 
       throws ConnectionFailedException {
     List<User> customers = machine.listUsers(type);
+    int user = 1;
     for (User currCustomer : customers) {
+      System.out.println("User " + String.valueOf(user));
+      System.out.println("--------------");
       System.out.println(currCustomer.toString());
+      user++;
     }
   }
 
@@ -900,12 +918,34 @@ public class Bank {
    * @param machine The machine to check for the message ids.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  private static void viewMessageIds(BankServiceSystems machine) 
+  private static void viewCustomerMessageIds(BankServiceSystems machine) 
       throws ConnectionFailedException {
-    List<Integer> messageIds = machine.getMessageIds();
+    List<Integer> messageIds = machine.getCustomerMessageIds();
     System.out.println("You can view messages with the following ids.");
     String message = "";
     for (Integer id : messageIds) {
+      message += id.toString() + ", ";
+    } 
+    message = message.substring(0, -2);
+    message += '.';
+    System.out.println("");
+  }
+  
+  /**
+   * View message ids that the user can view.
+   * @param machine The machine to check for the message ids.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  private static void viewUserMessageIds(BankWorkerServiceSystems machine) 
+      throws ConnectionFailedException {
+    List<Integer> userMessageIds = machine.getUserMessageIds();
+    List<Integer> customerMessageIds = machine.getCustomerMessageIds();
+    System.out.println("You can view messages with the following ids.");
+    String message = "";
+    for (Integer id : userMessageIds) {
+      message += id.toString() + ", ";
+    } 
+    for (Integer id : customerMessageIds) {
       message += id.toString() + ", ";
     } 
     message = message.substring(0, -2);
@@ -923,8 +963,14 @@ public class Bank {
    */
   private static void viewSpecificMessage(BankServiceSystems machine, BufferedReader inputReader) 
     throws ConnectionFailedException, IOException {
-    List<Integer> messageIds = machine.getMessageIds();
+    List<Integer> customerMessageIds = machine.getCustomerMessageIds();
+    List<Integer> userMessageIds = new ArrayList<Integer>();
     List<Integer> adminMessageIds = new ArrayList<Integer>();
+    // get the message ids the user can view
+    if (machine instanceof BankWorkerServiceSystems) {
+      userMessageIds = ((BankWorkerServiceSystems) machine).getUserMessageIds();
+    }
+    // get the message ids that belong to the current admin
     if (machine instanceof AdminTerminal) {
       adminMessageIds = ((AdminTerminal) machine).getAdminMessageIds();
     }
@@ -934,9 +980,12 @@ public class Bank {
       System.out.print("Invalid ID. Please try again: ");
       id = inputReader.readLine();
     } 
-    if (messageIds.contains(Integer.valueOf(id))) {
+    if (userMessageIds.contains(Integer.valueOf(id)) 
+        || customerMessageIds.contains(Integer.valueOf(id)) 
+        || adminMessageIds.contains(Integer.valueOf(id))) {
       System.out.println(machine.getMessage(Integer.valueOf(id)));
-      if (!adminMessageIds.contains(Integer.valueOf(id))) {
+      // update the message status as long as the an admin is not viewing someone else's message
+      if (!(machine instanceof AdminTerminal) || userMessageIds.contains(Integer.valueOf(id))) {
         machine.updateMessageStatus(Integer.valueOf(id));
       }
 
@@ -945,39 +994,61 @@ public class Bank {
     }
   }
   
-  /**
-   * Initialize all the roles in the Roles Table. Reads from the Roles Enum.
-   * @param connection The connection to the database.
-   */
-  private static void initializeRoleTable(Connection connection) {
-    String roleStr = "";
-    try {
-      for (Roles role : Roles.values()) {
-        roleStr = role.toString();
-        DatabaseInsertHelper.insertRole(roleStr);
+  private static void leaveMessage(BankWorkerServiceSystems machine, BufferedReader inputReader) 
+    throws ConnectionFailedException, IOException {
+    // ask for the id of the account to leave the message for 
+    System.out.print("Input the ID of the account you want to transfer funds to: ");
+    String id = inputReader.readLine();
+    // loop until a valid number is given
+    while (!id.matches("^[0-9]*$") || id.length() == 0) {
+      System.out.print("Invalid ID. Please try again: ");
+      id = inputReader.readLine();
+    }
+    User user = DatabaseSelectHelper.getUserDetails(Integer.valueOf(id));
+    if (user != null) {
+      int messageId = -1;
+      if (machine instanceof TellerTerminal) {
+        if (!(user instanceof Customer)) {
+          System.out.println("You can not leave a message for this teller/admin.");
+        } else {
+          System.out.print("Input the message for the Customer (512 character limit):  ");
+          String message = inputReader.readLine();
+          // loop until the length is valid
+          while (message.length() > 512) {
+            System.out.print("Message is too long! Input the message for the Customer (512 "
+                + "character limit): ");
+            message = inputReader.readLine();
+            messageId = machine.leaveMessage(message, Integer.valueOf(id));
+          }
+        }
+      } else {
+        System.out.print("Input the message for the User (512 character limit):  ");
+        String message = inputReader.readLine();
+        // loop until the length is valid
+        while (message.length() > 512) {
+          System.out.print("Message is too long! Input the message for the User (512 character "
+              + "limit): ");
+          message = inputReader.readLine();
+        }
+        messageId = machine.leaveMessage(message, Integer.valueOf(id));
+      } 
+      if (messageId == -1) {
+        System.out.println("Message was not successfully left.");
+      } else {
+        System.out.println("Message was successfully left with ID: " + String.valueOf(messageId));
       }
-    } catch (Exception e) {
-      e.printStackTrace();
+    } else {
+      System.out.println("The given ID does not belong in the database.");
     }
   }
   
   /**
-   * Initialize all the Account Types in the AccountTypes table. Reads from the AccountTypes Enum.
-   * @param connection The connection to the database.
+   * Transfer funds from your account to another account.
+   * @param machine The machine to transfer funds on.
+   * @param inputReader Used to read input from the user. 
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with input or output.
    */
-  private static void initializeAccountTypes(Connection connection) {
-    String accountTypeStr = "";
-    String interestRate = "0.2";
-    try {
-      for (AccountTypes accountTypes : AccountTypes.values()) {
-        accountTypeStr = accountTypes.toString();
-        DatabaseInsertHelper.insertAccountType(accountTypeStr, new BigDecimal(interestRate));
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
   private static void transferFundsOption(BankServiceSystems machine,
       BufferedReader inputReader) throws ConnectionFailedException, IOException {
     // ask for the id of the account to transfer to
@@ -1042,6 +1113,39 @@ public class Bank {
           System.out.println("Illegal amount given to transfer.");
         }
       }
+    }
+  }
+  
+  /**
+   * Initialize all the roles in the Roles Table. Reads from the Roles Enum.
+   * @param connection The connection to the database.
+   */
+  private static void initializeRoleTable(Connection connection) {
+    String roleStr = "";
+    try {
+      for (Roles role : Roles.values()) {
+        roleStr = role.toString();
+        DatabaseInsertHelper.insertRole(roleStr);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+  
+  /**
+   * Initialize all the Account Types in the AccountTypes table. Reads from the AccountTypes Enum.
+   * @param connection The connection to the database.
+   */
+  private static void initializeAccountTypes(Connection connection) {
+    String accountTypeStr = "";
+    String interestRate = "0.2";
+    try {
+      for (AccountTypes accountTypes : AccountTypes.values()) {
+        accountTypeStr = accountTypes.toString();
+        DatabaseInsertHelper.insertAccountType(accountTypeStr, new BigDecimal(interestRate));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
   

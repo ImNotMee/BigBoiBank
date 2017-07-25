@@ -14,6 +14,7 @@ import com.bank.users.Customer;
 import com.bank.users.User;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public abstract class BankWorkerServiceSystems extends BankServiceSystems {
   
@@ -31,6 +32,7 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
     this.currentCustomerAuthenticated = currentCustomer.authenticate(password);
     if (this.currentCustomerAuthenticated) {
       // print out the details of the customer without the accounts
+      System.out.println("Customer successfully authenticated.");
       this.printCustomerName();
       this.printCustomerAddress();
     }
@@ -139,6 +141,24 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
     this.currentCustomerAuthenticated = false;
   }
   
+  /**
+   * Get the total amount of money in all of the user's accounts.
+   * @return The total amount in all of the user's accounts.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * 
+   */
+  public BigDecimal getTotalBalance(User user) throws ConnectionFailedException {
+  List<Account> userAccounts = this.listCustomerAccounts();
+  BigDecimal totalBalance = BigDecimal.ZERO;
+  if (userAccounts != null) {
+    for (Account currAccount: userAccounts) {     
+      totalBalance.add(currAccount.getBalance());
+    }
+  } else {
+    System.out.println("This Customer has no accounts");
+  }
+   return totalBalance;  
+  }
   
   /**
    * Update the current user's name in the database.
@@ -197,7 +217,7 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
    * @return True if the password was successfully updated.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public boolean updateUserPassword(String password) throws ConnectionFailedException{
+  public boolean updateUserPassword(String password) throws ConnectionFailedException {
     if (this.currentCustomer != null && this.currentCustomerAuthenticated && 
         this.currentUserAuthenticated) {
     return DatabaseUpdateHelper.updateUserPassword(PasswordHelpers.passwordHash(password), 
@@ -205,6 +225,27 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
     } else {
       System.out.println("The current customer is not set or authenticated.");
       return false;
+    }
+  }
+  
+  /**
+   * Get the ids of messages the user can see.
+   * @return The ids of the messages the user can see.
+   */
+  public abstract List<Integer> getUserMessageIds() throws ConnectionFailedException;
+  
+  /**
+   * Leave a new message for a user.
+   * @param message The message for the user.
+   * @param userId The id of the user who the message is for.
+   * @return The id of the message, or -1 if it was unsuccessful.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public int leaveMessage(String message, int userId) throws ConnectionFailedException {
+    if (this.currentCustomer != null && this.currentUserAuthenticated) {
+      return DatabaseInsertHelper.insertMessage(userId, message);
+    } else {
+      return -1;
     }
   }
 }
