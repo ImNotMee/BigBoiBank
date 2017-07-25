@@ -106,14 +106,19 @@ public class AdminTerminal extends BankWorkerServiceSystems {
    */
   public boolean backUpDatabase(String output) {
     try {
+      System.out.println("CREATING BACKUP BEEP BOOP");
       DatabaseBackUp db = new DatabaseBackUp();
+      System.out.println("UPDATING BEEP BOOP");
       db.update();
+      System.out.println("FILE OUTPUT BEEP BOOP");
       FileOutputStream outputStream = new FileOutputStream(output);
+      System.out.println("D");
       ObjectOutputStream serialize = new ObjectOutputStream(outputStream);
+      System.out.println("WRITING BEEP BOOP");
       serialize.writeObject(db);
+      System.out.println("The DatabaseBackUp object has been sucessfully written to " + output);
       serialize.close();
       outputStream.close(); 
-      System.out.println("The DatabaseBackUp object has been sucessfully written to " + output);
       return true;
     } catch (IOException e) {
       e.printStackTrace();

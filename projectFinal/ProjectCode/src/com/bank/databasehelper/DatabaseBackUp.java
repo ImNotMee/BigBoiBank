@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import com.bank.accounts.Account;
 import com.bank.exceptions.ConnectionFailedException;
@@ -69,10 +68,10 @@ public class DatabaseBackUp implements Serializable {
         ArrayList<Integer> messageIds = (ArrayList<Integer>) DatabaseSelectHelper.getMessageIds(currUserId);
         // add all the values to the key
         this.map.put((Integer) currUserId, messageIds);
-        }
         // now that we've entered all the data about the currUser, we can go on to the next user
         currUserId ++;
         currUser = DatabaseSelectHelper.getUserDetails(currUserId);   
+       }
       
       // we have all the data for users but now we need the data for accounts
       int currAccountId = 1;

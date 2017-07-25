@@ -2,6 +2,10 @@ package com.bank.database;
 
 import com.bank.exceptions.ConnectionFailedException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -42,7 +46,16 @@ public class DatabaseDriver {
     return connection;
   }
   
-
+  
+  protected static Connection reInitialize() throws ConnectionFailedException {
+    if (clearDatabase()) {
+      Connection connection = connectOrCreateDataBase();
+      return initialize(connection);
+    } else {   
+      throw new ConnectionFailedException();
+    }
+  }
+  
   /*
    * BELOW THIS POINT ARE PRIVATE METHODS. 
    * DO NOT TOUCH THESE METHODS OR YOUR DATABASE SETUP MAY NOT MATCH WHAT IS BEING GRADED
@@ -97,6 +110,14 @@ public class DatabaseDriver {
           + "FOREIGN KEY(USERID) REFERENCES USER(ID))";
       statement.executeUpdate(sql);
       
+      sql = "CREATE TABLE USERMESSAGES "
+          + "(ID INTEGER PRIMARY KEY NOT NULL,"
+          + "USERID INTEGER NOT NULL,"
+          + "MESSAGE CHAR(512) NOT NULL,"
+          + "VIEWED CHAR(1) NOT NULL,"
+          + "FOREIGN KEY(USERID) REFERENCES USER(ID))";
+      statement.executeUpdate(sql);
+      
       statement.close();
       return true;
       
@@ -106,5 +127,14 @@ public class DatabaseDriver {
     return false;
   }
   
-  
+  private static boolean clearDatabase() {
+    Path path = Paths.get("bank.db");
+    try {
+      Files.deleteIfExists(path);
+      return true;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return false;
+  }
 }

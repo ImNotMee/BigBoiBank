@@ -8,6 +8,7 @@ import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
 import com.bank.generics.AccountTypes;
 import com.bank.generics.Roles;
+import com.bank.generics.RolesEnumMap;
 import com.bank.machines.AdminTerminal;
 import com.bank.machines.AutomatedTellerMachine;
 import com.bank.machines.BankServiceSystems;
@@ -59,18 +60,9 @@ public class Bank {
           initializeAccountTypes(connection);
           // check if argv contains -1
           System.out.println("Database has been initialized.");
-          // find all the roles in the database
-          List<Integer> roleIds = DatabaseSelectHelper.getRoles();
-          // loop through each role until admin is found
-          for (Integer id : roleIds) {
-            System.out.println(Integer.valueOf(id));
-            if (DatabaseSelectHelper.getRole(id).equals("ADMIN")) {
-              // create the admin of the database         
-              DatabaseInsertHelper.insertNewUser("Jayden Arquelada", 18, "1", id, "racecar");
-              System.out.println("Admin added with ID: " + DatabaseSelectHelper.getUserRole(1));
-              break;
-            }
-          }
+          RolesEnumMap map = new RolesEnumMap();
+          DatabaseInsertHelper.insertNewUser("Jayden Arquelada", 18, "1", map.getRoleId("ADMIN"), "racecar");
+          System.out.println("Admin added with ID: 1");
           // catches if the table has already been initialized
         } catch (ConnectionFailedException e) {
           // tell the user it has already been initialized
@@ -125,9 +117,9 @@ public class Bank {
                   + "\n14 - View current Admins\n15 - Promote Teller to Admin"
                   + "\n16 - Update Customer Name\n17 - Update Customer Address"
                   + "\n18 - Update Customer Age\n19 - Update Customer Password"
-                  + "\n20 - See Available Message Ids\21 - See Customer Message Ids"
-                  + "\n22 - See Specific Message\23 - Leave Message\n24 - Transfer funds"
-                  + "\n25 - Exit");
+                  + "\n20 - See Available Message Ids\n21 - See Customer Message Ids"
+                  + "\n22 - See Specific Message\n23 - Leave Message\n24 - Transfer funds"
+                  + "\n25 - backtheFup\n26 - Exit");
               adminOption = inputReader.readLine();
               // authenticate the current Customer
               if (adminOption.equals("1")) {
@@ -198,8 +190,11 @@ public class Bank {
                 // transfer funds between 2 accounts
               } else if (adminOption.equals("24")) {
                 transferFundsOption(adminTerminal, inputReader);
+                // back up the database
+              } else if (adminOption.equals("25")) {
+                backUpDatabase(adminTerminal);
               }
-            } while (!adminOption.equals("25"));
+            } while (!adminOption.equals("256"));
             try {
               connection.close();
             } catch (Exception e) {
@@ -1113,6 +1108,18 @@ public class Bank {
           System.out.println("Illegal amount given to transfer.");
         }
       }
+    }
+  }
+  
+  /**
+   * Serializes the database and saves the ser file in w/e mangz.
+   * @param machine the admin terminal.
+   */
+  private static void backUpDatabase(AdminTerminal machine) {
+    if (machine.backUpDatabase("/home/ricky/koolaid.ser")) {
+      System.out.println("Kill all hoomans");
+    } else {
+      System.out.println("Dont kill all hoomans");
     }
   }
   
