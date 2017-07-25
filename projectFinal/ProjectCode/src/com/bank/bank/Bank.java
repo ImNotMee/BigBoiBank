@@ -131,7 +131,7 @@ public class Bank {
               } else if (adminOption.equals("3")) {
                 makeAccountOption(adminTerminal, inputReader);
                 // give interest to the an account
-              } else if (adminTerminal.equals("4")) {
+              } else if (adminOption.equals("4")) {
                 giveInterestOption(adminTerminal, inputReader);
                 // make a deposit to the current Customer
               } else if (adminOption.equals("5")) {
@@ -992,7 +992,7 @@ public class Bank {
   private static void leaveMessage(BankWorkerServiceSystems machine, BufferedReader inputReader) 
     throws ConnectionFailedException, IOException {
     // ask for the id of the account to leave the message for 
-    System.out.print("Input the ID of the account you want to transfer funds to: ");
+    System.out.print("Input the ID of the user you want to leave the message for: ");
     String id = inputReader.readLine();
     // loop until a valid number is given
     while (!id.matches("^[0-9]*$") || id.length() == 0) {
