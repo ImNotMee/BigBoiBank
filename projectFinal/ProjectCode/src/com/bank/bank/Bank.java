@@ -967,5 +967,72 @@ public class Bank {
       e.printStackTrace();
     }
   }
+
+  private static void transferFundsOption(BankWorkerServiceSystems machine,
+      BufferedReader inputReader) throws ConnectionFailedException, IOException {
+    // ask for the id of the account to transfer to
+    System.out.print("Input the ID of the account you want to transfer funds to: ");
+    String destinationId = inputReader.readLine();
+    // loop until a valid number is given
+    while (!destinationId.matches("^[0-9]*$") || destinationId.length() == 0) {
+      System.out.print("Invalid ID. Please try again: ");
+      destinationId = inputReader.readLine();
+    }
+    // loop until a valid transfer amount is given
+    boolean validWithdrawl = false;
+    String transferAmount = "";
+    while (!validWithdrawl) {
+      // ask for the amount to transfer
+      System.out.print(
+          "Input the amount to transfer to this account " + "(must have two decimal places): ");
+      transferAmount = inputReader.readLine();
+      try {
+        new BigDecimal(transferAmount);
+        validWithdrawl = true;
+      } catch (NumberFormatException e) {
+        System.out.println("Transfer amount is invalid.");
+      }
+    }
+    // ask for the account id to transfer from
+    System.out.print("Input the ID of the Account you would like to transfer from: ");
+    String sourceId = inputReader.readLine();
+    // loop until a valid number is given
+    while (!sourceId.matches("^[0-9]*$") || sourceId.length() == 0) {
+      System.out.print("Invalid ID. Please try again: ");
+      sourceId = inputReader.readLine();
+    }
+    // check if the withdrawal was successful from source account
+    boolean success = false;
+    try {
+      success = machine.makeWithdrawal(new BigDecimal(transferAmount), Integer.valueOf(sourceId));
+    } catch (IllegalAmountException e) {
+      System.out.println("Illegal amount given to transfer.");
+    } catch (InsufficientFundsException e) {
+      System.out.println("You do not have enough money to transfer this amount.");
+    }
+    // try to deposit to the given destination account
+    boolean transferSuccess = false;
+    if (success) {
+      try {
+        transferSuccess =
+            machine.makeDeposit(new BigDecimal(transferAmount), Integer.valueOf(destinationId));
+      } catch (IllegalAmountException e) {
+        System.out.println("Illegal amount given to transfer.");
+      }
+      if (transferSuccess) {
+        System.out.println("Transfer of " + transferAmount.toString() + " was successful. New "
+            + "balance: " + machine.checkBalance(Integer.valueOf(sourceId)).toString());
+      // deposit the amount withdrawn back to source account if transfer fails
+      } else {
+        System.out.println("Transfer failed, account specified might not exist!");
+        try {
+          transferSuccess =
+              machine.makeDeposit(new BigDecimal(transferAmount), Integer.valueOf(sourceId));
+        } catch (IllegalAmountException e) {
+          System.out.println("Illegal amount given to transfer.");
+        }
+      }
+    }
+  }
   
 }
