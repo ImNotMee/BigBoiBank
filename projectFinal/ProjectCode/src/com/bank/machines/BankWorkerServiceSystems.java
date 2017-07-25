@@ -123,6 +123,8 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
         } else if (accountVar instanceof TaxFreeSavingsAccount) {
           ((TaxFreeSavingsAccount) accountVar).addInterest();
         }
+        int userId = DatabaseSelectHelper.getUserFromAccount(account);
+        DatabaseInsertHelper.insertMessage(userId, "Interest has been added you your account");
         return true;
       } else {
         System.out.println("The Customer does not have access to this account.");      
