@@ -541,7 +541,7 @@ public class DatabaseSelectHelper extends DatabaseSelector {
       User user = getUserDetails(currId);
       while (user != null) {
         userId = user.getId();
-        List<Integer> accounts = getAccountIds(accountId);
+        List<Integer> accounts = getAccountIds(userId);
         // if we find that this user owns this account then return the id of the user we found
         if (accounts.contains(accountId)){
           return userId;
