@@ -27,8 +27,8 @@ public class DatabaseInsertHelper extends DatabaseInserter {
     // gets the the id's of the types of accounts in the database
     List<Integer> accountTypeIds = DatabaseSelectHelper.getAccountTypesIds();
     // ensure the name, balance, and typeId are valid
-    if (name != null && name.length() > 0 && balance != null 
-        && balance.compareTo(BigDecimal.ZERO) >= 0 && accountTypeIds.contains((Integer) typeId)) {
+    if (name != null && name.length() > 0 && balance != null
+        && accountTypeIds.contains((Integer) typeId)) {
       // set the balance to have two decimal places
       balance = balance.setScale(2, BigDecimal.ROUND_HALF_UP);
       // Connect to the database

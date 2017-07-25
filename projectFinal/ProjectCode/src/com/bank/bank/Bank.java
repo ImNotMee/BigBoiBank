@@ -7,6 +7,7 @@ import com.bank.exceptions.ConnectionFailedException;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
 import com.bank.generics.AccountTypes;
+import com.bank.generics.AccountTypesEnumMap;
 import com.bank.generics.Roles;
 import com.bank.generics.RolesEnumMap;
 import com.bank.machines.AdminTerminal;
@@ -614,21 +615,6 @@ public class Bank {
     System.out.print("Input the name of the Account: ");
     String name;
     name = inputReader.readLine();
-    // loop until a valid balance is given
-    boolean validBalance = false;
-    String balance = "";
-    while (!validBalance) {
-      // ask for the balance of the account
-      System.out.print("Input the balance of the Account (must have two decimal "
-          + "places): ");
-      balance = inputReader.readLine();
-      try {
-        new BigDecimal(balance);
-        validBalance = true;
-      } catch (NumberFormatException e) {
-        System.out.println("Balance is invalid.");
-      }
-    }
     // get the Account Id's
     List<Integer> accountIds = DatabaseSelectHelper.getAccountTypesIds();
     // ask which account they would like to make
@@ -644,6 +630,42 @@ public class Bank {
       System.out.print("Invalid value for Account Type, try again: ");
       typeId = inputReader.readLine();
     }
+    String balance = "";
+    AccountTypesEnumMap map = new AccountTypesEnumMap();
+    if (String.valueOf(map.getAccountId("BALANCEOWING")).equals(typeId)) {
+      // loop until a valid balance is given
+      boolean validBalance = false;
+      while (!validBalance) {
+        // ask for the balance of the account, must be negative
+        System.out.print("Input the balance of the Account (must have two decimal "
+            + "places and be negative): ");
+        balance = inputReader.readLine();
+        try {
+          BigDecimal amount = new BigDecimal(balance);
+          if (amount.signum() == -1) {
+            validBalance = true;
+          }
+        } catch (NumberFormatException e) {
+          System.out.println("Balance is invalid.");
+        }
+      }
+    } else {
+      // loop until a valid balance is given
+      boolean validBalance = false;
+      while (!validBalance) {
+        // ask for the balance of the account
+        System.out.print("Input the balance of the Account (must have two decimal "
+            + "places): ");
+        balance = inputReader.readLine();
+        try {
+          new BigDecimal(balance);
+          validBalance = true;
+        } catch (NumberFormatException e) {
+          System.out.println("Balance is invalid.");
+        }
+      }
+    } 
+   
     // ensure customer and teller are authenticated
     if (machine.makeNewAccount(name, new BigDecimal(balance), 
          Integer.valueOf(typeId))) {
@@ -674,8 +696,15 @@ public class Bank {
       System.out.print("Invalid ID. Please try again: ");
       accountId = inputReader.readLine();
     }
-    // try to give interest 
-    machine.giveInterest(Integer.valueOf(accountId));
+      // try to give interest 
+      boolean success = machine.giveInterest(Integer.valueOf(accountId));
+      if (success) {
+        System.out.println("Interest Added. New balance: " 
+      + machine.checkBalance(Integer.valueOf(accountId)).toString());
+      } else {
+        System.out.println("Interest was not added.");
+      }
+    
   }
   
   /**
