@@ -1,11 +1,13 @@
 package com.bank.machines;
 
 import com.bank.accounts.Account;
+import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.ConnectionFailedException;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
+import com.bank.generics.AccountTypesEnumMap;
 import com.bank.users.User;
 
 import java.math.BigDecimal;
@@ -119,6 +121,10 @@ public abstract class BankServiceSystems {
    */
   public boolean makeWithdrawal(BigDecimal amount, int accountId) throws ConnectionFailedException, 
         IllegalAmountException, InsufficientFundsException {
+    // savings account id
+    AccountTypesEnumMap map = new AccountTypesEnumMap();
+    int savingsId = map.getAccountId("SAVING");
+    BigDecimal checker = new BigDecimal(1000);
     // check if the user is authenticated
     if (!this.currentCustomerAuthenticated) {
       System.out.println("The customer is not authenticated.");
@@ -136,6 +142,17 @@ public abstract class BankServiceSystems {
         < 0) {
       throw new InsufficientFundsException("You do not have enough funds to withdraw that amount.");
     } else {
+      boolean rightAccount = (DatabaseSelectHelper.getAccountDetails(accountId).getType() == savingsId);
+      boolean rightMoney = (DatabaseSelectHelper.getBalance(accountId).subtract(amount).compareTo(checker) < 0);
+      // changes from savings --> chequing under certain conditions
+      if (rightAccount && rightMoney) {
+        // this means the account will have less than 1000 dollars and it will be turned to a chequing account
+        DatabaseUpdateHelper.updateAccountType(map.getAccountId("CHEQUING"), accountId);
+        // give the user who owns the account a message
+        int userId = DatabaseSelectHelper.getUserFromAccount(accountId);
+        DatabaseInsertHelper.insertMessage(userId, 
+            "Your account has been changed from a SAVING account to a CHEQUING account due to low funds");
+      }
       return DatabaseUpdateHelper.updateAccountBalance(
           DatabaseSelectHelper.getBalance(accountId).subtract(amount), accountId);
     }

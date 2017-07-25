@@ -525,4 +525,34 @@ public class DatabaseSelectHelper extends DatabaseSelector {
     }
     return message;
   }
+  
+  /**
+   * Gets the user who owns the account given.
+   * @param accountId the account of the user we want to find.
+   * @return -1 if we could not find it, else we return the userId who owns this account.
+   */
+  public static int getUserFromAccount(int accountId) {
+    if (accountId < 1) {
+      return -1;
+    }
+    try {
+      int userId = -1;
+      int currId = 1;
+      User user = getUserDetails(currId);
+      while (user != null) {
+        userId = user.getId();
+        List<Integer> accounts = getAccountIds(accountId);
+        // if we find that this user owns this account then return the id of the user we found
+        if (accounts.contains(accountId)){
+          return userId;
+        }
+        // increment to continue to the next user
+        currId ++;
+        user = getUserDetails(currId);
+      }
+    } catch (ConnectionFailedException e) {
+      return -1;
+    }
+    return -1;
+  }
  }
