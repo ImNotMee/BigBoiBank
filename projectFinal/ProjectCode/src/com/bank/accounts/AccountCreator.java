@@ -24,6 +24,8 @@ public abstract class AccountCreator {
       return new TaxFreeSavingsAccount(id, name, balance);
     } else if (type.equals("BALANCEOWING")){
       return new BalanceOwingAccount(id, name, balance);
+    } else if (type.equals("RESTRICTEDSAVING")) {
+      return new RestrictedSavingsAccount(id, name, balance);
     } else {
       return null;
     }

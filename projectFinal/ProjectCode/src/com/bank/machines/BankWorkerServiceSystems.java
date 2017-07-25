@@ -1,9 +1,6 @@
 package com.bank.machines;
 
 import com.bank.accounts.Account;
-import com.bank.accounts.ChequingAccount;
-import com.bank.accounts.SavingsAccount;
-import com.bank.accounts.TaxFreeSavingsAccount;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
@@ -116,12 +113,8 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
         // create an account from the given id
         Account accountVar = DatabaseSelectHelper.getAccountDetails(account);
         // check what type accountVar is and add interest to the account
-        if (accountVar instanceof ChequingAccount) {
-          ((ChequingAccount) accountVar).addInterest();
-        } else if (accountVar instanceof SavingsAccount) {
-          ((SavingsAccount) accountVar).addInterest();
-        } else if (accountVar instanceof TaxFreeSavingsAccount) {
-          ((TaxFreeSavingsAccount) accountVar).addInterest();
+        if (accountVar != null) {
+          accountVar.addInterest();
         }
         int userId = DatabaseSelectHelper.getUserFromAccount(account);
         DatabaseInsertHelper.insertMessage(userId, "Interest has been added you your account");
@@ -155,7 +148,7 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
     BigDecimal totalBalance = BigDecimal.ZERO;
     if (userAccounts != null) {
       for (Account currAccount: userAccounts) {     
-        totalBalance.add(currAccount.getBalance());
+        totalBalance = totalBalance.add(currAccount.getBalance());
       }
     } else {
       System.out.println("This Customer has no accounts");

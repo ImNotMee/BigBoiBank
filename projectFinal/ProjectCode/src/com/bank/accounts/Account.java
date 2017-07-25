@@ -13,6 +13,8 @@ public abstract class Account {
   private BigDecimal balance = null;
   private int type = -1;
   protected AccountTypesEnumMap enumMap = new AccountTypesEnumMap();
+  private BigDecimal interestRate = BigDecimal.ZERO;
+
   
   /**
    * Get the id of the Account.
@@ -75,7 +77,7 @@ public abstract class Account {
       // only set the balance in the account
       this.balance = balance;
       // ensures that the balance to be set is non negative
-    } else if (balance.compareTo(BigDecimal.ZERO) > 0 && balance != null) {
+    } else if (balance != null) {
       this.balance = balance.setScale(2, BigDecimal.ROUND_HALF_UP);
       // set the balance of the account in the database
       DatabaseUpdateHelper.updateAccountBalance(balance.setScale(2, BigDecimal.ROUND_HALF_UP), 
@@ -93,6 +95,30 @@ public abstract class Account {
   
   public void setType(int accountType) {
     this.type = accountType;
+  }
+  
+  /**
+   * Finds the interestRate of the Account from the database, and set it if the Account exists in 
+   * the database. Otherwise the interest Rate will not be set.
+   * @throws ConnectionFailedException If connection can not be made to the database.
+   */
+  public void findAndSetInterestRate() throws ConnectionFailedException {
+    // tries to set the interest rate of the ChequingAccount
+    this.interestRate = DatabaseSelectHelper.getInterestRate(this.getType());
+  }
+  
+  /**
+   * Add money to the balance of the account, based on the interest of the account. 
+   * @throws ConnectionFailedException If connection can not be made to the database.
+   */
+  public void addInterest() throws ConnectionFailedException {
+    // ensures most recent interest rate is being used
+    this.findAndSetInterestRate();
+    // find the amount of money to be added to the balance
+    BigDecimal toAdd = this.getBalance().multiply(interestRate);
+    BigDecimal newBalance = this.getBalance().add(toAdd);
+    // add the amount of money to the balance
+    this.setBalance(newBalance);
   }
   
   /**
