@@ -30,9 +30,10 @@ import java.util.List;
 
 
 public class Bank {
-  
+
   /**
    * Runs the bank.
+   * 
    * @param argv Used to tell if initialize mode or a terminal.
    */
   public static void main(String[] argv) {
@@ -50,7 +51,7 @@ public class Bank {
       } else {
         mode = "user";
       }
-      if (mode.equals("initialize")) {        
+      if (mode.equals("initialize")) {
         // try to see if the first account is an admin
         try {
           // initialize an empty database
@@ -62,27 +63,28 @@ public class Bank {
           // check if argv contains -1
           System.out.println("Database has been initialized.");
           RolesEnumMap map = new RolesEnumMap();
-          DatabaseInsertHelper.insertNewUser("Jayden Arquelada", 18, "1", map.getRoleId("ADMIN"), "racecar");
+          DatabaseInsertHelper.insertNewUser("Jayden Arquelada", 18, "1", map.getRoleId("ADMIN"),
+              "racecar");
           System.out.println("Admin added with ID: 1");
           // catches if the table has already been initialized
         } catch (ConnectionFailedException e) {
           // tell the user it has already been initialized
           System.out.println("This database already has already been initialized.");
         }
-      } 
+      }
       // create a context menu where the User can interact through an Admin, Teller or ATM interface
       do {
         System.out.println("Please input the number of the interface you would like to interact "
             + "through and press enter:");
         System.out.println("1 - Admin Terminal\n2 - Teller Terminal\n3 - AutomatedTellerMachine "
             + "(ATM)\n0 - Exit ");
-        
+
         currentInput = inputReader.readLine();
         if (currentInput.equals("1")) {
           System.out.print("You are in admin mode, please enter your admin ID: ");
           String adminId = inputReader.readLine();
           // loop until a valid Id is given
-          while (!adminId.matches("^[0-9]*$")  || adminId.length() == 0) {
+          while (!adminId.matches("^[0-9]*$") || adminId.length() == 0) {
             System.out.print("Invalid ID. Please try again: ");
             adminId = inputReader.readLine();
           }
@@ -91,8 +93,9 @@ public class Bank {
           // variable to hold whether the Teller Terminal can be accessed
           boolean access = false;
           // ensure the id is valid
-          if (DatabaseSelectHelper.getRole(DatabaseSelectHelper.getUserRole(
-              Integer.valueOf(adminId))).equals("ADMIN")) {
+          if (DatabaseSelectHelper
+              .getRole(DatabaseSelectHelper.getUserRole(Integer.valueOf(adminId)))
+              .equals("ADMIN")) {
             // check that the password is correct
             Admin admin = (Admin) DatabaseSelectHelper.getUserDetails(Integer.valueOf(adminId));
             access = admin.authenticate(adminPassword);
@@ -100,16 +103,16 @@ public class Bank {
             System.out.println("ID does not belong to an Admin.");
           }
           if (access) {
-            AdminTerminal adminTerminal = new AdminTerminal(Integer.valueOf(adminId), 
-                adminPassword);
+            AdminTerminal adminTerminal =
+                new AdminTerminal(Integer.valueOf(adminId), adminPassword);
             String adminOption;
             System.out.println("Please input the number of what you would like to do and press "
                 + "enter (Options 3 - 7 are available only if the current Customer is set and "
                 + "authenticated): ");
             do {
               // ask what the admin would like to do
-              System.out.println("Please input the number of what you would like to do and press "
-                  + "enter"); 
+              System.out.println(
+                  "Please input the number of what you would like to do and press " + "enter");
               System.out.println("1 - Set and authenticate new Customer\n2 - Make new Customer"
                   + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
                   + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
@@ -210,14 +213,14 @@ public class Bank {
               System.out.println("Looks like it was closed already :)");
             }
           }
-          
+
           // prompt the user for their id and password, as a Teller
         } else if (currentInput.equals("2")) {
           System.out.println("TELLER TERMINAL");
           System.out.print("Please enter your Teller ID: ");
           String tellerId = inputReader.readLine();
           // loop until a valid Id is given
-          while (!tellerId.matches("^[0-9]*$")  || tellerId.length() == 0) {
+          while (!tellerId.matches("^[0-9]*$") || tellerId.length() == 0) {
             System.out.print("Invalid ID. Please try again: ");
             tellerId = inputReader.readLine();
           }
@@ -226,8 +229,9 @@ public class Bank {
           // variable to hold whether the Teller Terminal can be accessed
           boolean access = false;
           // ensure the id is valid
-          if (DatabaseSelectHelper.getRole(DatabaseSelectHelper.getUserRole(
-              Integer.valueOf(tellerId))).equals("TELLER")) {
+          if (DatabaseSelectHelper
+              .getRole(DatabaseSelectHelper.getUserRole(Integer.valueOf(tellerId)))
+              .equals("TELLER")) {
             // check that the password is correct
             Teller teller = (Teller) DatabaseSelectHelper.getUserDetails(Integer.valueOf(tellerId));
             access = teller.authenticate(tellerPassword);
@@ -237,8 +241,8 @@ public class Bank {
           // give them the Teller Terminal Interface if they are authenticated
           if (access) {
             // Create a Teller Terminal
-            TellerTerminal tellerTerminal = new TellerTerminal(Integer.valueOf(tellerId), 
-                tellerPassword);
+            TellerTerminal tellerTerminal =
+                new TellerTerminal(Integer.valueOf(tellerId), tellerPassword);
             String tellerOption;
             System.out.println("Please input the number of what you would like to do and press "
                 + "enter (Options 3 - 7 are available only if the current Customer is set and "
@@ -273,11 +277,11 @@ public class Bank {
                 makeWithdrawalOption(tellerTerminal, inputReader);
                 // check the balance of the current Customer
               } else if (tellerOption.equals("7")) {
-                checkBalanceOption(tellerTerminal, inputReader);                
+                checkBalanceOption(tellerTerminal, inputReader);
                 // close the current Customer session
               } else if (tellerOption.equals("8")) {
                 closeCustomerSessionOption(tellerTerminal);
-                //list the accounts of the customer
+                // list the accounts of the customer
               } else if (tellerOption.equals("9")) {
                 listCustomerAccountsOption(tellerTerminal);
                 // update the customer's name
@@ -311,7 +315,7 @@ public class Bank {
             } while (!tellerOption.equals("19"));
           } else {
             System.out.println("Teller was not authenticated");
-          }          
+          }
         } else if (currentInput.equals("3")) {
           System.out.println("AUTOMATED TELLER MACHINE");
           // variable to see if the Customer is authenticated
@@ -321,69 +325,70 @@ public class Bank {
           // holds the customer password
           String customerPassword;
           // loop until the Customer is authenticated
-          do {
-            System.out.print("Please enter your Customer ID: ");
+          System.out.print("Please enter your Customer ID: ");
+          customerId = inputReader.readLine();
+          // loop until a valid Id is given
+          while (!customerId.matches("^[0-9]*$") || customerId.length() == 0) {
+            System.out.print("Invalid ID. Please try again: ");
             customerId = inputReader.readLine();
-            // loop until a valid Id is given
-            while (!customerId.matches("^[0-9]*$") || customerId.length() == 0) {
-              System.out.print("Invalid ID. Please try again: ");
-              customerId = inputReader.readLine();
-            }
-            System.out.print("Please enter your Customer password: ");
-            customerPassword = inputReader.readLine();
-            // ensure the id is valid
-            if (DatabaseSelectHelper.getRole(DatabaseSelectHelper.getUserRole(
-                Integer.valueOf(customerId))).equals("CUSTOMER")) {
-              // check that the password is correct
-              Customer customer = (Customer) DatabaseSelectHelper.getUserDetails(
-                  Integer.valueOf(customerId));
-              authenticated = customer.authenticate(customerPassword);
-            }
-            if (!DatabaseSelectHelper.getRole(DatabaseSelectHelper.getUserRole(
-                Integer.valueOf(customerId))).equals("CUSTOMER")) {
-              System.out.println("That is not the ID of a customer.");
-            } else if (!authenticated) {
-              System.out.println("Customer ID or password is wrong.");
-            }
-          } while (!authenticated);
-          
-          String customerOption;
-          // Create an ATM
-          AutomatedTellerMachine automatedTellerMachine = new AutomatedTellerMachine(
-              Integer.valueOf(customerId), customerPassword);
-          System.out.println("Please input the number of what you would like to do and press "
-              + "enter: ");
-          // see what the user wants to do
-          do {
-            System.out.println("1 - List Accounts and Balances\n2 - Make a deposit"
-                + "\n3 - Check balance\n4 - Make a withdrawal\n5 - See available message Ids"
-                + "\n6 - See specific message\n7 - Transfer funds\n8 - Exit");
-            customerOption = inputReader.readLine();
-            // list accounts and balances
-            if (customerOption.equals("1")) {
-              listCustomerAccountsOption(automatedTellerMachine); 
-              // make a deposit
-            } else if (customerOption.equals("2")) {
-              makeDepositOption(automatedTellerMachine, inputReader);
-              // check balance
-            } else if (customerOption.equals("3")) {
-              checkBalanceOption(automatedTellerMachine, inputReader);                
-              // make a withdrawal
-            } else if (customerOption.equals("4")) {
-              makeWithdrawalOption(automatedTellerMachine, inputReader);
-            } else if (customerOption.equals("5")) {
-              viewCustomerMessageIds(automatedTellerMachine);
-              // view a specific message
-            } else if (customerOption.equals("6")) {
-              viewSpecificMessage(automatedTellerMachine, inputReader);
-              // transfer funds between 2 accounts
-            } else if (customerOption.equals("7")) {
-              transferFundsOption(automatedTellerMachine, inputReader);
-            }
-          } while (!customerOption.equals("8"));
-        }   
+          }
+          System.out.print("Please enter your Customer password: ");
+          customerPassword = inputReader.readLine();
+          // ensure the id is valid
+          if (DatabaseSelectHelper
+              .getRole(DatabaseSelectHelper.getUserRole(Integer.valueOf(customerId)))
+              .equals("CUSTOMER")) {
+            // check that the password is correct
+            Customer customer =
+                (Customer) DatabaseSelectHelper.getUserDetails(Integer.valueOf(customerId));
+            authenticated = customer.authenticate(customerPassword);
+          }
+          if (!DatabaseSelectHelper
+              .getRole(DatabaseSelectHelper.getUserRole(Integer.valueOf(customerId)))
+              .equals("CUSTOMER")) {
+            System.out.println("That is not the ID of a customer.");
+          } else if (!authenticated) {
+            System.out.println("Customer ID or password is wrong.");
+          }
+          if (authenticated) {
+            String customerOption;
+            // Create an ATM
+            AutomatedTellerMachine automatedTellerMachine =
+                new AutomatedTellerMachine(Integer.valueOf(customerId), customerPassword);
+            System.out.println(
+                "Please input the number of what you would like to do and press " + "enter: ");
+            // see what the user wants to do
+            do {
+              System.out.println("1 - List Accounts and Balances\n2 - Make a deposit"
+                  + "\n3 - Check balance\n4 - Make a withdrawal\n5 - See available message Ids"
+                  + "\n6 - See specific message\n7 - Transfer funds\n8 - Exit");
+              customerOption = inputReader.readLine();
+              // list accounts and balances
+              if (customerOption.equals("1")) {
+                listCustomerAccountsOption(automatedTellerMachine);
+                // make a deposit
+              } else if (customerOption.equals("2")) {
+                makeDepositOption(automatedTellerMachine, inputReader);
+                // check balance
+              } else if (customerOption.equals("3")) {
+                checkBalanceOption(automatedTellerMachine, inputReader);
+                // make a withdrawal
+              } else if (customerOption.equals("4")) {
+                makeWithdrawalOption(automatedTellerMachine, inputReader);
+              } else if (customerOption.equals("5")) {
+                viewCustomerMessageIds(automatedTellerMachine);
+                // view a specific message
+              } else if (customerOption.equals("6")) {
+                viewSpecificMessage(automatedTellerMachine, inputReader);
+                // transfer funds between 2 accounts
+              } else if (customerOption.equals("7")) {
+                transferFundsOption(automatedTellerMachine, inputReader);
+              }
+            } while (!customerOption.equals("8"));
+          }
+        }
       } while (!currentInput.equals("0"));
-      
+
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -394,29 +399,31 @@ public class Bank {
       }
     }
   }
-  
+
   /**
    * See the Accounts of the current Customer.
+   * 
    * @param machine The bank machine to get the accounts from.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  private static void listCustomerAccountsOption(BankServiceSystems machine) 
+  private static void listCustomerAccountsOption(BankServiceSystems machine)
       throws ConnectionFailedException {
     // get the accounts for the current Customer
     List<Account> accounts = machine.listCustomerAccounts();
     if (accounts != null) {
       machine.printCustomerAccounts();
-    }           
+    }
   }
-  
+
   /**
    * Deposit money to an account for the current Customer.
+   * 
    * @param machine The bank machine to deposit money to
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If input or output error occurs
    */
-  private static void makeDepositOption(BankServiceSystems machine, BufferedReader inputReader) 
+  private static void makeDepositOption(BankServiceSystems machine, BufferedReader inputReader)
       throws ConnectionFailedException, IOException {
     // loop until a valid deposit is given
     boolean validDeposit = false;
@@ -443,29 +450,28 @@ public class Bank {
     // check if the deposit was successful
     boolean success = false;
     try {
-      success = machine.makeDeposit(new BigDecimal(deposit), 
-          Integer.valueOf(accountId));
+      success = machine.makeDeposit(new BigDecimal(deposit), Integer.valueOf(accountId));
     } catch (IllegalAmountException e) {
       System.out.println("Illegal amount to deposit.");
     }
     if (success) {
-      System.out.println("Deposit of " + deposit.toString() + " was successful. New "
-          + "balance: " + machine.checkBalance(Integer.valueOf(accountId)).toString());
+      System.out.println("Deposit of " + deposit.toString() + " was successful. New " + "balance: "
+          + machine.checkBalance(Integer.valueOf(accountId)).toString());
     }
   }
-  
+
   /**
    * Check the balance of an account for the current Customer.
+   * 
    * @param machine The bank machine to check the balance from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If there is an error with input or output
    */
-  private static void checkBalanceOption(BankServiceSystems machine, BufferedReader inputReader) 
+  private static void checkBalanceOption(BankServiceSystems machine, BufferedReader inputReader)
       throws ConnectionFailedException, IOException {
     // ask for the account id of the current customer
-    System.out.print("Input the ID of the Account you would like to check the balance "
-        + "for: ");
+    System.out.print("Input the ID of the Account you would like to check the balance " + "for: ");
     String accountId = inputReader.readLine();
     // loop until a valid number is given
     while (!accountId.matches("^[0-9]*$") || accountId.length() == 0) {
@@ -473,19 +479,20 @@ public class Bank {
       accountId = inputReader.readLine();
     }
     if (machine.checkBalance(Integer.valueOf(accountId)) != null) {
-      System.out.println("This account has " 
-          + machine.checkBalance(Integer.valueOf(accountId)).toString());
-    }             
+      System.out.println(
+          "This account has " + machine.checkBalance(Integer.valueOf(accountId)).toString());
+    }
   }
-  
+
   /**
    * Make a withdrawal from an account for the current Customer.
+   * 
    * @param machine The bank machine to withdraw from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If there is an error with input or output
    */
-  private static void makeWithdrawalOption(BankServiceSystems machine, BufferedReader inputReader) 
+  private static void makeWithdrawalOption(BankServiceSystems machine, BufferedReader inputReader)
       throws IOException, ConnectionFailedException {
     // loop until a valid withdrawal amount is given
     boolean validWithdrawl = false;
@@ -512,34 +519,33 @@ public class Bank {
     // check if the withdrawal was successful
     boolean success = false;
     try {
-      success = machine.makeWithdrawal(new BigDecimal(withdrawal), 
-          Integer.valueOf(accountId));
+      success = machine.makeWithdrawal(new BigDecimal(withdrawal), Integer.valueOf(accountId));
     } catch (IllegalAmountException e) {
       System.out.println("Illegal amount given to withdraw.");
     } catch (InsufficientFundsException e) {
       System.out.println("You do not have enough money to withdraw this amount.");
     }
     if (success) {
-      System.out.println("The withdrawal of " + withdrawal + " was successful. New "
-          + "balance: " 
+      System.out.println("The withdrawal of " + withdrawal + " was successful. New " + "balance: "
           + machine.checkBalance(Integer.valueOf(accountId)).toString());
     }
   }
-  
+
   /**
    * Set and authenticate the current Customer.
+   * 
    * @param machine The bank machine to set and authenticate the Customer from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If there is an error with input or output
    */
-  private static void setAndAuthenticateCustomerOption(BankWorkerServiceSystems machine, 
+  private static void setAndAuthenticateCustomerOption(BankWorkerServiceSystems machine,
       BufferedReader inputReader) throws ConnectionFailedException, IOException {
     // ask for the customer id
     System.out.print("Input the ID of the customer you would like to load: ");
     String customerId = inputReader.readLine();
     // loop until a valid number is given
-    while (!customerId.matches("^[0-9]*$")  || customerId.length() == 0) {
+    while (!customerId.matches("^[0-9]*$") || customerId.length() == 0) {
       System.out.print("Invalid ID. Please try again: ");
       customerId = inputReader.readLine();
     }
@@ -557,15 +563,16 @@ public class Bank {
       System.out.println("The given ID does not belong to a customer");
     }
   }
-  
+
   /**
    * Make a new Customer.
+   * 
    * @param machine The bank machine to make a Customer from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If there is an error with input or output
    */
-  private static void makeCustomerOption(BankWorkerServiceSystems machine, 
+  private static void makeCustomerOption(BankWorkerServiceSystems machine,
       BufferedReader inputReader) throws ConnectionFailedException, IOException {
     // ask for the name of the new Customer
     System.out.print("Input the name of the Customer: ");
@@ -575,7 +582,7 @@ public class Bank {
     System.out.print("Input the age of the Customer: ");
     String customerAge = inputReader.readLine();
     // loop until a valid number is given
-    while (!customerAge.matches("^[0-9]*$") || customerAge.length() == 0 
+    while (!customerAge.matches("^[0-9]*$") || customerAge.length() == 0
         || Integer.valueOf(customerAge) == 0) {
       System.out.print("Invalid age. Please try again: ");
       customerAge = inputReader.readLine();
@@ -585,31 +592,32 @@ public class Bank {
     String customerAddress = inputReader.readLine();
     // loop until the length is valid
     while (customerAddress.length() > 100) {
-      System.out.print("Address is too long! Input the address of the Customer (100 "
-          + "character limit): ");
+      System.out.print(
+          "Address is too long! Input the address of the Customer (100 " + "character limit): ");
       customerAddress = inputReader.readLine();
     }
     // ask for the password of the Customer
     System.out.print("Input the password of the Customer: ");
     String password = inputReader.readLine();
     // input the Customer into the database
-    int id = machine.makeNewCustomer(customerName, Integer.valueOf(customerAge), 
-        customerAddress, password);
+    int id = machine.makeNewCustomer(customerName, Integer.valueOf(customerAge), customerAddress,
+        password);
     if (id != -1) {
       System.out.println("Customer was successfully added with ID " + String.valueOf(id));
     } else {
       System.out.println("Customer was not successfully added.");
     }
   }
-  
+
   /**
    * Make a new account for the current Customer.
+   * 
    * @param machine The bank machine to make an Account from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If there is an error with input or output
    */
-  private static void makeAccountOption(BankWorkerServiceSystems machine, 
+  private static void makeAccountOption(BankWorkerServiceSystems machine,
       BufferedReader inputReader) throws ConnectionFailedException, IOException {
     // ask for the name of the Account
     System.out.print("Input the name of the Account: ");
@@ -625,7 +633,7 @@ public class Bank {
     // variable to find what kind of account the User wants
     String typeId;
     typeId = inputReader.readLine();
-    while (!(typeId.matches("^[0-9]*$") || typeId.length() == 0) 
+    while (!(typeId.matches("^[0-9]*$") || typeId.length() == 0)
         || !accountIds.contains(Integer.valueOf(typeId))) {
       System.out.print("Invalid value for Account Type, try again: ");
       typeId = inputReader.readLine();
@@ -654,8 +662,7 @@ public class Bank {
       boolean validBalance = false;
       while (!validBalance) {
         // ask for the balance of the account
-        System.out.print("Input the balance of the Account (must have two decimal "
-            + "places): ");
+        System.out.print("Input the balance of the Account (must have two decimal " + "places): ");
         balance = inputReader.readLine();
         try {
           new BigDecimal(balance);
@@ -664,28 +671,27 @@ public class Bank {
           System.out.println("Balance is invalid.");
         }
       }
-    } 
-   
+    }
+
     // ensure customer and teller are authenticated
-    if (machine.makeNewAccount(name, new BigDecimal(balance), 
-         Integer.valueOf(typeId))) {
+    if (machine.makeNewAccount(name, new BigDecimal(balance), Integer.valueOf(typeId))) {
       // state the id of the created account
-      System.out.println("Account successfully added with ID: " 
-          + String.valueOf(machine.listCustomerAccounts().get(
-              machine.listCustomerAccounts().size() - 1).getId()));
+      System.out.println("Account successfully added with ID: " + String.valueOf(
+          machine.listCustomerAccounts().get(machine.listCustomerAccounts().size() - 1).getId()));
     } else {
       System.out.println("Account was not successfully added.");
     }
   }
-  
+
   /**
    * Give interest to an account for the current Customer.
+   * 
    * @param machine The bank machine to give interest from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If there is an error with input or output
    */
-  private static void giveInterestOption(BankWorkerServiceSystems machine, 
+  private static void giveInterestOption(BankWorkerServiceSystems machine,
       BufferedReader inputReader) throws ConnectionFailedException, IOException {
     // ask for the account id of the current customer
     System.out.print("Input the ID of the Account you would like to add interest to, "
@@ -696,32 +702,33 @@ public class Bank {
       System.out.print("Invalid ID. Please try again: ");
       accountId = inputReader.readLine();
     }
-      // try to give interest 
-      boolean success = machine.giveInterest(Integer.valueOf(accountId));
-      if (success) {
-        System.out.println("Interest Added. New balance: " 
-      + machine.checkBalance(Integer.valueOf(accountId)).toString());
-      } else {
-        System.out.println("Interest was not added.");
-      }
-    
+    // try to give interest
+    boolean success = machine.giveInterest(Integer.valueOf(accountId));
+    if (success) {
+      System.out.println("Interest Added. New balance: "
+          + machine.checkBalance(Integer.valueOf(accountId)).toString());
+    } else {
+      System.out.println("Interest was not added.");
+    }
+
   }
-  
+
   /**
-   * Close the current Customer session. 
+   * Close the current Customer session.
    */
   private static void closeCustomerSessionOption(BankWorkerServiceSystems machine) {
     machine.deAuthenticateCustomer();
   }
-  
+
   /**
    * Make a new Admin.
+   * 
    * @param machine The bank machine to make the Admin from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If there is an error with input or output
    */
-  private static void makeNewAdminOption(AdminTerminal machine, BufferedReader inputReader) 
+  private static void makeNewAdminOption(AdminTerminal machine, BufferedReader inputReader)
       throws ConnectionFailedException, IOException {
     // ask for the name of the new Admin
     System.out.print("Input the name of the Admin: ");
@@ -731,7 +738,7 @@ public class Bank {
     System.out.print("Input the age of the Admin: ");
     String adminAge = inputReader.readLine();
     // loop until a valid number is given
-    while (!adminAge.matches("^[0-9]*$") || adminAge.length() == 0 
+    while (!adminAge.matches("^[0-9]*$") || adminAge.length() == 0
         || Integer.valueOf(adminAge) == 0) {
       System.out.print("Invalid age. Please try again: ");
       adminAge = inputReader.readLine();
@@ -741,31 +748,32 @@ public class Bank {
     String adminAddress = inputReader.readLine();
     // loop until the length is valid
     while (adminAddress.length() > 100) {
-      System.out.print("Address is too long! Input the address of the Admin (100 "
-          + "character limit): ");
+      System.out.print(
+          "Address is too long! Input the address of the Admin (100 " + "character limit): ");
       adminAddress = inputReader.readLine();
     }
     // ask for the password of the Admin
     System.out.print("Input the password of the Admin: ");
     String password = inputReader.readLine();
     // input the Admin into the database
-    int id = machine.makeNewUser(adminName, Integer.valueOf(adminAge), 
-        adminAddress, password, "ADMIN");
+    int id =
+        machine.makeNewUser(adminName, Integer.valueOf(adminAge), adminAddress, password, "ADMIN");
     if (id != -1) {
       System.out.println("Admin was successfully added with ID " + String.valueOf(id));
     } else {
       System.out.println("Admin was not successfully added.");
     }
   }
-  
+
   /**
    * Make a new Teller.
+   * 
    * @param machine The bank machine to make the Teller from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If there is an error with input or output
    */
-  private static void makeNewTellerOption(AdminTerminal machine, BufferedReader inputReader) 
+  private static void makeNewTellerOption(AdminTerminal machine, BufferedReader inputReader)
       throws ConnectionFailedException, IOException {
     // ask for the name of the new Teller
     System.out.print("Input the name of the Teller: ");
@@ -775,7 +783,7 @@ public class Bank {
     System.out.print("Input the age of the Teller: ");
     String tellerAge = inputReader.readLine();
     // loop until a valid number is given
-    while (!tellerAge.matches("^[0-9]*$") || tellerAge.length() == 0 
+    while (!tellerAge.matches("^[0-9]*$") || tellerAge.length() == 0
         || Integer.valueOf(tellerAge) == 0) {
       System.out.print("Invalid age. Please try again: ");
       tellerAge = inputReader.readLine();
@@ -785,29 +793,30 @@ public class Bank {
     String tellerAddress = inputReader.readLine();
     // loop until the length is valid
     while (tellerAddress.length() > 100) {
-      System.out.print("Address is too long! Input the address of the Teller (100 "
-          + "character limit): ");
+      System.out.print(
+          "Address is too long! Input the address of the Teller (100 " + "character limit): ");
       tellerAddress = inputReader.readLine();
     }
     // ask for the password of the Customer
     System.out.print("Input the password of the Customer: ");
     String password = inputReader.readLine();
     // input the Customer into the database
-    int id = machine.makeNewUser(tellerName, Integer.valueOf(tellerAge), 
-        tellerAddress, password, "TELLER");
+    int id = machine.makeNewUser(tellerName, Integer.valueOf(tellerAge), tellerAddress, password,
+        "TELLER");
     if (id != -1) {
       System.out.println("Teller was successfully added with ID " + String.valueOf(id));
     } else {
       System.out.println("Teller was not successfully added.");
     }
   }
-  
+
   /**
    * Output a list of Users of the given type.
+   * 
    * @param machine The bank machine to check the view the Users from
    * @param type The type of Users to find
    */
-  private static void viewUsersOption(AdminTerminal machine, String type) 
+  private static void viewUsersOption(AdminTerminal machine, String type)
       throws ConnectionFailedException {
     List<User> customers = machine.listUsers(type);
     int user = 1;
@@ -821,17 +830,18 @@ public class Bank {
 
   /**
    * Promotes a teller to an admin.
+   * 
    * @param machine The bank machine to promote the teller from
    * @param inputReader Used to read input from the user
    * @throws ConnectionFailedException If the database can not be connected to
    * @throws IOException If there is an error with the input or output
    */
-  private static void promoteTellerOption(AdminTerminal machine, BufferedReader inputReader) 
+  private static void promoteTellerOption(AdminTerminal machine, BufferedReader inputReader)
       throws ConnectionFailedException, IOException {
     System.out.print("Input the ID of the teller you would like to promote to an Admin: ");
     String tellerId = inputReader.readLine();
     // loop until a valid number is given
-    while (!tellerId.matches("^[0-9]*$")  || tellerId.length() == 0) {
+    while (!tellerId.matches("^[0-9]*$") || tellerId.length() == 0) {
       System.out.print("Invalid ID. Please try again: ");
       tellerId = inputReader.readLine();
     }
@@ -846,17 +856,17 @@ public class Bank {
       System.out.println("The given ID does not belong to a teller");
     }
   }
-  
+
   /**
    * Change the name of a User in the database.
+   * 
    * @param machine The machine to change the name on.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
    * @throws IOException If there is an error with the input or output.
    */
-  private static void updateNameOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
-      throws ConnectionFailedException, IOException 
-    {
+  private static void updateNameOption(BankWorkerServiceSystems machine, BufferedReader inputReader)
+      throws ConnectionFailedException, IOException {
     System.out.print("Input the new name of the User: ");
     String name = inputReader.readLine();
     if (machine.updateUserName(name)) {
@@ -865,22 +875,21 @@ public class Bank {
       System.out.println("The name was not successfully updated.");
     }
   }
-  
+
   /**
    * Change the age of a User in the database.
+   * 
    * @param machine The machine to change the age on.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
    * @throws IOException If there is an error with the input or output.
    */
-  private static void updateAgeOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
-      throws ConnectionFailedException, IOException 
-    {
+  private static void updateAgeOption(BankWorkerServiceSystems machine, BufferedReader inputReader)
+      throws ConnectionFailedException, IOException {
     System.out.print("Input the new age of the current Customer: ");
     String age = inputReader.readLine();
     // loop until a valid number is given
-    while (!age.matches("^[0-9]*$") || age.length() == 0 
-        || Integer.valueOf(age) == 0) {
+    while (!age.matches("^[0-9]*$") || age.length() == 0 || Integer.valueOf(age) == 0) {
       System.out.print("Invalid age. Please try again: ");
       age = inputReader.readLine();
     }
@@ -890,23 +899,23 @@ public class Bank {
       System.out.println("The age was not successfully updated.");
     }
   }
-  
+
   /**
    * Change the age of a User in the database.
+   * 
    * @param machine The machine to change the age on.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
    * @throws IOException If there is an error with the input or output.
    */
-  private static void updateAddressOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
-      throws ConnectionFailedException, IOException 
-    {
+  private static void updateAddressOption(BankWorkerServiceSystems machine,
+      BufferedReader inputReader) throws ConnectionFailedException, IOException {
     System.out.print("Input the new address of the current Customer: ");
     String address = inputReader.readLine();
     // loop until the length is valid
     while (address.length() > 100) {
-      System.out.print("Address is too long! Input the address of the Teller (100 "
-          + "character limit): ");
+      System.out.print(
+          "Address is too long! Input the address of the Teller (100 " + "character limit): ");
       address = inputReader.readLine();
     }
     if (machine.updateUserAddress(address)) {
@@ -915,17 +924,17 @@ public class Bank {
       System.out.println("The address was not successfully updated.");
     }
   }
-  
+
   /**
    * Change the password of the current customer in the database.
+   * 
    * @param machine The machine to change the password on.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
    * @throws IOException If there is an error with the input or output.
    */
-  private static void updatePasswordOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
-      throws ConnectionFailedException, IOException 
-    {
+  private static void updatePasswordOption(BankWorkerServiceSystems machine,
+      BufferedReader inputReader) throws ConnectionFailedException, IOException {
     System.out.print("Input the new password of the current Customer: ");
     String password = inputReader.readLine();
     if (machine.updateUserPassword(password)) {
@@ -934,31 +943,33 @@ public class Bank {
       System.out.println("The password was not successfully updated.");
     }
   }
-  
+
   /**
    * View message ids that the user can view.
+   * 
    * @param machine The machine to check for the message ids.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  private static void viewCustomerMessageIds(BankServiceSystems machine) 
+  private static void viewCustomerMessageIds(BankServiceSystems machine)
       throws ConnectionFailedException {
     List<Integer> messageIds = machine.getCustomerMessageIds();
     System.out.println("You can view messages with the following ids.");
     String message = "";
     for (Integer id : messageIds) {
       message += id.toString() + ", ";
-    } 
-    message = message.substring(0, message.length()-2);
+    }
+    message = message.substring(0, message.length() - 2);
     message += '.';
     System.out.println("");
   }
-  
+
   /**
    * View message ids that the user can view.
+   * 
    * @param machine The machine to check for the message ids.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  private static void viewUserMessageIds(BankWorkerServiceSystems machine) 
+  private static void viewUserMessageIds(BankWorkerServiceSystems machine)
       throws ConnectionFailedException {
     List<Integer> userMessageIds = machine.getUserMessageIds();
     List<Integer> customerMessageIds = machine.getCustomerMessageIds();
@@ -966,24 +977,25 @@ public class Bank {
     String message = "";
     for (Integer id : userMessageIds) {
       message += id.toString() + ", ";
-    } 
+    }
     for (Integer id : customerMessageIds) {
       message += id.toString() + ", ";
-    } 
-    message = message.substring(0, message.length()-2);
+    }
+    message = message.substring(0, message.length() - 2);
     System.out.println("");
   }
-  
+
   /**
-   * View a specific message. If admin is viewing someone else's message, the view status is 
+   * View a specific message. If admin is viewing someone else's message, the view status is
    * unchanged. Otherwise it will be changed.
-   * @param machine The machine to view the messages from. 
+   * 
+   * @param machine The machine to view the messages from.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
    * @throws IOException If there is an error with the input or output.
    */
-  private static void viewSpecificMessage(BankServiceSystems machine, BufferedReader inputReader) 
-    throws ConnectionFailedException, IOException {
+  private static void viewSpecificMessage(BankServiceSystems machine, BufferedReader inputReader)
+      throws ConnectionFailedException, IOException {
     List<Integer> customerMessageIds = machine.getCustomerMessageIds();
     List<Integer> userMessageIds = new ArrayList<Integer>();
     List<Integer> adminMessageIds = new ArrayList<Integer>();
@@ -997,12 +1009,12 @@ public class Bank {
     }
     System.out.print("Input the id of the message you would like to view: ");
     String id = inputReader.readLine();
-    while (!id.matches("^[0-9]*$")  || id.length() == 0) {
+    while (!id.matches("^[0-9]*$") || id.length() == 0) {
       System.out.print("Invalid ID. Please try again: ");
       id = inputReader.readLine();
-    } 
-    if (userMessageIds.contains(Integer.valueOf(id)) 
-        || customerMessageIds.contains(Integer.valueOf(id)) 
+    }
+    if (userMessageIds.contains(Integer.valueOf(id))
+        || customerMessageIds.contains(Integer.valueOf(id))
         || adminMessageIds.contains(Integer.valueOf(id))) {
       System.out.println(machine.getMessage(Integer.valueOf(id)));
       // update the message status as long as the an admin is not viewing someone else's message
@@ -1014,10 +1026,10 @@ public class Bank {
       System.out.println("You can not view that message.");
     }
   }
-  
-  private static void leaveMessage(BankWorkerServiceSystems machine, BufferedReader inputReader) 
-    throws ConnectionFailedException, IOException {
-    // ask for the id of the account to leave the message for 
+
+  private static void leaveMessage(BankWorkerServiceSystems machine, BufferedReader inputReader)
+      throws ConnectionFailedException, IOException {
+    // ask for the id of the account to leave the message for
     System.out.print("Input the ID of the user you want to leave the message for: ");
     String id = inputReader.readLine();
     // loop until a valid number is given
@@ -1047,12 +1059,12 @@ public class Bank {
         String message = inputReader.readLine();
         // loop until the length is valid
         while (message.length() > 512) {
-          System.out.print("Message is too long! Input the message for the User (512 character "
-              + "limit): ");
+          System.out.print(
+              "Message is too long! Input the message for the User (512 character " + "limit): ");
           message = inputReader.readLine();
         }
         messageId = machine.leaveMessage(message, Integer.valueOf(id));
-      } 
+      }
       if (messageId == -1) {
         System.out.println("Message was not successfully left.");
       } else {
@@ -1062,16 +1074,17 @@ public class Bank {
       System.out.println("The given ID does not belong in the database.");
     }
   }
-  
+
   /**
    * Transfer funds from your account to another account.
+   * 
    * @param machine The machine to transfer funds on.
-   * @param inputReader Used to read input from the user. 
+   * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
    * @throws IOException If there is an error with input or output.
    */
-  private static void transferFundsOption(BankServiceSystems machine,
-      BufferedReader inputReader) throws ConnectionFailedException, IOException {
+  private static void transferFundsOption(BankServiceSystems machine, BufferedReader inputReader)
+      throws ConnectionFailedException, IOException {
     // ask for the id of the account to transfer to
     System.out.print("Input the ID of the account you want to transfer funds to: ");
     String destinationId = inputReader.readLine();
@@ -1124,7 +1137,7 @@ public class Bank {
       if (transferSuccess) {
         System.out.println("Transfer of " + transferAmount.toString() + " was successful. New "
             + "balance: " + machine.checkBalance(Integer.valueOf(sourceId)).toString());
-      // deposit the amount withdrawn back to source account if transfer fails
+        // deposit the amount withdrawn back to source account if transfer fails
       } else {
         System.out.println("Transfer failed, account specified might not exist!");
         try {
@@ -1136,9 +1149,10 @@ public class Bank {
       }
     }
   }
-  
+
   /**
    * Serializes the database and saves the ser file in w/e mangz.
+   * 
    * @param machine the admin terminal.
    */
   private static void backUpDatabase(AdminTerminal machine) {
@@ -1148,26 +1162,28 @@ public class Bank {
       System.out.println("Dont kill all hoomans");
     }
   }
-  
+
   /**
    * View the total amount of money of the current customer.
+   * 
    * @param machine The machine to get the total balance from.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  private static void viewCustomerTotalBalance(BankWorkerServiceSystems machine) 
+  private static void viewCustomerTotalBalance(BankWorkerServiceSystems machine)
       throws ConnectionFailedException {
     BigDecimal totalBalance = machine.getTotalBalance();
     System.out.println("The total balance the current customer has is " + totalBalance.toString());
   }
-  
+
   private static void viewBankTotalBalance(AdminTerminal machine) throws ConnectionFailedException {
     BigDecimal totalBalance = machine.getTotalBankBalance();
     System.out.println("The total amount of money in the bank is: " + totalBalance.toString());
-    
+
   }
-  
+
   /**
    * Initialize all the roles in the Roles Table. Reads from the Roles Enum.
+   * 
    * @param connection The connection to the database.
    */
   private static void initializeRoleTable(Connection connection) {
@@ -1181,9 +1197,10 @@ public class Bank {
       e.printStackTrace();
     }
   }
-  
+
   /**
    * Initialize all the Account Types in the AccountTypes table. Reads from the AccountTypes Enum.
+   * 
    * @param connection The connection to the database.
    */
   private static void initializeAccountTypes(Connection connection) {
@@ -1198,5 +1215,5 @@ public class Bank {
       e.printStackTrace();
     }
   }
-  
+
 }
