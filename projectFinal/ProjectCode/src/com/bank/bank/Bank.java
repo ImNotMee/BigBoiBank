@@ -857,7 +857,6 @@ public class Bank {
   private static void updateNameOption(BankWorkerServiceSystems machine, BufferedReader inputReader) 
       throws ConnectionFailedException, IOException 
     {
-    System.out.print("Input the ID of the User who's name you would like to change: ");
     System.out.print("Input the new name of the User: ");
     String name = inputReader.readLine();
     if (machine.updateUserName(name)) {
