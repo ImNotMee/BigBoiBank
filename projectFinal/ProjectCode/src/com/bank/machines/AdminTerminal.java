@@ -10,11 +10,14 @@ import com.bank.generics.RolesEnumMap;
 import com.bank.users.Admin;
 import com.bank.users.User;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AdminTerminal extends BankWorkerServiceSystems {
@@ -90,7 +93,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     int currId = 1;
     Account account = DatabaseSelectHelper.getAccountDetails(currId);
     while (account != null) {
-      totalBalance = totalBalance.add(account.getBalance());
+      totalBalance.add(account.getBalance());
       currId ++;
       account = DatabaseSelectHelper.getAccountDetails(currId);
     }
@@ -134,6 +137,71 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     return false;
     
   }
+  
+  public boolean loadDatabaseObject(String input) throws ConnectionFailedException {
+		DatabaseBackUp db = new DatabaseBackUp();
+		boolean check = false;
+	    try {
+		  FileInputStream inputStream = new FileInputStream(input);
+		  ObjectInputStream deserialize = new ObjectInputStream(inputStream);
+		  db = (DatabaseBackUp) deserialize.readObject();
+		  deserialize.close();
+		  inputStream.close();
+		  System.out.println("The DatabaseBackUp object has been sucesfully loaded");
+	      check = true;
+		  } catch(Exception e) {
+			  e.printStackTrace();
+		  }
+	      DatabaseDriverExtend.reInitialize();
+	      
+	      ArrayList<BigDecimal> balance = db.getAccountBalances();
+	      ArrayList<BigDecimal> interestRate = db.getAccountInterestRates();
+	      ArrayList<String> accountNames = db.getAccountNames();
+	      ArrayList<String> accountTypeNames = db.getAccountTypeNames();
+	      ArrayList<Integer> accountType = db.getAccountTypes();
+	      ArrayList<Integer> roles = db.getUserRoleIds();
+	      ArrayList<String> roleNames = db.getRoleNames();
+	      HashMap<Integer, ArrayList<Integer>> accountsIds = db.getAccountsIds();
+	      HashMap<Integer, ArrayList<Integer>> messageRelation = db.getMessageRelationships();
+	      HashMap<Integer, String> messages = db.getMessages();
+	      ArrayList<String> names = db.getUserNames();
+	      ArrayList<String> addresses = db.getUserAddresses();
+	      ArrayList<Integer> age = db.getUserAges();
+	      ArrayList<String> passwords = db.getUserPassword();
+	      
+	      
+	      for(int i = 0; i < accountTypeNames.size(); i ++) {
+	      DatabaseInsertHelper.insertAccountType(accountTypeNames.get(i), interestRate.get(i));
+	      }
+	      
+	      for(int i = 0; i < roles.size(); i ++) {
+		      DatabaseInsertHelper.insertRole(roleNames.get(i));
+		      }
+
+	      for(int i = 1; i < messageRelation.size() + 1; i++ ) {
+	          ArrayList<Integer> messages1 = messageRelation.get(i);
+	          for(Integer messageid: messages1) {
+	        	 DatabaseInsertHelper.insertMessage(i, messages.get(messageid));
+	          }
+	      }
+	      
+	      for(int i = 1; i < accountsIds.size() + 1; i++) {
+	    	  ArrayList<Integer> accountID = accountsIds.get(i);
+	    	  for(Integer Id: accountID) {
+	    		  DatabaseInsertHelper.insertUserAccount(i, Id);
+	    	  }
+	      }
+
+	      for(int i = 0; i < balance.size(); i++) {
+	    	  DatabaseInsertHelper.insertAccount(accountNames.get(i), balance.get(i), accountType.get(i));
+	      }
+	 
+	      for(int i = 0; i < names.size(); i++) {
+	    	  DatabaseInsertHelper.insertNewUser(names.get(i), age.get(i), addresses.get(i), roles.get(i), passwords.get(i));
+	      }
+	      
+	      return check;
+	  }
    
   /**
    * Get all the ids of the messages the admin can view.
