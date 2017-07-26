@@ -25,8 +25,10 @@ public class DatabaseBackUp implements Serializable {
   private ArrayList<String> accountNames;
   private ArrayList<BigDecimal> accountInterestRates;
   private ArrayList<BigDecimal> accountBalances;
-  private ArrayList<String> messages;
+  private HashMap<Integer, String> messages;
   private HashMap<Integer, ArrayList<Integer>> map;
+  private HashMap<Integer, ArrayList<Integer>> accountIds;
+  private ArrayList<String> roleNames;
   
   /**
    * Constructor that initializes all the arrayLists.
@@ -42,8 +44,11 @@ public class DatabaseBackUp implements Serializable {
     this.accountNames = new ArrayList<>();
     this.accountInterestRates = new ArrayList<>();
     this.accountBalances = new ArrayList<>();
-    this.messages = new ArrayList<>();
+    this.messages = new HashMap<>();
     this.map = new HashMap<>();
+    this.accountIds = new HashMap<>();
+    this.roleNames = new ArrayList<>();
+    
   }
   /**
    * Goes through the whole database and makes a copy of it in this object.
@@ -61,6 +66,9 @@ public class DatabaseBackUp implements Serializable {
         this.ages.add((Integer) currUser.getAge());
         this.roleIds.add((Integer) currUser.getRoleId());
         this.passwords.add(DatabaseSelectHelper.getPassword(currUserId));
+        this.accountIds.put(currUserId, (ArrayList<Integer>) DatabaseSelectHelper.getAccountIds(currUserId));
+        
+        
         // we need to know the list of the userIds associated with any given message so
         // Use a hashmap so we have the key(userId) associated to a bunch of messages which we can 
         // decipher later when we deserialize the data
@@ -79,20 +87,28 @@ public class DatabaseBackUp implements Serializable {
       while (currAccount != null) {
         // add the data about the accounts to our lists
         this.accountTypes.add((Integer) currAccount.getType());
-        this.accountTypeNames.add(DatabaseSelectHelper.getAccountTypeName(currAccount.getType()));
         this.accountNames.add(currAccount.getName());
         this.accountBalances.add(DatabaseSelectHelper.getBalance(currAccountId));
-        this.accountInterestRates.add(DatabaseSelectHelper.getInterestRate(currAccount.getType()));
         // we have the data for the specific account, now do that increment it
         currAccountId ++;
         currAccount = DatabaseSelectHelper.getAccountDetails(currAccountId);
+      }
+      // get the account names and interest so we can insert the account type to the database
+      for(Integer accountTypes: DatabaseSelectHelper.getAccountTypesIds()) {
+    	  this.accountInterestRates.add(DatabaseSelectHelper.getInterestRate(accountTypes));
+    	  this.accountTypeNames.add(DatabaseSelectHelper.getAccountTypeName(accountTypes));
+    	  
+      }
+      // Get all the names to insert roles into database
+      for(int roleId: DatabaseSelectHelper.getRoles()) {
+    	  this.roleNames.add(DatabaseSelectHelper.getRole(roleId));
       }
       // now get all the messages
       int currMessageId = 1;
       String message = DatabaseSelectHelper.getSpecificMessage(currMessageId);
       while (message != null) {
         // add the message to our list of messages
-        this.messages.add(message);
+        this.messages.put(currMessageId, message);
         currMessageId ++;
         message = DatabaseSelectHelper.getSpecificMessage(currMessageId);
       }
@@ -151,11 +167,20 @@ public class DatabaseBackUp implements Serializable {
     return this.accountBalances;
   }
   
-  public ArrayList<String> getMessages() {
+  public HashMap<Integer, String> getMessages() {
     return this.messages;
   }
   
   public HashMap<Integer, ArrayList<Integer>> getMessageRelationships() {
     return this.map;
   }
+  
+  public HashMap<Integer, ArrayList<Integer>> getAccountsIds() {
+	    return this.accountIds;
+  }
+  
+  public ArrayList<String> getRoleNames() {
+	    return this.roleNames;
+  }
+	  
 }
