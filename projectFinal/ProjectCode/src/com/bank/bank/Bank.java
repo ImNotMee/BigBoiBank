@@ -558,7 +558,7 @@ public class Bank {
     if (user instanceof Customer) {
       machine.setCurrentCustomer((Customer) user);
       // try to authenticate the password
-      System.out.print("Please input the password of the Customer:");
+      System.out.print("Please input the password of the Customer: ");
       String customerPassword = inputReader.readLine();
       // try to authenticate the current customer
       machine.authenticateCurrentCustomer(customerPassword);
@@ -956,14 +956,13 @@ public class Bank {
   private static void viewCustomerMessageIds(BankServiceSystems machine)
       throws ConnectionFailedException {
     List<Integer> messageIds = machine.getCustomerMessageIds();
-    System.out.println("You can view messages with the following ids.");
+    System.out.println("You can view messages with the following ID's:");
     String message = "";
     for (Integer id : messageIds) {
       message += id.toString() + ", ";
     }
     message = message.substring(0, message.length() - 2);
-    message += '.';
-    System.out.println("");
+    System.out.println(message);
   }
 
   /**
@@ -976,7 +975,7 @@ public class Bank {
       throws ConnectionFailedException {
     List<Integer> userMessageIds = machine.getUserMessageIds();
     List<Integer> customerMessageIds = machine.getCustomerMessageIds();
-    System.out.println("You can view messages with the following ids.");
+    System.out.print("You can view messages with the following ID's:");
     String message = "";
     for (Integer id : userMessageIds) {
       message += id.toString() + ", ";
@@ -985,7 +984,7 @@ public class Bank {
       message += id.toString() + ", ";
     }
     message = message.substring(0, message.length() - 2);
-    System.out.println("");
+    System.out.println(message);
   }
 
   /**
