@@ -40,7 +40,7 @@ public class DatabaseSelectHelper extends DatabaseSelector {
         role = DatabaseSelector.getRole(id, connection);
       // catch if the id is not in the database
       } catch (SQLException e) {
-        e.printStackTrace();
+        
       } 
       // ensure the connection closes
       try {
@@ -78,8 +78,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
         hashPassword = DatabaseSelector.getPassword(userId, connection);
       // catch if the id is not in the database
       } catch (SQLException e) {
-        // show what the error stack was
-        e.printStackTrace();
       }
       // ensure the connection closes
       try {
@@ -161,8 +159,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
           accountIds.add(results.getInt("ACCOUNTID"));
         }
       } catch (SQLException e) {
-        // show what the error stack was
-        e.printStackTrace();
       }
       // ensure the connection closes
       try {
@@ -239,8 +235,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
       try {
         balance = DatabaseSelector.getBalance(accountId, connection);
       } catch (SQLException e) {
-        // show what the error stack was
-        e.printStackTrace();
       }
       // ensure the connection closes
       try {
@@ -277,8 +271,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
       try {
         interestRate = DatabaseSelector.getInterestRate(accountType, connection);
       } catch (SQLException e) {
-        // show what the error stack was
-        e.printStackTrace();
       }
       // ensure the connection closes
       try {
@@ -313,8 +305,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
           accountTypeIds.add(results.getInt("ID"));
         }
       } catch (SQLException e) {
-        // show what the error stack was
-        e.printStackTrace();
       } 
     }
     // ensure the connection closes
@@ -347,8 +337,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
       try {
         accountTypeName = DatabaseSelector.getAccountTypeName(accountTypeId, connection);
       } catch (SQLException e) {
-        // show what the error stack was
-        e.printStackTrace();
       }
       // ensure the connection closes
       try {
@@ -381,8 +369,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
           roleIds.add(results.getInt("ID"));
         }
       } catch (SQLException e) {
-        // show what the error stack was
-        e.printStackTrace();
       }
       // ensure the connection closes
       try {
@@ -415,7 +401,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
         // try to get the AccountType of the accountId
         accountType = DatabaseSelector.getAccountType(accountId, connection);
       } catch (SQLException e) {
-        e.printStackTrace();
       }
       // ensure the connection closes
       try {
@@ -480,7 +465,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
           messageIds.add(new Integer(results.getInt("ID")));
         }        
       } catch (SQLException e) {
-        e.printStackTrace();
       } 
       // ensure the connection closes
       try {

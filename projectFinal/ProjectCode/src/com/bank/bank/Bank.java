@@ -121,10 +121,10 @@ public class Bank {
                   + "\n14 - View current Tellers\n15 - View current Admins"
                   + "\n16 - Promote Teller to Admin\n17 - Update Customer Name"
                   + "\n18 - Update Customer Address\n19 - Update Customer Age"
-                  + "\n20 - Update Customer Password\n21 - See Available Message Ids"
-                  + "\n22 - See Customer Message Ids\n23 - See Specific Message"
-                  + "\n24 - Leave Message\n25 - Transfer funds\n26 - Back up Database"
-                  + "\n27 - View money in bank\n28 - Exit");
+                  + "\n20 - Update Customer Password\n21 - Update Account Interest Rate"
+                  + "\n22 - See Available Message Ids\n23 - See Customer Message Ids"
+                  + "\n24 - See Specific Message\n25 - Leave Message\n26 - Transfer funds"
+                  + "\n27 - Back up Database\n28 - View money in bank\n29 - Exit");
               adminOption = inputReader.readLine();
               // authenticate the current Customer
               if (adminOption.equals("1")) {
@@ -184,29 +184,32 @@ public class Bank {
                 // update the customer's password
               } else if (adminOption.equals("20")) {
                 updatePasswordOption(adminTerminal, inputReader);
-                // see available message id's
+                // update an account's itnerest rate
               } else if (adminOption.equals("21")) {
+                updateInterestRateOption(adminTerminal, inputReader);
+                // see available message id's
+              } else if (adminOption.equals("22")) {
                 viewUserMessageIds(adminTerminal);
                 // view message id's the customer can view
-              } else if (adminOption.equals("22")) {
+              } else if (adminOption.equals("23")) {
                 viewCustomerMessageIds(adminTerminal);
                 // see a specific message
-              } else if (adminOption.equals("23")) {
+              } else if (adminOption.equals("24")) {
                 viewSpecificMessage(adminTerminal, inputReader);
                 // leave a message
-              } else if (adminOption.equals("24")) {
+              } else if (adminOption.equals("25")) {
                 leaveMessage(adminTerminal, inputReader);
                 // transfer funds between 2 accounts
-              } else if (adminOption.equals("25")) {
+              } else if (adminOption.equals("26")) {
                 transferFundsOption(adminTerminal, inputReader);
                 // back up the database
-              } else if (adminOption.equals("26")) {
+              } else if (adminOption.equals("27")) {
                 backUpDatabase(adminTerminal);
                 // see total money in the bank
-              } else if (adminOption.equals("27")) {
+              } else if (adminOption.equals("28")) {
                 viewBankTotalBalance(adminTerminal);
               }
-            } while (!adminOption.equals("28"));
+            } while (!adminOption.equals("29"));
             try {
               connection.close();
             } catch (Exception e) {
@@ -1171,12 +1174,66 @@ public class Bank {
     System.out.println("The total balance the current customer has is " + totalBalance.toString());
   }
 
+  /**
+   * View the total balance in all accounts in the bank.
+   * @param machine
+   * @throws ConnectionFailedException
+   */
   private static void viewBankTotalBalance(AdminTerminal machine) throws ConnectionFailedException {
     BigDecimal totalBalance = machine.getTotalBankBalance();
     System.out.println("The total amount of money in the bank is: " + totalBalance.toString());
-
   }
 
+  /**
+   * Update the interest rate of a given account type.
+   * @param machine The machine to update the interest rate one.
+   * @param inputReader Used to read input from the user.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with input or output.
+   */
+  private static void updateInterestRateOption(AdminTerminal machine, BufferedReader inputReader) 
+      throws ConnectionFailedException, IOException {
+    List<Integer> accountIds = DatabaseSelectHelper.getAccountTypesIds();
+    // ask which account they would like to make
+    System.out.println("Which kind of account interest would you like to update?");
+    for (Integer id : accountIds) {
+      System.out.println(id + " - " + DatabaseSelectHelper.getAccountTypeName(id));
+    }
+    String typeId;
+    typeId = inputReader.readLine();
+    while (!(typeId.matches("^[0-9]*$") || typeId.length() == 0)
+        || !accountIds.contains(Integer.valueOf(typeId))) {
+      System.out.print("Invalid value for Account Type, try again: ");
+      typeId = inputReader.readLine();
+    }
+    // loop until a valid deposit is given
+    boolean validInterest = false;
+    String interest = "";
+    while (!validInterest) {
+      // ask for the balance of the account
+      System.out.print("Input the new interest rate (must have two decimal places and be between "
+          + "0.00 and 1.00): ");
+      interest = inputReader.readLine();
+      try {
+        BigDecimal interestRate = new BigDecimal(interest);
+        if (interestRate.compareTo(BigDecimal.ONE) < 0 
+            && interestRate.compareTo(BigDecimal.ZERO) >= 0) {
+          validInterest = true;
+        } else {
+          System.out.println("Interest is invalid.");
+
+        }
+      } catch (NumberFormatException e) {
+        System.out.println("Interest is invalid.");
+      }
+    }
+    if (machine.updateInterestRate(new BigDecimal(interest), Integer.valueOf(typeId))) {
+      System.out.println("Interest rate succesfully updated.");
+    } else {
+      System.out.println("Interest rate was not succesfully updated.");
+    }
+  }
+  
   /**
    * Initialize all the roles in the Roles Table. Reads from the Roles Enum.
    * 
