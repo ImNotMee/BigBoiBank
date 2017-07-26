@@ -948,7 +948,7 @@ public class Bank {
     for (Integer id : messageIds) {
       message += id.toString() + ", ";
     } 
-    message = message.substring(0, -2);
+    message = message.substring(0, message.length()-2);
     message += '.';
     System.out.println("");
   }
@@ -970,8 +970,7 @@ public class Bank {
     for (Integer id : customerMessageIds) {
       message += id.toString() + ", ";
     } 
-    message = message.substring(0, -2);
-    message += '.';
+    message = message.substring(0, message.length()-2);
     System.out.println("");
   }
   
@@ -996,7 +995,7 @@ public class Bank {
     if (machine instanceof AdminTerminal) {
       adminMessageIds = ((AdminTerminal) machine).getAdminMessageIds();
     }
-    System.out.print("Input the id of the message you would like to view.");
+    System.out.print("Input the id of the message you would like to view: ");
     String id = inputReader.readLine();
     while (!id.matches("^[0-9]*$")  || id.length() == 0) {
       System.out.print("Invalid ID. Please try again: ");
