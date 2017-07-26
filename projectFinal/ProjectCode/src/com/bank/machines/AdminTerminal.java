@@ -228,4 +228,22 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     }
     return null;
   }
+  
+  /**
+   * Update a given account type's interest.
+   * @param interestRate The new interest Rate.
+   * @param accountTypeId The type of account to update.
+   * @return True if the udpate was successful.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   */
+  public boolean updateInterestRate(BigDecimal interestRate, int accountTypeId) 
+      throws ConnectionFailedException {
+    if (this.currentUserAuthenticated && interestRate.compareTo(BigDecimal.ONE) < 0 
+        && interestRate.compareTo(BigDecimal.ZERO) >= 0) {
+    return DatabaseUpdateHelper.updateAccountTypeInterestRate(interestRate, accountTypeId);
+    } else {
+      return false;
+    }
+  }  
 }
+  
