@@ -448,8 +448,6 @@ public class DatabaseSelectHelper extends DatabaseSelector {
         // try to get the userRole
         userRole = DatabaseSelector.getUserRole(userId, connection);
       } catch (SQLException e) {
-        // show what the error stack was
-        e.printStackTrace();
       }
       // ensure the connection closes
       try {
