@@ -1156,11 +1156,7 @@ public class Bank {
    * @param machine the admin terminal.
    */
   private static void backUpDatabase(AdminTerminal machine) {
-    if (machine.backUpDatabase("/home/ricky/koolaid.ser")) {
-      System.out.println("Kill all hoomans");
-    } else {
-      System.out.println("Dont kill all hoomans");
-    }
+   machine.backUpDatabase("database_copy.ser");
   }
 
   /**
