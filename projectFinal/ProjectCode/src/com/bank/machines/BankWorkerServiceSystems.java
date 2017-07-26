@@ -117,7 +117,8 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
           accountVar.addInterest();
         }
         int userId = DatabaseSelectHelper.getUserFromAccount(account);
-        DatabaseInsertHelper.insertMessage(userId, "Interest has been added you your account");
+        DatabaseInsertHelper.insertMessage(userId, "Interest has been added to your account with "
+            + "ID " + String.valueOf(account));
         return true;
       } else {
         System.out.println("The Customer does not have access to this account.");      
