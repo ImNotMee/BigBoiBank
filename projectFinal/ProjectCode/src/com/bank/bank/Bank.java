@@ -213,15 +213,16 @@ public class Bank {
                 // see total money in the bank
               } else if (adminOption.equals("29")) {
                 viewBankTotalBalance(adminTerminal);
-              }
+              } 
             } while (!adminOption.equals("30"));
             try {
               connection.close();
             } catch (Exception e) {
               System.out.println("Looks like it was closed already :)");
             }
+          } else {
+            System.out.println("Admin was not authenticated");
           }
-
           // prompt the user for their id and password, as a Teller
         } else if (currentInput.equals("2")) {
           System.out.println("TELLER TERMINAL");
@@ -1286,7 +1287,7 @@ public class Bank {
         DatabaseInsertHelper.insertRole(roleStr);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      System.out.println("Roles have already been initialized.");
     }
   }
 
@@ -1304,7 +1305,7 @@ public class Bank {
         DatabaseInsertHelper.insertAccountType(accountTypeStr, new BigDecimal(interestRate));
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      System.out.println("Account Types have already been initialized.");
     }
   }
 
