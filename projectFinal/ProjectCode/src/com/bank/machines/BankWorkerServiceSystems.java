@@ -138,28 +138,30 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
   }
   
   /**
-   * Get the total amount of money in all of the current customer's accounts.
+   * Get the total amount of money in all of a customer's account.
    * @return The total amount in all of the user's accounts.
    * @throws ConnectionFailedException If the database can not be connected to.
    * 
    */
-  public BigDecimal getTotalBalance() throws ConnectionFailedException {
-  if (this.currentCustomer != null && this.currentCustomerAuthenticated) {
-    List<Account> userAccounts = this.listCustomerAccounts();
+  public BigDecimal getTotalBalance(int userId) throws ConnectionFailedException {
     BigDecimal totalBalance = BigDecimal.ZERO;
-    if (userAccounts != null) {
-      for (Account currAccount: userAccounts) {     
-        totalBalance = totalBalance.add(currAccount.getBalance());
+    if (this.currentUserAuthenticated) {
+      User user = DatabaseSelectHelper.getUserDetails(userId);
+      if (user != null) {
+        List<Account> userAccounts = user.getAccounts();
+        if (userAccounts != null) {
+          for (Account currAccount: userAccounts) {     
+            totalBalance = totalBalance.add(currAccount.getBalance());
+          }
+        } else {
+          System.out.println("This Customer has no accounts");
+        }
       }
     } else {
-      System.out.println("This Customer has no accounts");
+      System.out.println("The teller/admin is not authenticated.");
     }
-     return totalBalance;  
-  } else {
-    System.out.println("The customer is not authenticated or set.");
-    return BigDecimal.ZERO;
-  }
-    
+    return totalBalance;  
+
   }
   
   /**
@@ -244,7 +246,7 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
    * @throws ConnectionFailedException If the database can not be connected to.
    */
   public int leaveMessage(String message, int userId) throws ConnectionFailedException {
-    if (this.currentCustomer != null && this.currentUserAuthenticated) {
+    if (this.currentUserAuthenticated) {
       return DatabaseInsertHelper.insertMessage(userId, message);
     } else {
       return -1;

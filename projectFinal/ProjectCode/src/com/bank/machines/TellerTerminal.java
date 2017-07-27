@@ -43,7 +43,7 @@ public class TellerTerminal extends BankWorkerServiceSystems {
    */
   @Override
   public int leaveMessage(String message, int userId) throws ConnectionFailedException {
-    if (this.currentCustomer != null && this.currentUserAuthenticated) {
+    if (this.currentUserAuthenticated) {
       // tellers can only leave messages for Customers
       if (DatabaseSelectHelper.getUserDetails(userId) instanceof Customer) {
         

@@ -37,7 +37,7 @@ public class Bank {
    * @param argv Used to tell if initialize mode or a terminal.
    */
   public static void main(String[] argv) {
-    Connection connection = DatabaseDriverExtender.connectOrCreateDataBase();
+    final Connection connection = DatabaseDriverExtender.connectOrCreateDataBase();
     try {
       BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
       // Used as the variable to hold the current input of the user
@@ -116,7 +116,7 @@ public class Bank {
               System.out.println("1 - Set and authenticate new Customer\n2 - Make new Customer"
                   + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
                   + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
-                  + "\n9 - List Customer Accounts\n10 - View balance of Customer Accounts"
+                  + "\n9 - List Customer Accounts\n10 - View total balance of a Customer's Accounts"
                   + "\n11 - Make new Admin\n12 - Make new Teller\n13 - View current Customers"
                   + "\n14 - View current Tellers\n15 - View current Admins"
                   + "\n16 - Promote Teller to Admin\n17 - Update Customer Name"
@@ -124,7 +124,8 @@ public class Bank {
                   + "\n20 - Update Customer Password\n21 - Update Account Interest Rate"
                   + "\n22 - See Available Message Ids\n23 - See Customer Message Ids"
                   + "\n24 - See Specific Message\n25 - Leave Message\n26 - Transfer funds"
-                  + "\n27 - Back up Database\n28 - View money in bank\n29 - Exit");
+                  + "\n27 - Back up Database\n28 - Load back up database\n29 - View money in bank"
+                  + "\n30 - Exit");
               adminOption = inputReader.readLine();
               // authenticate the current Customer
               if (adminOption.equals("1")) {
@@ -155,7 +156,7 @@ public class Bank {
                 listCustomerAccountsOption(adminTerminal);
                 // see the total money of the current customer
               } else if (adminOption.equals("10")) {
-                viewCustomerTotalBalance(adminTerminal);
+                viewCustomerTotalBalance(adminTerminal, inputReader);
                 // make a new admin
               } else if (adminOption.equals("11")) {
                 makeNewAdminOption(adminTerminal, inputReader);
@@ -205,11 +206,15 @@ public class Bank {
                 // back up the database
               } else if (adminOption.equals("27")) {
                 backUpDatabase(adminTerminal);
-                // see total money in the bank
+                // load the bacck up database
               } else if (adminOption.equals("28")) {
+                connection.close();
+                loadSavedDatabase(adminTerminal);
+                // see total money in the bank
+              } else if (adminOption.equals("29")) {
                 viewBankTotalBalance(adminTerminal);
               }
-            } while (!adminOption.equals("29"));
+            } while (!adminOption.equals("30"));
             try {
               connection.close();
             } catch (Exception e) {
@@ -254,11 +259,12 @@ public class Bank {
               System.out.println("1 - Set and authenticate new Customer\n2 - Make new Customer"
                   + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
                   + "\n6 - Make a withdrawal\n7 - Check balance\n8 - Close customer session"
-                  + "\n9 - See Customer Accounts\n10 - Update Customer Name"
-                  + "\n11 - Update Customer Address\n12 - Update Customer Age"
-                  + "\n13 - Update Customer Password\n14 - See Available Message Ids"
-                  + "\n15 - See Customer Message Ids\n16 - See Specific Message\n17 - Leave Message"
-                  + "\n18 - Transfer funds\n19 - Exit");
+                  + "\n9 - See Customer Accounts\n10 - View total balance of a Customer's accounts"
+                  + "\n11 - Update Customer Name\n12 - Update Customer Address"
+                  + "\n13 - Update Customer Age\n14 - Update Customer Password"
+                  + "\n15 - See Available Message Ids\n16 - See Customer Message Ids"
+                  + "\n17 - See Specific Message\n18 - Leave Message\n19 - Transfer funds"
+                  + "\n20 - Exit");
               tellerOption = inputReader.readLine();
               // authenticate the current Customer
               if (tellerOption.equals("1")) {
@@ -287,35 +293,38 @@ public class Bank {
                 // list the accounts of the customer
               } else if (tellerOption.equals("9")) {
                 listCustomerAccountsOption(tellerTerminal);
-                // update the customer's name
+                // see the total balance of a given customer
               } else if (tellerOption.equals("10")) {
+                viewCustomerTotalBalance(tellerTerminal, inputReader);
+                // update the customer's name
+              } else if (tellerOption.equals("11")) {
                 updateNameOption(tellerTerminal, inputReader);
                 // update the customer's address
-              } else if (tellerOption.equals("11")) {
+              } else if (tellerOption.equals("12")) {
                 updateAddressOption(tellerTerminal, inputReader);
                 // update the customer's age
-              } else if (tellerOption.equals("12")) {
+              } else if (tellerOption.equals("13")) {
                 updateAgeOption(tellerTerminal, inputReader);
                 // update the customer's password
-              } else if (tellerOption.equals("13")) {
+              } else if (tellerOption.equals("14")) {
                 updatePasswordOption(tellerTerminal, inputReader);
                 // view message id's the current user can see
-              } else if (tellerOption.equals("14")) {
+              } else if (tellerOption.equals("15")) {
                 viewUserMessageIds(tellerTerminal);
                 // view message id's the customer can view
-              } else if (tellerOption.equals("15")) {
+              } else if (tellerOption.equals("16")) {
                 viewCustomerMessageIds(tellerTerminal);
                 // view a specific message
-              } else if (tellerOption.equals("16")) {
+              } else if (tellerOption.equals("17")) {
                 viewSpecificMessage(tellerTerminal, inputReader);
                 // leave a message
-              } else if (tellerOption.equals("17")) {
+              } else if (tellerOption.equals("18")) {
                 leaveMessage(tellerTerminal, inputReader);
                 // transfer funds between 2 accounts
-              } else if (tellerOption.equals("18")) {
+              } else if (tellerOption.equals("19")) {
                 transferFundsOption(tellerTerminal, inputReader);
               }
-            } while (!tellerOption.equals("19"));
+            } while (!tellerOption.equals("20"));
           } else {
             System.out.println("Teller was not authenticated");
           }
@@ -961,7 +970,9 @@ public class Bank {
     for (Integer id : messageIds) {
       message += id.toString() + ", ";
     }
-    message = message.substring(0, message.length() - 2);
+    if (message.length() > 2) {
+      message = message.substring(0, message.length() - 2);
+    }
     System.out.println(message);
   }
 
@@ -983,7 +994,9 @@ public class Bank {
     for (Integer id : customerMessageIds) {
       message += id.toString() + ", ";
     }
-    message = message.substring(0, message.length() - 2);
+    if (message.length() > 2) {
+      message = message.substring(0, message.length() - 2);
+    }
     System.out.println(message);
   }
 
@@ -1020,7 +1033,7 @@ public class Bank {
         || adminMessageIds.contains(Integer.valueOf(id))) {
       System.out.println(machine.getMessage(Integer.valueOf(id)));
       // update the message status as long as the an admin is not viewing someone else's message
-      if (!(machine instanceof AdminTerminal) || userMessageIds.contains(Integer.valueOf(id))) {
+      if (!(machine instanceof AdminTerminal) || adminMessageIds.contains(Integer.valueOf(id))) {
         machine.updateMessageStatus(Integer.valueOf(id));
       }
 
@@ -1029,6 +1042,13 @@ public class Bank {
     }
   }
 
+  /**
+   * Leave a message for a user.
+   * @param machine The machine to leave a message on.
+   * @param inputReader Used to read input from the user.
+   * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with input or output.
+   */
   private static void leaveMessage(BankWorkerServiceSystems machine, BufferedReader inputReader)
       throws ConnectionFailedException, IOException {
     // ask for the id of the account to leave the message for
@@ -1053,16 +1073,16 @@ public class Bank {
             System.out.print("Message is too long! Input the message for the Customer (512 "
                 + "character limit): ");
             message = inputReader.readLine();
-            messageId = machine.leaveMessage(message, Integer.valueOf(id));
           }
+          messageId = machine.leaveMessage(message, Integer.valueOf(id));
         }
       } else {
-        System.out.print("Input the message for the User (512 character limit):  ");
+        System.out.print("Input the message for the User (512 character limit): ");
         String message = inputReader.readLine();
         // loop until the length is valid
         while (message.length() > 512) {
           System.out.print(
-              "Message is too long! Input the message for the User (512 character " + "limit): ");
+              "Message is too long! Input the message for the User (512 character limit): ");
           message = inputReader.readLine();
         }
         messageId = machine.leaveMessage(message, Integer.valueOf(id));
@@ -1160,17 +1180,37 @@ public class Bank {
   private static void backUpDatabase(AdminTerminal machine) {
    machine.backUpDatabase("database_copy.ser");
   }
+  
+  private static void loadSavedDatabase(AdminTerminal machine) 
+      throws ConnectionFailedException {
+    machine.loadDatabase("database_copy.ser");
+  }
 
   /**
    * View the total amount of money of the current customer.
    * 
    * @param machine The machine to get the total balance from.
    * @throws ConnectionFailedException If the database can not be connected to.
+   * @throws IOException If there is an error with input or output.
    */
-  private static void viewCustomerTotalBalance(BankWorkerServiceSystems machine)
-      throws ConnectionFailedException {
-    BigDecimal totalBalance = machine.getTotalBalance();
-    System.out.println("The total balance the current customer has is " + totalBalance.toString());
+  private static void viewCustomerTotalBalance(BankWorkerServiceSystems machine, 
+      BufferedReader inputReader) throws ConnectionFailedException, IOException {
+    System.out.print("Input the ID of the user you want to check the balance of: ");
+    String id = inputReader.readLine();
+    // loop until a valid number is given
+    while (!id.matches("^[0-9]*$") || id.length() == 0) {
+      System.out.print("Invalid ID. Please try again: ");
+      id = inputReader.readLine();
+    }
+    User user = DatabaseSelectHelper.getUserDetails(Integer.valueOf(id));
+    if (user != null) {
+      BigDecimal totalBalance = machine.getTotalBalance(Integer.valueOf(id));
+      System.out.println("The total balance the current customer has is " 
+      + totalBalance.toString());
+    } else {
+      System.out.println("The given id does not belong in the database.");
+    }
+    
   }
 
   /**

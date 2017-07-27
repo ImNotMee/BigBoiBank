@@ -37,8 +37,8 @@ public abstract class BankServiceSystems {
   }
   
   /**
-   * Get the accounts for the currentUser. 
-   * @return A List of Account of the currentUser. 
+   * Get the accounts for the current customer. 
+   * @return A List of Account of the current customer. 
    * @throws ConnectionFailedException If database was not successfully connected to.
    */
   public List<Account> listCustomerAccounts() throws ConnectionFailedException {
@@ -200,7 +200,11 @@ public abstract class BankServiceSystems {
    * @throws ConnectionFailedException If the database can not be connected to.
    */
   public List<Integer> getCustomerMessageIds() throws ConnectionFailedException {
-    return DatabaseSelectHelper.getMessageIds(this.currentCustomer.getId());
+    if (this.currentCustomer != null && this.currentCustomerAuthenticated) {
+      return DatabaseSelectHelper.getMessageIds(this.currentCustomer.getId());
+    } else {
+      return new ArrayList<Integer>();
+    }
   }
   
   /**

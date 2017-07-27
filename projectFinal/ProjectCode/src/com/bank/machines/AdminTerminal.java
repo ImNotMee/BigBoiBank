@@ -133,7 +133,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     
   }
   
-  public boolean loadDatabaseObject(String input) throws ConnectionFailedException {
+  public boolean loadDatabase(String input) throws ConnectionFailedException {
 		DatabaseBackUp db = new DatabaseBackUp();
 		boolean check = false;
 	    try {
@@ -169,16 +169,9 @@ public class AdminTerminal extends BankWorkerServiceSystems {
 	      DatabaseInsertHelper.insertAccountType(accountTypeNames.get(i), interestRate.get(i));
 	      }
 	      
-	      for(int i = 0; i < roles.size(); i ++) {
+	      for(int i = 0; i < roleNames.size(); i ++) {
 		      DatabaseInsertHelper.insertRole(roleNames.get(i));
 		      }
-
-	      for(int i = 1; i < messageRelation.size() + 1; i++ ) {
-	          ArrayList<Integer> messages1 = messageRelation.get(i);
-	          for(Integer messageid: messages1) {
-	        	 DatabaseInsertHelper.insertMessage(i, messages.get(messageid));
-	          }
-	      }
 	      
 	      for(int i = 1; i < accountsIds.size() + 1; i++) {
 	    	  ArrayList<Integer> accountID = accountsIds.get(i);
@@ -188,12 +181,30 @@ public class AdminTerminal extends BankWorkerServiceSystems {
 	      }
 
 	      for(int i = 0; i < balance.size(); i++) {
-	    	  DatabaseInsertHelper.insertAccount(accountNames.get(i), balance.get(i), accountType.get(i));
+	    	  DatabaseInsertHelper.insertAccount(accountNames.get(i), balance.get(i), 
+	    	      accountType.get(i));
 	      }
 	 
 	      for(int i = 0; i < names.size(); i++) {
-	    	  DatabaseInsertHelper.insertNewUser(names.get(i), age.get(i), addresses.get(i), roles.get(i), passwords.get(i));
+	    	  int id = DatabaseInsertHelper.insertNewUser(names.get(i), age.get(i), addresses.get(i), 
+	    	      roles.get(i), "");
+	    	  DatabaseUpdateHelper.updateUserPassword(passwords.get(i), id);
 	      }
+	      
+	      boolean messageExists = true;
+        int currMessageId = 1;
+        while (messageExists) {
+          messageExists = false;
+          for(int i = 1; i < messageRelation.size() + 1; i++ ) {
+            ArrayList<Integer> messages1 = messageRelation.get(i);
+            if (messages1.contains(currMessageId)) {
+              DatabaseInsertHelper.insertMessage(i, messages.get(currMessageId));
+              messageExists = true;
+              currMessageId++;
+              break;
+            } 
+          }
+        }
 	      
 	      return check;
 	  }
