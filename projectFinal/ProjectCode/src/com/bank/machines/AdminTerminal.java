@@ -142,7 +142,6 @@ public class AdminTerminal extends BankWorkerServiceSystems {
 		  db = (DatabaseBackUp) deserialize.readObject();
 		  deserialize.close();
 		  inputStream.close();
-		  System.out.println("The DatabaseBackUp object has been sucesfully loaded");
 	      check = true;
 		  } catch(Exception e) {
 			  e.printStackTrace();
@@ -205,7 +204,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
             } 
           }
         }
-	      
+        System.out.println("The DatabaseBackUp object has been sucesfully loaded");
 	      return check;
 	  }
    

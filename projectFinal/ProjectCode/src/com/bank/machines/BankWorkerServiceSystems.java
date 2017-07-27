@@ -117,8 +117,8 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
           accountVar.addInterest();
         }
         int userId = DatabaseSelectHelper.getUserFromAccount(account);
-        DatabaseInsertHelper.insertMessage(userId, "Interest has been added to your account with "
-            + "ID " + String.valueOf(account));
+        this.leaveMessage("Interest has been added to your account with ID " 
+            + String.valueOf(account), userId);
         return true;
       } else {
         System.out.println("The Customer does not have access to this account.");      
@@ -156,7 +156,15 @@ public abstract class BankWorkerServiceSystems extends BankServiceSystems {
         } else {
           System.out.println("This Customer has no accounts");
         }
+        // check if there should be a message left for the customer who's accounts are being viewed
+        if (this instanceof AdminTerminal) {
+          if (this.currentCustomer == null || !(this.currentCustomer.getId() == userId)) {
+            this.leaveMessage("An Admin has viewed the balance on your account while you were not"
+                + " logged in.", userId);
+          }
+        }
       }
+      
     } else {
       System.out.println("The teller/admin is not authenticated.");
     }

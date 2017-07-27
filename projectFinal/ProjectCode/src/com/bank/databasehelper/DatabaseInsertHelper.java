@@ -248,7 +248,6 @@ public class DatabaseInsertHelper extends DatabaseInserter {
         }
       }
     } catch (SQLException e) {
-      e.printStackTrace();
     }
     // return if the account was added properly
     if (added != -1) {
