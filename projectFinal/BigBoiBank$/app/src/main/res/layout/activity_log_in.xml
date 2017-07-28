@@ -71,4 +71,15 @@
         android:layout_marginTop="20dp"
         android:text="Confirm" />
 
+    <EditText
+        android:id="@+id/infoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/atm"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:visibility="invisible" />
+
 </RelativeLayout>
