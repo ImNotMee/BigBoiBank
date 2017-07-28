@@ -1,10 +1,12 @@
 package com.bank.machines;
 
+import android.content.Context;
+
+import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
-import com.bank.exceptions.ConnectionFailedException;
+import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
-import com.bank.users.Customer;
 
 import java.math.BigDecimal;
 
@@ -15,11 +17,14 @@ public class AutomatedTellerMachine extends BankServiceSystems {
    * 
    * @param customerId The id of the Customer.
    * @param password The possible password of the Customer.
-   * @throws ConnectionFailedException If database was not successfully connected to.
    */
-  public AutomatedTellerMachine(int customerId, String password) throws ConnectionFailedException {
+  public AutomatedTellerMachine(int customerId, String password, Context context) {
+    this.context = context;
+    this.insertor = new DatabaseInsertHelper(this.context);
+    this.selector = new DatabaseSelectHelper(this.context);
+    this.updater = new DatabaseUpdateHelper(this.context);
     // create a Customer object from the information in the database
-    this.currentCustomer = (Customer) DatabaseSelectHelper.getUserDetails(customerId);
+    this.currentCustomer = selector.getUserDetails(customerId);
     // ensure the customer has the correct password if the customer exists
     if (this.currentCustomer != null) {
       this.authenticateCurrentCustomer(password);
@@ -31,11 +36,10 @@ public class AutomatedTellerMachine extends BankServiceSystems {
    * Instantiate an AutomatedTellerMachine with a Customer.
    * 
    * @param customerId The id of the Customer.
-   * @throws ConnectionFailedException If database was not successfully connected to.
    */
-  public AutomatedTellerMachine(int customerId) throws ConnectionFailedException {
+  public AutomatedTellerMachine(int customerId) {
     // create a Customer object from the information in the database
-    this.currentCustomer = (Customer) DatabaseSelectHelper.getUserDetails(customerId);
+    this.currentCustomer = selector.getUserDetails(customerId);
   }
 
   /**
@@ -44,15 +48,14 @@ public class AutomatedTellerMachine extends BankServiceSystems {
    * @param amount The amount of money to be withdrawn.
    * @param accountId The id of the account.
    * @return true if the money was successfully withdrawn, false otherwise
-   * @throws ConnectionFailedException If database was not successfully connected to.
    * @throws IllegalAmountException If the amount to be deposited is not valid.
    * @throws InsufficientFundsException If the account does not have enough funds to be withdrawn.
    */
   public boolean makeWithdrawal(BigDecimal amount, int accountId)
-      throws ConnectionFailedException, IllegalAmountException, InsufficientFundsException {
+      throws IllegalAmountException, InsufficientFundsException {
     boolean success = false;
     // check if RestrictedSavingsAccount
-    if (DatabaseSelectHelper.getAccountTypeName(DatabaseSelectHelper.getAccountType(accountId))
+    if (selector.getAccountTypeName(selector.getAccountType(accountId))
         .equalsIgnoreCase("RESTRICTEDSAVING")) {
       System.out.println("Please see a teller to withdraw from this account");
       return success;

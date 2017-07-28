@@ -1,12 +1,13 @@
 package com.bank.databasehelper;
 
+import android.content.Context;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.bank.accounts.Account;
-import com.bank.exceptions.ConnectionFailedException;
 import com.bank.users.User;
 
 public class DatabaseBackUp implements Serializable {
@@ -29,11 +30,13 @@ public class DatabaseBackUp implements Serializable {
   private HashMap<Integer, ArrayList<Integer>> map;
   private HashMap<Integer, ArrayList<Integer>> accountIds;
   private ArrayList<String> roleNames;
+  private DatabaseSelectHelper selector;
   
   /**
    * Constructor that initializes all the arrayLists.
    */
-  public DatabaseBackUp() {
+  public DatabaseBackUp(Context context) {
+    this.selector = new DatabaseSelectHelper(context);
     this.userNames = new ArrayList<>();
     this.addresses = new ArrayList<>();
     this.ages = new ArrayList<>();
@@ -55,65 +58,59 @@ public class DatabaseBackUp implements Serializable {
    * @return true if we updated and false otherwise.
    */
   public boolean update() {
-    try {
-      // First we'll get all the data about the users
-      int currUserId = 1;
-      User currUser = DatabaseSelectHelper.getUserDetails(currUserId);
-      while (currUser != null) {
-        // add the data to our lists
-        this.userNames.add(currUser.getName());
-        this.addresses.add(currUser.getAddress());
-        this.ages.add((Integer) currUser.getAge());
-        this.roleIds.add((Integer) currUser.getRoleId());
-        this.passwords.add(DatabaseSelectHelper.getPassword(currUserId));
-        this.accountIds.put(currUserId, (ArrayList<Integer>) DatabaseSelectHelper.getAccountIds(currUserId));
-        
-        
-        // we need to know the list of the userIds associated with any given message so
-        // Use a hashmap so we have the key(userId) associated to a bunch of messages which we can 
-        // decipher later when we deserialize the data
-        // get all the messages associated about our given user using the helper
-        ArrayList<Integer> messageIds = (ArrayList<Integer>) DatabaseSelectHelper.getMessageIds(currUserId);
-        // add all the values to the key
-        this.map.put((Integer) currUserId, messageIds);
-        // now that we've entered all the data about the currUser, we can go on to the next user
-        currUserId ++;
-        currUser = DatabaseSelectHelper.getUserDetails(currUserId);   
-       }
-      
-      // we have all the data for users but now we need the data for accounts
-      int currAccountId = 1;
-      Account currAccount = DatabaseSelectHelper.getAccountDetails(currAccountId);
-      while (currAccount != null) {
-        // add the data about the accounts to our lists
-        this.accountTypes.add((Integer) currAccount.getType());
-        this.accountNames.add(currAccount.getName());
-        this.accountBalances.add(DatabaseSelectHelper.getBalance(currAccountId));
-        // we have the data for the specific account, now do that increment it
-        currAccountId ++;
-        currAccount = DatabaseSelectHelper.getAccountDetails(currAccountId);
-      }
-      // get the account names and interest so we can insert the account type to the database
-      for(Integer accountTypes: DatabaseSelectHelper.getAccountTypesIds()) {
-    	  this.accountInterestRates.add(DatabaseSelectHelper.getInterestRate(accountTypes));
-    	  this.accountTypeNames.add(DatabaseSelectHelper.getAccountTypeName(accountTypes));
-    	  
-      }
-      // Get all the names to insert roles into database
-      for(int roleId: DatabaseSelectHelper.getRoles()) {
-    	  this.roleNames.add(DatabaseSelectHelper.getRole(roleId));
-      }
-      // now get all the messages
-      int currMessageId = 1;
-      String message = DatabaseSelectHelper.getSpecificMessage(currMessageId);
-      while (message != null) {
-        // add the message to our list of messages
-        this.messages.put(currMessageId, message);
-        currMessageId ++;
-        message = DatabaseSelectHelper.getSpecificMessage(currMessageId);
-      }
-    } catch (ConnectionFailedException e) {
-      System.out.println("Failed to connect to Database");
+    // First we'll get all the data about the users
+    int currUserId = 1;
+    User currUser = selector.getUserDetails(currUserId);
+    while (currUser != null) {
+      // add the data to our lists
+      this.userNames.add(currUser.getName());
+      this.addresses.add(currUser.getAddress());
+      this.ages.add((Integer) currUser.getAge());
+      this.roleIds.add((Integer) currUser.getRoleId());
+      this.passwords.add(selector.getPassword(currUserId));
+      this.accountIds.put(currUserId, (ArrayList<Integer>) selector.getAccountIds(currUserId));
+      // we need to know the list of the userIds associated with any given message so
+      // Use a hashmap so we have the key(userId) associated to a bunch of messages which we can
+      // decipher later when we deserialize the data
+      // get all the messages associated about our given user using the helper
+      ArrayList<Integer> messageIds = (ArrayList<Integer>) selector.getMessageIds(currUserId);
+      // add all the values to the key
+      this.map.put((Integer) currUserId, messageIds);
+      // now that we've entered all the data about the currUser, we can go on to the next user
+      currUserId ++;
+      currUser = selector.getUserDetails(currUserId);
+     }
+
+    // we have all the data for users but now we need the data for accounts
+    int currAccountId = 1;
+    Account currAccount = selector.getAccountDetails(currAccountId);
+    while (currAccount != null) {
+      // add the data about the accounts to our lists
+      this.accountTypes.add((Integer) currAccount.getType());
+      this.accountNames.add(currAccount.getName());
+      this.accountBalances.add(selector.getBalance(currAccountId));
+      // we have the data for the specific account, now do that increment it
+      currAccountId ++;
+      currAccount = selector.getAccountDetails(currAccountId);
+    }
+    // get the account names and interest so we can insert the account type to the database
+    for(Integer accountTypes: selector.getAccountTypesIds()) {
+      this.accountInterestRates.add(selector.getInterestRate(accountTypes));
+      this.accountTypeNames.add(selector.getAccountTypeName(accountTypes));
+
+    }
+    // Get all the names to insert roles into database
+    for(int roleId: selector.getRoles()) {
+      this.roleNames.add(selector.getRole(roleId));
+    }
+    // now get all the messages
+    int currMessageId = 1;
+    String message = selector.getSpecificMessage(currMessageId);
+    while (message != null) {
+      // add the message to our list of messages
+      this.messages.put(currMessageId, message);
+      currMessageId ++;
+      message = selector.getSpecificMessage(currMessageId);
     }
     return false;
   }

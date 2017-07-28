@@ -1,12 +1,13 @@
 package com.bank.machines;
 
+import android.content.Context;
+
 import java.util.List;
 
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
-import com.bank.exceptions.ConnectionFailedException;
+import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.users.Customer;
-import com.bank.users.Teller;
 
 public class TellerTerminal extends BankWorkerServiceSystems {
 
@@ -15,23 +16,23 @@ public class TellerTerminal extends BankWorkerServiceSystems {
    * 
    * @param tellerId The id of the teller.
    * @param password The password of the teller.
-   * @throws ConnectionFailedException If the database was not successfully connected to.
    */
-  public TellerTerminal(int tellerId, String password) throws ConnectionFailedException {
+  public TellerTerminal(int tellerId, String password, Context context) {
+    insertor = new DatabaseInsertHelper(context);
+    selector = new DatabaseSelectHelper(context);
+    updater = new DatabaseUpdateHelper(context);
     // create a Customer object from the information in the database
-    this.currentUser = (Teller) DatabaseSelectHelper.getUserDetails(tellerId);
+    this.currentUser = selector.getUserDetails(tellerId);
     // ensure the customer has the correct password
     this.currentUserAuthenticated = currentUser.authenticate(password);
   }
   
   /**
    * Get all the ids of the messages for the current teller.
-   * @param id The id of the user to get the messages for.
    * @return The ids of all the messages.
-   * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public List<Integer> getUserMessageIds() throws ConnectionFailedException {
-    return DatabaseSelectHelper.getMessageIds(this.currentUser.getId());
+  public List<Integer> getUserMessageIds() {
+    return selector.getMessageIds(this.currentUser.getId());
   }
   
   /**
@@ -39,16 +40,15 @@ public class TellerTerminal extends BankWorkerServiceSystems {
    * @param message The message for the user.
    * @param userId The id of the user who the message is for.
    * @return The id of the message, or -1 if it was unsuccessful.
-   * @throws ConnectionFailedException If the database can not be connected to.
    */
   @Override
-  public int leaveMessage(String message, int userId) throws ConnectionFailedException {
+  public int leaveMessage(String message, int userId) {
     if (this.currentUserAuthenticated) {
       // tellers can only leave messages for Customers
-      if (DatabaseSelectHelper.getUserDetails(userId) instanceof Customer) {
+      if (selector.getUserDetails(userId) instanceof Customer) {
         
       }
-      return DatabaseInsertHelper.insertMessage(userId, message);
+      return insertor.insertMessage(userId, message);
     } else {
       return -1;
     }

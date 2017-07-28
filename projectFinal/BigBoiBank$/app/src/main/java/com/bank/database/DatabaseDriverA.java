@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.b07.bank.PasswordHelpers;
+import com.bank.security.PasswordHelpers;
 
 import java.math.BigDecimal;
 
@@ -21,6 +21,10 @@ public class DatabaseDriverA extends SQLiteOpenHelper {
   public DatabaseDriverA(Context context) {
     super(context, DATABASE_NAME, null, 1);
 
+  }
+
+  protected int getDatabaseVersion() {
+    return this.DATABASE_VERSION;
   }
 
   @Override

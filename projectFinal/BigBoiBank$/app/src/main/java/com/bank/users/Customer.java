@@ -1,7 +1,11 @@
 package com.bank.users;
 
+import android.content.Context;
+
+import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
-import com.bank.exceptions.ConnectionFailedException;
+import com.bank.databasehelper.DatabaseUpdateHelper;
+import com.bank.generics.RolesEnumMap;
 
 import java.util.List;
 
@@ -13,9 +17,12 @@ public class Customer extends User {
    * @param name The name of the Customer. Name must not be null or it will not be set.
    * @param age The age of the Customer. Must be a positive integer.
    * @param address The address of the Customer. Must not be null or it will not be set.
-   * @throws ConnectionFailedException If connection can not be made to the database.
    */
-  public Customer(int id, String name, int age, String address) throws ConnectionFailedException {
+  public Customer(int id, String name, int age, String address, Context context) {
+    this.insertor = new DatabaseInsertHelper(context);
+    this.selector = new DatabaseSelectHelper(context);
+    this.updater = new DatabaseUpdateHelper(context);
+    this.enumMap = new RolesEnumMap(context);
     this.setId(id);
     this.setName(name);
     this.setAge(age);
@@ -23,10 +30,10 @@ public class Customer extends User {
       this.setAddress(address);
     }
     this.setRoleId(this.enumMap.getRoleId("CUSTOMER"));
-    List<Integer> accountIds = DatabaseSelectHelper.getAccountIds(this.getId());
+    List<Integer> accountIds = selector.getAccountIds(this.getId());
     // add each account to the users account
     for (Integer accountId : accountIds) {
-      this.addAccount(DatabaseSelectHelper.getAccountDetails(accountId));
+      this.addAccount(selector.getAccountDetails(accountId));
     }
   }
   
@@ -37,10 +44,12 @@ public class Customer extends User {
    * @param age The age of the Customer. Must be a positive integer.
    * @param address The address of the Customer. Must not be null or it will not be set.
    * @param authenticated Whether the Customer is authenticated.
-   * @throws ConnectionFailedException If connection can not be made to the database.
    */
-  public Customer(int id, String name, int age, String address, boolean authenticated) 
-      throws ConnectionFailedException {
+  public Customer(int id, String name, int age, String address, boolean authenticated, Context context) {
+    this.insertor = new DatabaseInsertHelper(context);
+    this.selector = new DatabaseSelectHelper(context);
+    this.updater = new DatabaseUpdateHelper(context);
+    this.enumMap = new RolesEnumMap(context);
     this.setId(id);
     this.setName(name);
     this.setAge(age);

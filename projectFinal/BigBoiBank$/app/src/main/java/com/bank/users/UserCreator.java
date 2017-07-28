@@ -1,6 +1,6 @@
 package com.bank.users;
 
-import com.bank.exceptions.ConnectionFailedException;
+import android.content.Context;
 
 
 public abstract class UserCreator {
@@ -15,14 +15,13 @@ public abstract class UserCreator {
    * @return The User created, or null if the given type is invalid.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public static User makeUser(int id, String name, int age, String address, String role) 
-      throws ConnectionFailedException {
+  public static User makeUser(int id, String name, int age, String address, String role, Context context) {
     if (role.equals("ADMIN")) {
-      return new Admin(id, name, age, address);
+      return new Admin(id, name, age, address, context);
     } else if (role.equals("CUSTOMER")) {
-      return new Customer(id, name, age, address);
+      return new Customer(id, name, age, address, context);
     } else if (role.equals("TELLER")) {
-      return new Teller(id, name, age, address);
+      return new Teller(id, name, age, address, context);
     } else {
       return null;
     }

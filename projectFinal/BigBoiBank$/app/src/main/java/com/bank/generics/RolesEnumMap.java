@@ -1,8 +1,9 @@
 package com.bank.generics;
 
+import android.content.Context;
+
 import com.bank.databasehelper.DatabaseSelectHelper;
-import com.bank.exceptions.ConnectionFailedException;
-import com.bank.generics.Roles;
+
 import java.util.EnumMap;
 import java.util.List;
 
@@ -10,8 +11,11 @@ public class RolesEnumMap {
   
   //the enumMap that this will refer to
   private static EnumMap<Roles, Integer> rolesMap = new EnumMap<>(Roles.class);
-  
-  public RolesEnumMap() {
+  private DatabaseSelectHelper selector;
+
+
+  public RolesEnumMap(Context context) {
+    selector = new DatabaseSelectHelper(context);
     this.update();
   }
   
@@ -19,21 +23,14 @@ public class RolesEnumMap {
    * Updates the EnumMap according to whatever is inside of the database.
    * @return true if it has successfully updated and false otherwise.
    */
-  public boolean update() {
-    List<Integer> roleIds = DatabaseSelectHelper.getRoles();
-    
-    try {
-      // update the enumMap according to the database
-      for (Integer roleId : roleIds) {
-        // for all the roleIds, there are specific roles we want to add
-        String role = DatabaseSelectHelper.getRole((int) roleId);
-        
-        // add the value of the roleId into the enumMap for the specified role
-        rolesMap.put(Roles.valueOf(role), (int) roleId);
-      } 
-      return true;
-    } catch (ConnectionFailedException e) {
-      return false;
+  public void update() {
+    List<Integer> roleIds = selector.getRoles();
+    for (Integer roleId : roleIds) {
+      // for all the roleIds, there are specific roles we want to add
+      String role = selector.getRole(roleId);
+
+      // add the value of the roleId into the enumMap for the specified role
+      rolesMap.put(Roles.valueOf(role), roleId);
     }
   }
   

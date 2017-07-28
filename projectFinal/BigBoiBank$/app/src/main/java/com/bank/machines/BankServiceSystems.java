@@ -1,10 +1,11 @@
 package com.bank.machines;
 
+import android.content.Context;
+
 import com.bank.accounts.Account;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
-import com.bank.exceptions.ConnectionFailedException;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
 import com.bank.generics.AccountTypesEnumMap;
@@ -18,14 +19,17 @@ public abstract class BankServiceSystems {
 
   protected User currentCustomer;
   protected boolean currentCustomerAuthenticated;
+  protected DatabaseInsertHelper insertor;
+  protected DatabaseSelectHelper selector;
+  protected DatabaseUpdateHelper updater;
+  protected Context context;
   
   /**
    * Used to Authenticate the currentCustomer 
    * @param password The possible password of the User.
    * @return true if the password was correct and the User is authenticated, false otherwise
-   * @throws ConnectionFailedException If database was not successfully connected to.
    */
-  public boolean authenticateCurrentCustomer(String password) throws ConnectionFailedException {
+  public boolean authenticateCurrentCustomer(String password) {
     this.currentCustomerAuthenticated = currentCustomer.authenticate(password);
     if (this.currentCustomerAuthenticated) {
       // print out the details of the customer and their accounts
@@ -39,19 +43,18 @@ public abstract class BankServiceSystems {
   /**
    * Get the accounts for the current customer. 
    * @return A List of Account of the current customer. 
-   * @throws ConnectionFailedException If database was not successfully connected to.
    */
-  public List<Account> listCustomerAccounts() throws ConnectionFailedException {
+  public List<Account> listCustomerAccounts() {
     if (!this.currentCustomerAuthenticated) {
       System.out.println("Customer is not authenticated");
       return null;
     } else {
       // create a list to hold the accounts
       List<Account> accounts = new ArrayList<Account>();
-      List<Integer> ids = DatabaseSelectHelper.getAccountIds(this.currentCustomer.getId());
+      List<Integer> ids = selector.getAccountIds(this.currentCustomer.getId());
       // loop through each id, creating a new account for it
       for (int id: ids) {
-        accounts.add(DatabaseSelectHelper.getAccountDetails(id));
+        accounts.add(selector.getAccountDetails(id));
       }
       return accounts;
     }
@@ -62,21 +65,20 @@ public abstract class BankServiceSystems {
    * @param accountId The id of the account to look for.
    * @return The balance of the account. Null if the customer is not authenticated or does not have 
    *         access to the account.
-   * @throws ConnectionFailedException If database was not successfully connected to.
    */
-  public BigDecimal checkBalance(int accountId) throws ConnectionFailedException {
+  public BigDecimal checkBalance(int accountId) {
     // check if the user is authenticated
     if (!this.currentCustomerAuthenticated) {
       System.out.println("The customer is not authenticated.");
       return null;
     // check if the user has access to the account
-    } else if (!DatabaseSelectHelper.getAccountIds(
+    } else if (!selector.getAccountIds(
         this.currentCustomer.getId()).contains(accountId)) { 
       System.out.println("You do not have access to this account.");
       return null;
     } else {
       // get the balance of the account
-      return DatabaseSelectHelper.getBalance(accountId);
+      return selector.getBalance(accountId);
     }   
   }
   
@@ -86,17 +88,15 @@ public abstract class BankServiceSystems {
    * @param amount Amount to be added to the account.
    * @param accountId The id of the account.
    * @return true if the amount was added successfully, false otherwise
-   * @throws ConnectionFailedException If database was not successfully connected to.
    * @throws IllegalAmountException If the amount to be deposited is not valid.
    */
-  public boolean makeDeposit(BigDecimal amount, int accountId) throws ConnectionFailedException, 
-      IllegalAmountException {
+  public boolean makeDeposit(BigDecimal amount, int accountId) throws IllegalAmountException {
     // check if the user is authenticated
     if (!this.currentCustomerAuthenticated) {
       System.out.println("The customer is not authenticated.");
       return false;
     // check if the user has access to the account
-    } else if (!DatabaseSelectHelper.getAccountIds(
+    } else if (!selector.getAccountIds(
         this.currentCustomer.getId()).contains(accountId)) {
       System.out.println("You do not have access to this account.");
       return false;
@@ -105,8 +105,8 @@ public abstract class BankServiceSystems {
       throw new IllegalAmountException("Input given is an illegal amount.");
     } else {
       // add the deposit
-      return DatabaseUpdateHelper.updateAccountBalance(
-          DatabaseSelectHelper.getBalance(accountId).add(amount), accountId);
+      return updater.updateAccountBalance(
+          selector.getBalance(accountId).add(amount), accountId);
     }
   }
   
@@ -115,21 +115,20 @@ public abstract class BankServiceSystems {
    * @param amount The amount of money to be withdrawn.
    * @param accountId The id of the account.
    * @return true if the money was successfully withdrawn, false otherwise
-   * @throws ConnectionFailedException If database was not successfully connected to.
    * @throws IllegalAmountException If the amount to be deposited is not valid.
    * @throws InsufficientFundsException If the account does not have enough funds to be withdrawn.
    */
-  public boolean makeWithdrawal(BigDecimal amount, int accountId) throws ConnectionFailedException, 
-        IllegalAmountException, InsufficientFundsException {
+  public boolean makeWithdrawal(BigDecimal amount, int accountId) throws IllegalAmountException,
+          InsufficientFundsException {
     // savings account id
-    AccountTypesEnumMap map = new AccountTypesEnumMap();
+    AccountTypesEnumMap map = new AccountTypesEnumMap(this.context);
     int savingsId = map.getAccountId("SAVING");
     BigDecimal checker = new BigDecimal(1000);
     // check if the user is authenticated
     if (!this.currentCustomerAuthenticated) {
       System.out.println("The customer is not authenticated.");
       return false;
-    } else if (!DatabaseSelectHelper.getAccountIds(
+    } else if (!selector.getAccountIds(
         this.currentCustomer.getId()).contains(accountId)) {
       System.out.println("You do not have access to this account.");
       return false;
@@ -138,23 +137,23 @@ public abstract class BankServiceSystems {
       throw new IllegalAmountException("The amount given is invalid");
     // check if the account has enough money to be withdrawn
     } else if (
-        DatabaseSelectHelper.getBalance(accountId).subtract(amount).compareTo(BigDecimal.ZERO) 
+        selector.getBalance(accountId).subtract(amount).compareTo(BigDecimal.ZERO)
         < 0) {
       throw new InsufficientFundsException("You do not have enough funds to withdraw that amount.");
     } else {
-      boolean rightAccount = (DatabaseSelectHelper.getAccountDetails(accountId).getType() == savingsId);
-      boolean rightMoney = (DatabaseSelectHelper.getBalance(accountId).subtract(amount).compareTo(checker) < 0);
+      boolean rightAccount = (selector.getAccountDetails(accountId).getType() == savingsId);
+      boolean rightMoney = (selector.getBalance(accountId).subtract(amount).compareTo(checker) < 0);
       // changes from savings --> chequing under certain conditions
       if (rightAccount && rightMoney) {
         // this means the account will have less than 1000 dollars and it will be turned to a chequing account
-        DatabaseUpdateHelper.updateAccountType(map.getAccountId("CHEQUING"), accountId);
+        updater.updateAccountType(map.getAccountId("CHEQUING"), accountId);
         // give the user who owns the account a message
-        int userId = DatabaseSelectHelper.getUserFromAccount(accountId);
-        DatabaseInsertHelper.insertMessage(userId, 
+        int userId = selector.getUserFromAccount(accountId);
+        insertor.insertMessage(userId,
             "Your account has been changed from a SAVING account to a CHEQUING account due to low funds");
       }
-      return DatabaseUpdateHelper.updateAccountBalance(
-          DatabaseSelectHelper.getBalance(accountId).subtract(amount), accountId);
+      return updater.updateAccountBalance(
+          selector.getBalance(accountId).subtract(amount), accountId);
     }
   }
   
@@ -195,15 +194,13 @@ public abstract class BankServiceSystems {
   
   /**
    * Get all the ids of the messages for the given user.
-   * @param id The id of the user to get the messages for.
    * @return The ids of all the messages.
-   * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public List<Integer> getCustomerMessageIds() throws ConnectionFailedException {
+  public List<Integer> getCustomerMessageIds() {
     if (this.currentCustomer != null && this.currentCustomerAuthenticated) {
-      return DatabaseSelectHelper.getMessageIds(this.currentCustomer.getId());
+      return selector.getMessageIds(this.currentCustomer.getId());
     } else {
-      return new ArrayList<Integer>();
+      return new ArrayList<>();
     }
   }
   
@@ -211,19 +208,17 @@ public abstract class BankServiceSystems {
    * Get a specific message.
    * @param messageId The id of the message to get.
    * @return The message.
-   * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public String getMessage(int messageId) throws ConnectionFailedException {
-    return DatabaseSelectHelper.getSpecificMessage(messageId);
+  public String getMessage(int messageId) {
+    return selector.getSpecificMessage(messageId);
   }
   
   /**
    * Update a message status to read.
    * @param messageId The id of the message which status is to be update.
    * @return True if the message status is successfully updated.
-   * @throws ConnectionFailedException If the database can not be connected to.
    */
-  public boolean updateMessageStatus(int messageId) throws ConnectionFailedException {
-    return DatabaseUpdateHelper.updateUserMessageState(messageId);
+  public boolean updateMessageStatus(int messageId) {
+    return updater.updateUserMessageState(messageId);
   }
 }

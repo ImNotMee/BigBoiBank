@@ -4,7 +4,6 @@ import com.bank.accounts.Account;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
-import com.bank.exceptions.ConnectionFailedException;
 import com.bank.generics.RolesEnumMap;
 import com.bank.security.PasswordHelpers;
 
@@ -18,8 +17,11 @@ public abstract class User {
   private String address = "";
   private int roleId = -1;
   protected boolean authenticated = false;
-  private List<Account> accounts = new ArrayList<Account>();
-  protected RolesEnumMap enumMap = new RolesEnumMap();
+  private List<Account> accounts = new ArrayList<>();
+  protected RolesEnumMap enumMap;
+  protected DatabaseSelectHelper selector;
+  protected DatabaseInsertHelper insertor;
+  protected DatabaseUpdateHelper updater;
   
   /**
    * Get the id of the User.
@@ -51,14 +53,13 @@ public abstract class User {
    * Set the name of the User. Name can not be null, and must have at least one character, or it 
    * will not be set.
    * @param name The name of the User.
-   * @throws ConnectionFailedException If connection can not be made to the database.
    */
-  public void setName(String name) throws ConnectionFailedException {
+  public void setName(String name) {
     if (name != null && name.length() > 0) {
       // check if the name is being updated
       if (!this.name.equals("")) {
         // update the name in the database
-        DatabaseUpdateHelper.updateUserName(name, this.id);
+        updater.updateUserName(name, this.id);
       }
       this.name = name;
     }
@@ -75,14 +76,13 @@ public abstract class User {
   /**
    * Set the age of the User. Age must be a valid age.
    * @param age The age of the User.
-   * @throws ConnectionFailedException If connection can not be made to the database.
    */
-  public void setAge(int age) throws ConnectionFailedException {
+  public void setAge(int age) {
     if (age >= 0) {
       // check if the age is being updated
       if (this.age != -1) {
         // update the age in the database
-        DatabaseUpdateHelper.updateUserAge(age, this.id);
+        updater.updateUserAge(age, this.id);
       }
       this.age = age;
     }
@@ -116,14 +116,13 @@ public abstract class User {
    * Set the name of the User. Name can not be null, and must have at least one character, or it 
    * will not be set.
    * @param address The address of the User.
-   * @throws ConnectionFailedException If connection can not be made to the database.
    */
-  public void setAddress(String address) throws ConnectionFailedException {
+  public void setAddress(String address) {
     if (address != null && address.length() > 0) {
       // check if the name is being updated
       if (!this.address.equals("")) {
         // update the name in the database
-        DatabaseUpdateHelper.updateUserName(name, this.id);
+        updater.updateUserName(name, this.id);
       }
       this.address = address;
     }
@@ -141,15 +140,14 @@ public abstract class User {
    * Add an Account to this customer.
    * @param account Account to be added. Account must not be null, and must not already be 
    *        be associated to this Customer.
-   * @throws ConnectionFailedException If connection can not be made to the database.
    */
-  public void addAccount(Account account) throws ConnectionFailedException {
+  public void addAccount(Account account) {
     // ensure the account is new and not null
     if (account != null && !this.accounts.contains(account)) {
       this.accounts.add(account);
       // add the user account in the database if it is not already there
-      if (!DatabaseSelectHelper.getAccountIds(this.getId()).contains(account.getId())) {
-        DatabaseInsertHelper.insertUserAccount(this.getId(), account.getId());
+      if (!selector.getAccountIds(this.getId()).contains(account.getId())) {
+        insertor.insertUserAccount(this.getId(), account.getId());
       }
     }
   }
@@ -159,11 +157,10 @@ public abstract class User {
    * @param password The password to check if it matches the user.
    * @return True iff the password matches the password in the database for the user, False 
    *         otherwise.
-   * @throws ConnectionFailedException If connection can not be made to the database.
    */
   
-  public final boolean authenticate(String password) throws ConnectionFailedException {
-    this.authenticated = PasswordHelpers.comparePassword(DatabaseSelectHelper.getPassword(this.id), 
+  public final boolean authenticate(String password) {
+    this.authenticated = PasswordHelpers.comparePassword(selector.getPassword(this.id),
         password);
     // Return whether the password given matches the password of the User
     return this.authenticated;
