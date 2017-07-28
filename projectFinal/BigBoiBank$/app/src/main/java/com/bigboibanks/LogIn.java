@@ -16,16 +16,5 @@ public class LogIn extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
 
         final Context context = this;
-
-        TextView text = (TextView) findViewById(R.id.test);
-        text.setText("TEST");
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent adminTerminal = new Intent(context, AdminTerminalActivity.class);
-                startActivity(adminTerminal);
-            }
-        });
     }
 }
