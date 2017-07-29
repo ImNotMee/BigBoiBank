@@ -20,7 +20,7 @@
         <activity android:name=".TellerTerminal" />
         <activity android:name=".AdminInterface" />
         <activity android:name=".TellerInterface" />
-        <activity android:name=".CustomerInterface"></activity>
+        <activity android:name=".CustomerInterface" />
     </application>
 
 </manifest>
