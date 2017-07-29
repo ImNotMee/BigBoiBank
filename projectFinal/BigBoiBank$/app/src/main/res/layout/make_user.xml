@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/makeUser">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/promptName"
+        android:id="@+id/name"
+        android:layout_below="@id/title"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/promptAge"
+        android:id="@+id/age"
+        android:inputType="number"
+        android:layout_below="@id/name"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/promptAddress"
+        android:id="@+id/address"
+        android:layout_below="@id/age"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_password"
+        android:inputType="textPassword"
+        android:id="@+id/password"
+        android:layout_below="@id/address"/>
+    
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:hint="@string/promptConfirmPassword"
+        android:inputType="textPassword"
+        android:id="@+id/confirmPassword"
+        android:layout_below="@id/password"/>
+    
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm"
+        android:id="@+id/confirm"
+        android:layout_below="@id/confirmPassword"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirmationMessage"
+        android:layout_below="@id/confirm"
+        android:textAlignment="center"/>
+
+</RelativeLayout>

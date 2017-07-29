@@ -91,38 +91,25 @@ public class LogIn extends AppCompatActivity {
           boolean authenticated = user.authenticate(password.getText().toString());
           if (authenticated) {
             if (user instanceof Admin && admin.isChecked()) {
-              startActivity(new Intent(context, AdminInterface.class));
+              Intent intent = new Intent(context, AdminInterface.class);
+              intent.putExtra("id", user.getId());
+              intent.putExtra("password", password.getText().toString());
+              startActivity(intent);
             } else if (user instanceof Teller && teller.isChecked()) {
-              startActivity(new Intent(context, TellerInterface.class));
+              Intent intent = new Intent(context, TellerInterface.class);
+              intent.putExtra("id", user.getId());
+              intent.putExtra("password", password.getText().toString());
+              startActivity(intent);
             } else if (user instanceof Customer && customer.isChecked()) {
-              startActivity(new Intent(context, CustomerInterface.class));
-            }
+              Intent intent = new Intent(context, CustomerInterface.class);
+              intent.putExtra("id", user.getId());
+              intent.putExtra("password", password.getText().toString());
+              startActivity(intent);            }
           }
         }
       }
     });
 
   }
-//
-//  public void buttonOnClick() {
-//    button = (Button) findViewById(R.id.confirmButton);
-//    button.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View view) {
-//        try {
-//            // get the values they user put in the id
-//            EditText editTextId = (EditText) findViewById(R.id.inputId);
-//            String inputId = editTextId.getText().toString();
-//            // get the values the user put as the password
-//            EditText editTextPassword = (EditText) findViewById(R.id.inputPassword);
-//            String inputPassword = editTextPassword.getText().toString();
-//
-//        } catch (Exception e) {
-//            button.setText("Invalid Input you bagoongo");
-//        }
-//      }
-//    });
-//  }
-
 
 }

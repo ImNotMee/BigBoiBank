@@ -1,5 +1,6 @@
 package com.bigboibanks;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,18 +10,24 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import com.bank.machines.AdminTerminal;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdminInterface extends AppCompatActivity {
 
   final private List<List<Button>> buttons = new ArrayList<>();
+  private AdminTerminal machine;
+  private Context context;
   private int currSelection = 0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_admin_interface);
+    context = this;
+    machine = new AdminTerminal(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
     RelativeLayout buttonsContainer = (RelativeLayout) findViewById(R.id.home).findViewById(R.id.scrollView).findViewById(R.id.buttons);
     List<Button> customerOptions = new ArrayList<>();
     List<Button> messageOptions = new ArrayList<>();
@@ -87,4 +94,18 @@ public class AdminInterface extends AppCompatActivity {
     });
 
   }
+
+  public void makeAdmin(View v) {
+    OptionDialogs.makeUserDialog(machine, "admin", context);
+  }
+
+  public void makeTeller(View v) {
+    OptionDialogs.makeUserDialog(machine, "teller", context);
+  }
+
+  public void makeCustomer(View v) {
+    OptionDialogs.makeUserDialog(machine, "customer", context);
+  }
+
+
 }
