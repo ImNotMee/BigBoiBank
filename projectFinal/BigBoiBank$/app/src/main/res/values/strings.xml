@@ -10,4 +10,51 @@
     <string name="prompt_password">Input your password</string>
     <string name="logIn">Log In</string>
 
+    <string-array name="optionsArray">
+        <item>@string/customerOptions</item>
+        <item>@string/messageOptions</item>
+        <item>@string/staffOptions</item>
+        <item>@string/bankOptions</item>
+        <item>@string/databaseOptions</item>
+    </string-array>
+
+    <string name="customerOptions">Current Customer Interactions</string>
+    <string name="setCustomer">Set and authenticate a Customer</string>
+    <string name="listAccounts">List customer accounts</string>
+    <string name="makeAccount">Make a new account</string>
+    <string name="giveInterest">Give interest</string>
+    <string name="makeDeposit">Make a deposit</string>
+    <string name="makeWithdrawal">Make a withdrawal</string>
+    <string name="checkBalance">Check balance</string>
+    <string name="transferFunds">Transfer Funds</string>
+    <string name="updateName">Update name</string>
+    <string name="updateAge">Update age</string>
+    <string name="updateAddress">Update address</string>
+    <string name="updatePassword">Update password</string>
+    <string name="closeCustomer">Close the current customer session</string>
+
+    <string name="messageOptions">Message Interactions</string>
+    <string name="leaveMessage">Leave a message</string>
+    <string name="customerMessages">View message ID\'s the customer can see</string>
+    <string name="userMessages">View message ID\'s you can see</string>
+    <string name="seeMessage">See a specific message</string>
+    
+    <string name="staffOptions">Staff and Customer Interactions</string>
+    <string name="viewTellers">View Current Tellers</string>
+    <string name="viewAdmins">View current admins</string>
+    <string name="viewCustomers">View current customers</string>
+    <string name="makeCustomer">Make a new customer</string>
+    <string name="makeTeller">Make a new teller</string>
+    <string name="makeAdmin">Make a new admin</string>
+    <string name="promoteTeller">Promote a teller to admin</string>
+
+    <string name="bankOptions">Bank Interactions</string>
+    <string name="customerBalance">View total balance of all the accounts of a customer</string>
+    <string name="bankBalance">View the total balance of the bank</string>
+    <string name="updateInterest">Update account interest rate</string>
+    
+    <string name="databaseOptions">Database Interactions</string>
+    <string name="backup">Backup current database</string>
+    <string name="load">Load saved database</string>
+
 </resources>

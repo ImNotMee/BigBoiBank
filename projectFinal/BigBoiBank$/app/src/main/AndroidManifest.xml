@@ -21,6 +21,8 @@
         <activity android:name=".AdminInterface" />
         <activity android:name=".TellerInterface" />
         <activity android:name=".CustomerInterface" />
+        <activity android:name=".CustomerUserSession" />
+        <activity android:name=".CustomerUserSessionChoice"></activity>
     </application>
 
 </manifest>

@@ -1,86 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bigboibanks.AdminInterface">
+    tools:context="com.bigboibanks.AdminInterface"
+    android:id="@+id/home">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Admin Terminal"
-        android:textSize="25dp"
-        tools:layout_editor_absoluteX="105dp"
-        tools:layout_editor_absoluteY="41dp"
-        android:layout_marginBottom="46dp"
-        android:layout_above="@+id/button5"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/options"/>
 
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="368dp"
+    <ScrollView
+        android:layout_below="@+id/options"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Make New Teller or Admin"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="96dp"
-        android:layout_marginBottom="19dp"
-        android:layout_above="@+id/button6"
-        android:layout_alignStart="@+id/button6" />
+        android:id="@+id/scrollView">
 
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:text="Authenticate Customer"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="163dp"
-        android:layout_marginBottom="16dp"
-        android:layout_above="@+id/button7"
-        android:layout_alignStart="@+id/button7" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttons">
 
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:text="Make New Customer"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="231dp"
-        android:layout_marginBottom="13dp"
-        android:layout_above="@+id/button8"
-        android:layout_alignStart="@+id/button8" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/setCustomer"
+                android:text="@string/setCustomer"/>
 
-    <Button
-        android:id="@+id/button8"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:text="Make New Account"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="305dp"
-        android:layout_marginBottom="15dp"
-        android:layout_above="@+id/button9"
-        android:layout_alignStart="@+id/button9" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listAccounts"
+                android:text="@string/listAccounts"
+                android:layout_below="@id/setCustomer"/>
 
-    <Button
-        android:id="@+id/button9"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:text="Transactions"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="374dp"
-        android:layout_marginBottom="16dp"
-        android:layout_above="@+id/button10"
-        android:layout_alignStart="@+id/button10" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/makeAccount"
+                android:text="@string/makeAccount"
+                android:layout_below="@id/listAccounts"/>
 
-    <Button
-        android:id="@+id/button10"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:text="Customer Accounts"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="438dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="13dp" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/giveInterest"
+                android:text="@string/giveInterest"
+                android:layout_below="@id/makeAccount"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/makeDeposit"
+                android:text="@string/makeDeposit"
+                android:layout_below="@id/giveInterest"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/makeWithdrawal"
+                android:text="@string/makeWithdrawal"
+                android:layout_below="@id/makeAccount"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkBalance"
+                android:text="@string/checkBalance"
+                android:layout_below="@id/makeWithdrawal"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/transferFunds"
+                android:text="@string/transferFunds"
+                android:layout_below="@id/checkBalance"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateName"
+                android:text="@string/updateName"
+                android:layout_below="@id/transferFunds"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateAge"
+                android:text="@string/updateAge"
+                android:layout_below="@id/updateName"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateAddress"
+                android:text="@string/updateAddress"
+                android:layout_below="@id/updateAge"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updatePassword"
+                android:text="@string/updatePassword"
+                android:layout_below="@id/updateAddress"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/closeCustomer"
+                android:text="@string/closeCustomer"
+                android:layout_below="@id/updatePassword"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/leaveMessage"
+                android:text="@string/leaveMessage"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/customerMessages"
+                android:text="@string/customerMessages"
+                android:layout_below="@id/leaveMessage"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/userMessages"
+                android:text="@string/userMessages"
+                android:layout_below="@id/customerMessages"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seeMessage"
+                android:text="@string/seeMessage"
+                android:layout_below="@id/userMessages"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/viewAdmins"
+                android:text="@string/viewAdmins"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/viewTellers"
+                android:text="@string/viewTellers"
+                android:layout_below="@id/viewAdmins"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/viewCustomers"
+                android:text="@string/viewCustomers"
+                android:layout_below="@id/viewTellers"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/makeAdmin"
+                android:text="@string/makeAdmin"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/makeTeller"
+                android:text="@string/makeTeller"
+                android:layout_below="@id/makeAdmin"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/makeCustomer"
+                android:text="@string/makeCustomer"
+                android:layout_below="@id/makeTeller"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/promoteTeller"
+                android:text="@string/promoteTeller"
+                android:layout_below="@id/makeCustomer"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/customerBalance"
+                android:text="@string/customerBalance"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bankBalance"
+                android:text="@string/bankBalance"
+                android:layout_below="@id/customerBalance"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateInterest"
+                android:text="@string/updateInterest"
+                android:layout_below="@id/bankBalance"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/backup"
+                android:text="@string/backup"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/load"
+                android:text="@string/load"
+                android:layout_below="@id/backup"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+
+
+    </ScrollView>
+
+
 </RelativeLayout>
