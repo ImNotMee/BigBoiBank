@@ -1,9 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.bigboibanks.TellerInterface">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Teller Terminal"
+        android:textSize="25dp"
+        tools:layout_editor_absoluteY="29dp"
+        tools:layout_editor_absoluteX="110dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:text="Authenticate Customer"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="106dp"
+        android:layout_marginTop="62dp"
+        android:layout_below="@+id/textView4"
+        android:layout_alignStart="@+id/button2" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:text="Make New Account or Customer"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="179dp"
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="37dp" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:text="Set or Change Customer"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="259dp"
+        android:layout_below="@+id/button2"
+        android:layout_alignStart="@+id/button2"
+        android:layout_marginTop="41dp" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:text="Give Interest"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="326dp"
+        android:layout_below="@+id/button3"
+        android:layout_alignStart="@+id/button3"
+        android:layout_marginTop="34dp" />
+
+</RelativeLayout>
