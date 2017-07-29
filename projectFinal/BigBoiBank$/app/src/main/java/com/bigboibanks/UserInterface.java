@@ -11,6 +11,10 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.bank.machines.AdminTerminal;
+import com.bank.machines.AutomatedTellerMachine;
+import com.bank.machines.BankServiceSystems;
+import com.bank.machines.BankWorkerServiceSystems;
+import com.bank.machines.TellerTerminal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +22,24 @@ import java.util.List;
 public class UserInterface extends AppCompatActivity {
 
   final private List<List<Button>> buttons = new ArrayList<>();
-  private AdminTerminal machine;
+  private BankServiceSystems machine;
   private Context context;
   private int currSelection = 0;
+  private String machineTerminal;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_user_interface);
     context = this;
-    machine = new AdminTerminal(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
+    machineTerminal = getIntent().getStringExtra("machine");
+    if (machineTerminal.equals("admin")) {
+      machine = new AdminTerminal(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
+    } else if (machineTerminal.equals("teller")) {
+      machine = new TellerTerminal(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
+    } else {
+      machine = new AutomatedTellerMachine(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
+    }
     RelativeLayout buttonsContainer = (RelativeLayout) findViewById(R.id.home).findViewById(R.id.scrollView).findViewById(R.id.buttons);
     List<Button> customerOptions = new ArrayList<>();
     List<Button> messageOptions = new ArrayList<>();
@@ -35,40 +47,77 @@ public class UserInterface extends AppCompatActivity {
     List<Button> bankOptions = new ArrayList<>();
     List<Button> databaseOptions = new ArrayList<>();
 
-    // add the 13 customer options
-    for (int i = 0; i < 13; i++) {
-      customerOptions.add((Button) buttonsContainer.getChildAt(i));
-    }
-    // add the 4 message options
-    for (int i = 13; i < 17; i++) {
-      messageOptions.add((Button) buttonsContainer.getChildAt(i));
-    }
-
-    // add the 7 staff options
-    for (int i = 17; i < 24; i++) {
-      staffOptions.add((Button) buttonsContainer.getChildAt(i));
-    }
-
-    // add the 3 bank options
-    for (int i = 24; i < 27; i++) {
-      bankOptions.add((Button) buttonsContainer.getChildAt(i));
+    if (machineTerminal.equals("customer")) {
+      customerOptions.add((Button) buttonsContainer.getChildAt(1));
+      customerOptions.add((Button) buttonsContainer.getChildAt(4));
+      customerOptions.add((Button) buttonsContainer.getChildAt(5));
+      customerOptions.add((Button) buttonsContainer.getChildAt(6));
+      customerOptions.add((Button) buttonsContainer.getChildAt(7));
+      buttons.add(customerOptions);
+    } else {
+      // add the 13 customer options
+      for (int i = 0; i < 13; i++) {
+        customerOptions.add((Button) buttonsContainer.getChildAt(i));
+      }
+      buttons.add(customerOptions);
     }
 
-    // add the 2 database options
-    for (int i = 27; i < 29; i++) {
-      databaseOptions.add((Button) buttonsContainer.getChildAt(i));
+    if (machineTerminal.equals("customer")) {
+      messageOptions.add((Button) buttonsContainer.getChildAt(1));
+      messageOptions.get(1).setText(getString(R.string.userMessages));
+      messageOptions.add((Button) buttonsContainer.getChildAt(3));
+      buttons.add(messageOptions);
+    } else {
+      // add the 4 message options
+      for (int i = 13; i < 17; i++) {
+        messageOptions.add((Button) buttonsContainer.getChildAt(i));
+      }
+      buttons.add(messageOptions);
     }
 
-    buttons.add(customerOptions);
-    buttons.add(messageOptions);
-    buttons.add(staffOptions);
-    buttons.add(bankOptions);
-    buttons.add(databaseOptions);
+    if (machineTerminal.equals("admin")) {
+      // add the 7 staff options
+      for (int i = 17; i < 24; i++) {
+        staffOptions.add((Button) buttonsContainer.getChildAt(i));
+      }
+      buttons.add(staffOptions);
+    } else if (machineTerminal.equals("teller")) {
+      staffOptions.add((Button) buttonsContainer.getChildAt(5));
+      buttons.add(staffOptions);
+    }
+
+    if (machineTerminal.equals("admin")) {
+      // add the 3 bank options
+      for (int i = 24; i < 27; i++) {
+        bankOptions.add((Button) buttonsContainer.getChildAt(i));
+      }
+      buttons.add(bankOptions);
+    } else if (machineTerminal.equals("teller")) {
+      staffOptions.add((Button) buttonsContainer.getChildAt(0));
+      buttons.add(bankOptions);
+    }
+
+    if (machineTerminal.equals("admin")) {
+      // add the 2 database options
+      for (int i = 27; i < 29; i++) {
+        databaseOptions.add((Button) buttonsContainer.getChildAt(i));
+      }
+      buttons.add(databaseOptions);
+    }
 
     Spinner spinner = (Spinner) findViewById(R.id.options);
-    // Create an ArrayAdapter using the string array and a default spinner layout
-    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-            R.array.optionsArray, android.R.layout.simple_spinner_item);
+    ArrayAdapter<CharSequence> adapter;
+    if (machineTerminal.equals("admin")) {
+      // Create an ArrayAdapter using the string array and a default spinner layout
+      adapter = ArrayAdapter.createFromResource(this,
+              R.array.adminOptionsArray, android.R.layout.simple_spinner_item);
+    } else if (machine.equals("teller")) {
+      adapter = ArrayAdapter.createFromResource(this,
+              R.array.tellerOptionsArray, android.R.layout.simple_spinner_item);
+    } else {
+      adapter = ArrayAdapter.createFromResource(this,
+              R.array.customerOptionsArray, android.R.layout.simple_spinner_item);
+    }
     // Specify the layout to use when the list of choices appears
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     // Apply the adapter to the spinner
@@ -96,15 +145,15 @@ public class UserInterface extends AppCompatActivity {
   }
 
   public void makeAdmin(View v) {
-    OptionDialogs.makeUserDialog(machine, "admin", context);
+    OptionDialogs.makeUserDialog((BankWorkerServiceSystems) machine, "admin", context);
   }
 
   public void makeTeller(View v) {
-    OptionDialogs.makeUserDialog(machine, "teller", context);
+    OptionDialogs.makeUserDialog((BankWorkerServiceSystems)machine, "teller", context);
   }
 
   public void makeCustomer(View v) {
-    OptionDialogs.makeUserDialog(machine, "customer", context);
+    OptionDialogs.makeUserDialog((BankWorkerServiceSystems)machine, "customer", context);
   }
 
 
