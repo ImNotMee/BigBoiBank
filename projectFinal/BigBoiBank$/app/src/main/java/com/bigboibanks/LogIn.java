@@ -100,14 +100,15 @@ public class LogIn extends AppCompatActivity {
               Intent intent = new Intent(context, UserInterface.class);
               intent.putExtra("id", user.getId());
               intent.putExtra("password", password.getText().toString());
-              intent.putExtra("machine", "teller")
+              intent.putExtra("machine", "teller");
               startActivity(intent);
             } else if (user instanceof Customer && customer.isChecked()) {
               Intent intent = new Intent(context, UserInterface.class);
               intent.putExtra("id", user.getId());
               intent.putExtra("password", password.getText().toString());
               intent.putExtra("machine", "customer");
-              startActivity(intent);            }
+              startActivity(intent);
+            }
           }
         }
       }

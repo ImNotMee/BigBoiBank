@@ -10,12 +10,24 @@
     <string name="prompt_password">Input your password</string>
     <string name="logIn">Log In</string>
 
-    <string-array name="optionsArray">
+    <string-array name="adminOptionsArray">
         <item>@string/customerOptions</item>
         <item>@string/messageOptions</item>
         <item>@string/staffOptions</item>
         <item>@string/bankOptions</item>
         <item>@string/databaseOptions</item>
+    </string-array>
+
+    <string-array name="tellerOptionsArray">
+        <item>@string/customerOptions</item>
+        <item>@string/messageOptions</item>
+        <item>@string/staffOptions</item>
+        <item>@string/bankOptions</item>
+    </string-array>
+
+    <string-array name="customerOptionsArray">
+        <item>@string/customerOptions</item>
+        <item>@string/bankOptions</item>
     </string-array>
 
     <string name="customerOptions">Current Customer Interactions</string>
