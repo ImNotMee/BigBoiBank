@@ -16,6 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".AdminTerminal" />
+        <activity android:name=".TellerTerminal" />
+        <activity android:name=".AdminInterface" />
+        <activity android:name=".TellerInterface" />
+        <activity android:name=".CustomerInterface"></activity>
     </application>
 
 </manifest>

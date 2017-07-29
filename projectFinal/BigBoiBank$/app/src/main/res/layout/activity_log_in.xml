@@ -18,35 +18,6 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true" />
 
-    <Button
-        android:id="@+id/admin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="73dp"
-        android:text="@string/admin_terminal"
-        android:layout_alignBottom="@+id/teller"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:id="@+id/teller"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/teller_terminal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/admin"
-        android:layout_marginBottom="36dp" />
-
-    <Button
-        android:id="@+id/atm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/atm"
-        android:layout_above="@+id/admin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="19dp" />
-
-
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,24 +33,37 @@
         android:hint="@string/prompt_password"
         android:layout_below="@+id/inputId"/>
 
-    <Button
-        android:id="@+id/confirmButton"
+    <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/userChoice"
         android:layout_below="@+id/inputPassword"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="Confirm" />
+        android:layout_centerHorizontal="true">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/admin"
+            android:text="@string/admin"
+            android:checked="true"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/teller"
+            android:text="@string/teller"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/customer"
+            android:text="@string/customer"/>
+    </RadioGroup>
 
-    <EditText
-        android:id="@+id/infoText"
+    <Button
+        android:id="@+id/logIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/atm"
+        android:layout_below="@+id/userChoice"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:visibility="invisible" />
+        android:text="@string/logIn"/>
 
 </RelativeLayout>
