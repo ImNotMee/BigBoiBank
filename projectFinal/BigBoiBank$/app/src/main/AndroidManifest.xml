@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".AdminTerminal" />
         <activity android:name=".TellerTerminal" />
-        <activity android:name=".AdminInterface" />
+        <activity android:name=".UserInterface" />
         <activity android:name=".TellerInterface" />
         <activity android:name=".CustomerInterface" />
         <activity android:name=".CustomerUserSession" />

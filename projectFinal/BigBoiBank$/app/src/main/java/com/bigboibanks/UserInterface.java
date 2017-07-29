@@ -15,7 +15,7 @@ import com.bank.machines.AdminTerminal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminInterface extends AppCompatActivity {
+public class UserInterface extends AppCompatActivity {
 
   final private List<List<Button>> buttons = new ArrayList<>();
   private AdminTerminal machine;
@@ -25,7 +25,7 @@ public class AdminInterface extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_admin_interface);
+    setContentView(R.layout.activity_user_interface);
     context = this;
     machine = new AdminTerminal(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
     RelativeLayout buttonsContainer = (RelativeLayout) findViewById(R.id.home).findViewById(R.id.scrollView).findViewById(R.id.buttons);

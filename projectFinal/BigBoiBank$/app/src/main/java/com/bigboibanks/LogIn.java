@@ -91,19 +91,22 @@ public class LogIn extends AppCompatActivity {
           boolean authenticated = user.authenticate(password.getText().toString());
           if (authenticated) {
             if (user instanceof Admin && admin.isChecked()) {
-              Intent intent = new Intent(context, AdminInterface.class);
+              Intent intent = new Intent(context, UserInterface.class);
               intent.putExtra("id", user.getId());
               intent.putExtra("password", password.getText().toString());
+              intent.putExtra("machine", "admin" );
               startActivity(intent);
             } else if (user instanceof Teller && teller.isChecked()) {
-              Intent intent = new Intent(context, TellerInterface.class);
+              Intent intent = new Intent(context, UserInterface.class);
               intent.putExtra("id", user.getId());
               intent.putExtra("password", password.getText().toString());
+              intent.putExtra("machine", "teller")
               startActivity(intent);
             } else if (user instanceof Customer && customer.isChecked()) {
-              Intent intent = new Intent(context, CustomerInterface.class);
+              Intent intent = new Intent(context, UserInterface.class);
               intent.putExtra("id", user.getId());
               intent.putExtra("password", password.getText().toString());
+              intent.putExtra("machine", "customer");
               startActivity(intent);            }
           }
         }
