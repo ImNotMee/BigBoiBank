@@ -28,7 +28,6 @@ import java.math.BigDecimal;
 
 public class LogIn extends AppCompatActivity {
 
-  private Button button;
   private static SharedPreferences savedInfo;
   private static SharedPreferences.Editor savedInfoWriter;
 

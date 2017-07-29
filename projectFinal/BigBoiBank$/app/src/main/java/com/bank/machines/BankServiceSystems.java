@@ -221,4 +221,8 @@ public abstract class BankServiceSystems {
   public boolean updateMessageStatus(int messageId) {
     return updater.updateUserMessageState(messageId);
   }
+
+  public User getCurrentCustomer() {
+    return this.currentCustomer;
+  }
 }
