@@ -56,5 +56,11 @@
     <string name="databaseOptions">Database Interactions</string>
     <string name="backup">Backup current database</string>
     <string name="load">Load saved database</string>
-
+    
+    <string name="promptName">Input Name</string>
+    <string name="promptAge">Input Age</string>
+    <string name="promptAddress">Input Address (100 Character Limit)</string>
+    <string name="promptPassword">Input Password></string>
+    <string name="promptConfirmPassword">Confirm Password</string>
+    <string name="confirm">Confirm</string>
 </resources>

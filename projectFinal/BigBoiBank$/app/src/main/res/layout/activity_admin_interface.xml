@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/makeWithdrawal"
                 android:text="@string/makeWithdrawal"
-                android:layout_below="@id/makeAccount"/>
+                android:layout_below="@id/makeDeposit"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -172,7 +172,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/makeAdmin"
                 android:text="@string/makeAdmin"
-                android:visibility="gone"/>
+                android:layout_below="@id/viewCustomers"
+                android:visibility="gone"
+                android:onClick="makeAdmin"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -180,7 +182,8 @@
                 android:id="@+id/makeTeller"
                 android:text="@string/makeTeller"
                 android:layout_below="@id/makeAdmin"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="makeTeller"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -188,7 +191,8 @@
                 android:id="@+id/makeCustomer"
                 android:text="@string/makeCustomer"
                 android:layout_below="@id/makeTeller"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="makeCustomer"/>
 
             <Button
                 android:layout_width="match_parent"
