@@ -27,7 +27,7 @@
 
     <string-array name="customerOptionsArray">
         <item>@string/customerOptions</item>
-        <item>@string/bankOptions</item>
+        <item>@string/messageOptions</item>
     </string-array>
 
     <string name="customerOptions">Current Customer Interactions</string>
