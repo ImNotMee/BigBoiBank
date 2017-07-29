@@ -23,7 +23,7 @@ public class DatabaseDriverA extends SQLiteOpenHelper {
 
   }
 
-  protected int getDatabaseVersion() {
+  public int getDatabaseVersion() {
     return this.DATABASE_VERSION;
   }
 
@@ -69,13 +69,13 @@ public class DatabaseDriverA extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-    sqLiteDatabase.execSQL("DROP TABLES IF EXIST USERMESSAGES");
-    sqLiteDatabase.execSQL("DROP TABLES IF EXIST USERPW");
-    sqLiteDatabase.execSQL("DROP TABLES IF EXIST USERACCOUNT");
-    sqLiteDatabase.execSQL("DROP TABLES IF EXIST USERS");
-    sqLiteDatabase.execSQL("DROP TABLES IF EXIST ACCOUNTS");
-    sqLiteDatabase.execSQL("DROP TABLES IF EXIST ACCOUNTTYPES");
-    sqLiteDatabase.execSQL("DROP TABLES IF EXIST ROLES");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXIST USERMESSAGES");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXIST USERPW");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXIST USERACCOUNT");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXIST USERS");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXIST ACCOUNTS");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXIST ACCOUNTTYPES");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXIST ROLES");
 
     onCreate(sqLiteDatabase);
   }
@@ -365,7 +365,7 @@ public class DatabaseDriverA extends SQLiteOpenHelper {
     SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
     ContentValues contentValues = new ContentValues();
     contentValues.put("VIEWED", 1);
-    return sqLiteDatabase.update("ACCOUNTS",contentValues,"ID = ?",
+    return sqLiteDatabase.update("USERMESSAGES",contentValues,"ID = ?",
             new String[] {String.valueOf(id)}) > 0;
   }
 }

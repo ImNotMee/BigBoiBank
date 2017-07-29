@@ -66,17 +66,17 @@ public class DatabaseSelectHelper {
     }
     // try to get the User details of the given userId
     Cursor cursor = driverExtender.getUserDetails(userId);
-     if(cursor.moveToFirst()) {
-       String role = getRole(cursor.getInt(cursor.getColumnIndex("ROLEID")));
-       // try to create the new user
-       User user = UserCreator.makeUser(userId, cursor.getString(cursor.getColumnIndex("NAME")),
-               cursor.getInt(cursor.getColumnIndex("AGE")),
-               cursor.getString(cursor.getColumnIndex("ADDRESS")), role, this.context);
-       cursor.close();
-       return user;
-     } else {
-       return null;
-     }
+    if (cursor.moveToFirst()) {
+      String role = getRole(cursor.getInt(cursor.getColumnIndex("ROLEID")));
+      // try to create the new user
+      User user = UserCreator.makeUser(userId, cursor.getString(cursor.getColumnIndex("NAME")),
+              cursor.getInt(cursor.getColumnIndex("AGE")),
+              cursor.getString(cursor.getColumnIndex("ADDRESS")), role, this.context);
+      cursor.close();
+      return user;
+    } else {
+      return null;
+    }
   }
  
   /**
@@ -93,7 +93,6 @@ public class DatabaseSelectHelper {
     List<Integer> accountIds = new ArrayList<>();
     // try to get the accounts of the given Id
     Cursor cursor = driverExtender.getAccountIds(userId);
-    cursor.moveToFirst();
     // loop through each available row in the results
     while (cursor.moveToNext()) {
       // add the accountId to the list of accountIds
@@ -168,7 +167,6 @@ public class DatabaseSelectHelper {
     // create an empty array of AccountTypeIds
     List<Integer> accountTypeIds = new ArrayList<>();
     Cursor cursor = driverExtender.getAccountTypesId();
-    cursor.moveToFirst();
     // add each id to the list of ids
     while (cursor.moveToNext()) {
       accountTypeIds.add(cursor.getInt(cursor.getColumnIndex("ID")));
@@ -200,7 +198,6 @@ public class DatabaseSelectHelper {
     // create an empty array of roleIds
     List<Integer> roleIds = new ArrayList<>();
     Cursor cursor = driverExtender.getRoles();
-    cursor.moveToFirst();
     // add each role id to the roleIds
     while (cursor.moveToNext()) {
       roleIds.add(cursor.getInt(cursor.getColumnIndex("ID")));
@@ -249,7 +246,6 @@ public class DatabaseSelectHelper {
     }
     ArrayList<Integer> messageIds = new ArrayList<>();
     Cursor cursor = driverExtender.getAllMessages(userId);
-    cursor.moveToFirst();
     while (cursor.moveToNext()) {
       messageIds.add(new Integer(cursor.getInt(cursor.getColumnIndex("ID"))));
     }

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.databasehelper.DatabaseUpdateHelper;
+import com.bank.generics.RolesEnumMap;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Admin extends User {
     insertor = new DatabaseInsertHelper(context);
     selector = new DatabaseSelectHelper(context);
     updater = new DatabaseUpdateHelper(context);
+    this.enumMap = new RolesEnumMap(context);
     this.setId(id);
     this.setName(name);
     this.setAge(age);
