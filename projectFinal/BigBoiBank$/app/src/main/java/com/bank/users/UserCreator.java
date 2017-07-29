@@ -13,7 +13,6 @@ public abstract class UserCreator {
    * @param address The address of the User.
    * @param role The role of the User.
    * @return The User created, or null if the given type is invalid.
-   * @throws ConnectionFailedException If the database can not be connected to.
    */
   public static User makeUser(int id, String name, int age, String address, String role, Context context) {
     if (role.equals("ADMIN")) {

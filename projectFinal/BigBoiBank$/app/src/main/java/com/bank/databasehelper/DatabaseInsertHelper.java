@@ -53,20 +53,7 @@ public class DatabaseInsertHelper {
   public int insertAccountType(String name, BigDecimal interestRate) {
     if (interestRate.compareTo(BigDecimal.ONE) < 0 && interestRate.compareTo(BigDecimal.ZERO) >= 0
             && AccountTypesContains.contains(name)) {
-      // check if the account type is already in the database
-      List<Integer> accountIds = selector.getAccountTypesIds();
-      // variable to check if this account name is unique
-      boolean unique = true;
-      // loop through each account type and if the Account exists, set that it is not unique
-      for (Integer id : accountIds) {
-        if (driverExtender.getRole(id).equals(name.toUpperCase())) {
-          unique = false;
-        }
-      }
-      // try to add a new account type to the database if its not there, seeing if it worked
-      if (unique) {
-        return (int) driverExtender.insertAccountType(name.toUpperCase(), interestRate);
-      }
+      return (int) driverExtender.insertAccountType(name.toUpperCase(), interestRate);
     }
     return -1;
   }
@@ -101,20 +88,7 @@ public class DatabaseInsertHelper {
   public int insertRole(String role) {
     // ensure the role is in the enum
     if (RolesContains.contains(role)) {
-      // check if the role is already in the database
-      List<Integer> roleIds = selector.getAccountTypesIds();
-      // variable to check if this account name is unique
-      boolean unique = true;
-      // loop through each roleId and if the Account exists, set that it is not unique
-      for (Integer id : roleIds) {
-        if (driverExtender.getRole(id).equals(role.toUpperCase())) {
-          unique = false;
-        }
-      }
-      // try to add a new role to the database if its not there, seeing if it worked
-      if (unique) {
-        return (int) driverExtender.insertRole(role.toUpperCase());
-      }
+      return (int) driverExtender.insertRole(role.toUpperCase());
     }
     return -1;
   }
