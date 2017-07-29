@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">BigBoiBank$</string>
+    <string name="admin">Admin</string>
+    <string name="teller">Teller</string>
+    <string name="customer">Customer</string>
     <string name="admin_terminal">Admin Terminal</string>
     <string name="teller_terminal">Teller Terminal</string>
     <string name="atm">Automated Teller Machine (ATM)</string>
     <string name="prompt_id">Input your ID</string>
     <string name="prompt_password">Input your password</string>
+    <string name="logIn">Log In</string>
 
 </resources>
