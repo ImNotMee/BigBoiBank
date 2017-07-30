@@ -1,6 +1,8 @@
 package com.bank.machines;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.bank.accounts.Account;
 import com.bank.databasehelper.DatabaseBackUp;
@@ -11,6 +13,7 @@ import com.bank.databasehelper.DatabaseUpdateHelper;
 import com.bank.generics.RolesEnumMap;
 import com.bank.users.User;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -119,15 +122,14 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     try {
       DatabaseBackUp db = new DatabaseBackUp(this.context);
       db.update();
-      FileOutputStream outputStream = new FileOutputStream(output);
+      File file = new File(this.context.getFilesDir(), output);
+      FileOutputStream outputStream = new FileOutputStream(file);
       ObjectOutputStream serialize = new ObjectOutputStream(outputStream);
       serialize.writeObject(db);
-      System.out.println("The DatabaseBackUp object has been sucessfully written to " + output);
       serialize.close();
       outputStream.close(); 
       return true;
     } catch (IOException e) {
-      System.out.print("The DatabaseBacUp Object could not be written");
     }
     return false;
     
@@ -136,19 +138,24 @@ public class AdminTerminal extends BankWorkerServiceSystems {
   public boolean loadDatabase(String input) {
 		DatabaseBackUp db = new DatabaseBackUp(this.context);
 		boolean check = false;
-	    try {
-		  FileInputStream inputStream = new FileInputStream(input);
-		  ObjectInputStream deserialize = new ObjectInputStream(inputStream);
-		  db = (DatabaseBackUp) deserialize.readObject();
-		  deserialize.close();
-		  inputStream.close();
-	      check = true;
-		  } catch(Exception e) {
-			  e.printStackTrace();
-		  }
+    try {
+      File file = new File(this.context.getFilesDir(), input);
+      FileInputStream inputStream = new FileInputStream(file);
+      ObjectInputStream deserialize = new ObjectInputStream(inputStream);
+      db = (DatabaseBackUp) deserialize.readObject();
+      deserialize.close();
+      inputStream.close();
+        check = true;
+      } catch(Exception e) {
+      }
 
-    DatabaseDriverAExtender driver = new DatabaseDriverAExtender(this.context);
-    driver.reinitialize();
+    try {
+      DatabaseDriverAExtender driver = new DatabaseDriverAExtender(this.context);
+      driver.reinitialize();
+    } catch (Exception e) {
+      Log.e("MYAPP", "exception", e);
+    }
+
     ArrayList<BigDecimal> balance = db.getAccountBalances();
     ArrayList<BigDecimal> interestRate = db.getAccountInterestRates();
     ArrayList<String> accountNames = db.getAccountNames();
@@ -205,7 +212,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
         }
       }
     }
-    System.out.println("The DatabaseBackUp object has been sucesfully loaded");
+    System.out.println("The DatabaseBackUp object has been sucessfully loaded");
     return check;
   }
    

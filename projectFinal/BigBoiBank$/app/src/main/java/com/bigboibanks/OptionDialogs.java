@@ -564,7 +564,7 @@ public abstract class OptionDialogs {
           if (address.length() == 0 || address.length() > 100) {
             confirmationMessage += context.getString(R.string.invalidAddress);
           } else {
-            machine.updateUserName(address);
+            machine.updateUserAddress(address);
             confirmationMessage += context.getString(R.string.addressUpdated);
           }
           confirmMessage.setText(confirmationMessage);
@@ -720,7 +720,9 @@ public abstract class OptionDialogs {
     } else {
       final Dialog dialog = new Dialog(context);
       dialog.setContentView(R.layout.list_message_ids);
-      final LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.layout);
+      final RelativeLayout parent = (RelativeLayout) dialog.findViewById(R.id.parent);
+      final ScrollView scrollView = (ScrollView) parent.findViewById(R.id.scrollView);
+      final LinearLayout layout = (LinearLayout) scrollView.findViewById(R.id.layout);
       // show the user all of the message Ids that are for them
       try {
         ArrayList<Integer> ids = (ArrayList<Integer>) machine.getCustomerMessageIds();
