@@ -29,6 +29,7 @@
             android:id="@+id/buttons">
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/setCustomer"
@@ -37,6 +38,7 @@
                 android:onClick="setCustomer"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/listAccounts"
@@ -46,6 +48,7 @@
                 android:onClick="listAccounts"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeAccount"
@@ -55,6 +58,7 @@
                 android:onClick="makeAccount"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/giveInterest"
@@ -64,6 +68,7 @@
                 android:onClick="giveInterest"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeDeposit"
@@ -73,6 +78,7 @@
                 android:onClick="makeDeposit"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeWithdrawal"
@@ -82,6 +88,7 @@
                 android:onClick="makeWithdrawal"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/checkBalance"
@@ -91,6 +98,7 @@
                 android:onClick="checkBalance"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/transferFunds"
@@ -100,6 +108,7 @@
                 android:onClick="transferFunds"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updateName"
@@ -109,6 +118,7 @@
                 android:onClick="updateName"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updateAge"
@@ -118,6 +128,7 @@
                 android:onClick="updateAge"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updateAddress"
@@ -127,6 +138,7 @@
                 android:onClick="updateAddress"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updatePassword"
@@ -136,6 +148,7 @@
                 android:onClick="updatePassword"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/closeCustomer"
@@ -145,6 +158,7 @@
                 android:onClick="closeCustomerSession"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/leaveMessage"
@@ -153,6 +167,7 @@
                 android:onClick="leaveMessage"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/customerMessages"
@@ -162,6 +177,7 @@
                 android:onClick="showMessageIds"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/userMessages"
@@ -171,6 +187,7 @@
                 android:onClick="showUserMessageIds"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/seeMessage"
@@ -180,6 +197,7 @@
                 android:onClick="seeSpecificMessage"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/viewAdmins"
@@ -188,6 +206,7 @@
                 android:onClick="listCurrentAdmins"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/viewTellers"
@@ -197,6 +216,7 @@
                 android:onClick="listCurrentTellers"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/viewCustomers"
@@ -206,6 +226,7 @@
                 android:onClick="listCurrentCustomers"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeAdmin"
@@ -215,6 +236,7 @@
                 android:onClick="makeAdmin"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeTeller"
@@ -224,6 +246,7 @@
                 android:onClick="makeTeller"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeCustomer"
@@ -233,6 +256,7 @@
                 android:onClick="makeCustomer"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/promoteTeller"
@@ -241,6 +265,7 @@
                 android:visibility="gone"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/customerBalance"
@@ -249,6 +274,7 @@
                 android:onClick="viewCustomerBalance"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/bankBalance"
@@ -258,6 +284,7 @@
                 android:onClick="viewTotalBankBalance"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updateInterest"
@@ -266,6 +293,7 @@
                 android:visibility="gone"/>
 
             <Button
+                android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/backup"
@@ -274,6 +302,7 @@
                 android:onClick="backUpDatabase"/>
 
             <Button
+                android:background="@color/colorButtonYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/load"
