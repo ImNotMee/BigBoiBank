@@ -2,13 +2,12 @@ package com.bigboibanks;
 
 // credits to https://stackoverflow.com/questions/11300847/load-and-display-all-the-images-from-a-folder
 //https://developer.android.com/training/camera/photobasics.html#TaskGallery
+// https://androidkennel.org/android-camera-access-tutorial/
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Environment;
@@ -341,6 +340,30 @@ public class UserInterface extends AppCompatActivity {
 
   public void transferFunds(View v) {
     OptionDialogs.transferFunds(machine, context);
+  }
+
+  public void backUpDatabase(View v) {
+    if (((AdminTerminal) machine).backUpDatabase("database_copy.ser")) {
+      Toast.makeText(context, context.getString(R.string.databaseBackedUp), Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(context, context.getString(R.string.databaseBackUpFailed), Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  public void loadSavedDatabase(View v) {
+    if (((AdminTerminal) machine).loadDatabase("database_copy.ser")) {
+      Toast.makeText(context, context.getString(R.string.databaseLoaded), Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(context, context.getString(R.string.databaseNotLoaded), Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  public void viewCustomerBalance(View v) {
+    OptionDialogs.viewUserBalanceDialog((BankWorkerServiceSystems) machine, context);
+  }
+
+  public void viewTotalBankBalance(View v) {
+    Toast.makeText(context, (context.getString(R.string.totalBankBalance) + ((AdminTerminal)machine).getTotalBankBalance().toString()), Toast.LENGTH_SHORT).show();
   }
 
   public void leaveMessage(View v) {

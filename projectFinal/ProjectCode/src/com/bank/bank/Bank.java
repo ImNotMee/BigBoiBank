@@ -33,7 +33,7 @@ public class Bank {
 
   /**
    * Runs the bank.
-   * 
+   *
    * @param argv Used to tell if initialize mode or a terminal.
    */
   public static void main(String[] argv) {
@@ -106,9 +106,6 @@ public class Bank {
             AdminTerminal adminTerminal =
                 new AdminTerminal(Integer.valueOf(adminId), adminPassword);
             String adminOption;
-            System.out.println("Please input the number of what you would like to do and press "
-                + "enter (Options 3 - 7 are available only if the current Customer is set and "
-                + "authenticated): ");
             do {
               // ask what the admin would like to do
               System.out.println(
@@ -213,7 +210,7 @@ public class Bank {
                 // see total money in the bank
               } else if (adminOption.equals("29")) {
                 viewBankTotalBalance(adminTerminal);
-              } 
+              }
             } while (!adminOption.equals("30"));
             try {
               connection.close();
@@ -253,9 +250,6 @@ public class Bank {
             TellerTerminal tellerTerminal =
                 new TellerTerminal(Integer.valueOf(tellerId), tellerPassword);
             String tellerOption;
-            System.out.println("Please input the number of what you would like to do and press "
-                + "enter (Options 3 - 7 are available only if the current Customer is set and "
-                + "authenticated): ");
             do {
               System.out.println("1 - Set and authenticate new Customer\n2 - Make new Customer"
                   + "\n3 - Make new Account\n4 - Give interest\n5 - Make a deposit"
@@ -415,7 +409,7 @@ public class Bank {
 
   /**
    * See the Accounts of the current Customer.
-   * 
+   *
    * @param machine The bank machine to get the accounts from.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
@@ -430,7 +424,7 @@ public class Bank {
 
   /**
    * Deposit money to an account for the current Customer.
-   * 
+   *
    * @param machine The bank machine to deposit money to
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
@@ -475,7 +469,7 @@ public class Bank {
 
   /**
    * Check the balance of an account for the current Customer.
-   * 
+   *
    * @param machine The bank machine to check the balance from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
@@ -499,7 +493,7 @@ public class Bank {
 
   /**
    * Make a withdrawal from an account for the current Customer.
-   * 
+   *
    * @param machine The bank machine to withdraw from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
@@ -546,7 +540,7 @@ public class Bank {
 
   /**
    * Set and authenticate the current Customer.
-   * 
+   *
    * @param machine The bank machine to set and authenticate the Customer from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
@@ -579,7 +573,7 @@ public class Bank {
 
   /**
    * Make a new Customer.
-   * 
+   *
    * @param machine The bank machine to make a Customer from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
@@ -624,7 +618,7 @@ public class Bank {
 
   /**
    * Make a new account for the current Customer.
-   * 
+   *
    * @param machine The bank machine to make an Account from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
@@ -698,7 +692,7 @@ public class Bank {
 
   /**
    * Give interest to an account for the current Customer.
-   * 
+   *
    * @param machine The bank machine to give interest from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
@@ -735,7 +729,7 @@ public class Bank {
 
   /**
    * Make a new Admin.
-   * 
+   *
    * @param machine The bank machine to make the Admin from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
@@ -780,7 +774,7 @@ public class Bank {
 
   /**
    * Make a new Teller.
-   * 
+   *
    * @param machine The bank machine to make the Teller from
    * @param inputReader Used to read input from the User
    * @throws ConnectionFailedException If the database can not be connected to
@@ -825,7 +819,7 @@ public class Bank {
 
   /**
    * Output a list of Users of the given type.
-   * 
+   *
    * @param machine The bank machine to check the view the Users from
    * @param type The type of Users to find
    */
@@ -843,7 +837,7 @@ public class Bank {
 
   /**
    * Promotes a teller to an admin.
-   * 
+   *
    * @param machine The bank machine to promote the teller from
    * @param inputReader Used to read input from the user
    * @throws ConnectionFailedException If the database can not be connected to
@@ -872,7 +866,7 @@ public class Bank {
 
   /**
    * Change the name of a User in the database.
-   * 
+   *
    * @param machine The machine to change the name on.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
@@ -891,7 +885,7 @@ public class Bank {
 
   /**
    * Change the age of a User in the database.
-   * 
+   *
    * @param machine The machine to change the age on.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
@@ -915,7 +909,7 @@ public class Bank {
 
   /**
    * Change the age of a User in the database.
-   * 
+   *
    * @param machine The machine to change the age on.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
@@ -940,7 +934,7 @@ public class Bank {
 
   /**
    * Change the password of the current customer in the database.
-   * 
+   *
    * @param machine The machine to change the password on.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
@@ -959,7 +953,7 @@ public class Bank {
 
   /**
    * View message ids that the user can view.
-   * 
+   *
    * @param machine The machine to check for the message ids.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
@@ -979,7 +973,7 @@ public class Bank {
 
   /**
    * View message ids that the user can view.
-   * 
+   *
    * @param machine The machine to check for the message ids.
    * @throws ConnectionFailedException If the database can not be connected to.
    */
@@ -1004,7 +998,7 @@ public class Bank {
   /**
    * View a specific message. If admin is viewing someone else's message, the view status is
    * unchanged. Otherwise it will be changed.
-   * 
+   *
    * @param machine The machine to view the messages from.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
@@ -1100,7 +1094,7 @@ public class Bank {
 
   /**
    * Transfer funds from your account to another account.
-   * 
+   *
    * @param machine The machine to transfer funds on.
    * @param inputReader Used to read input from the user.
    * @throws ConnectionFailedException If the database can not be connected to.
@@ -1175,26 +1169,26 @@ public class Bank {
 
   /**
    * Serializes the database and saves the ser file in w/e mangz.
-   * 
+   *
    * @param machine the admin terminal.
    */
   private static void backUpDatabase(AdminTerminal machine) {
    machine.backUpDatabase("database_copy.ser");
   }
-  
-  private static void loadSavedDatabase(AdminTerminal machine) 
+
+  private static void loadSavedDatabase(AdminTerminal machine)
       throws ConnectionFailedException {
     machine.loadDatabase("database_copy.ser");
   }
 
   /**
    * View the total amount of money of the current customer.
-   * 
+   *
    * @param machine The machine to get the total balance from.
    * @throws ConnectionFailedException If the database can not be connected to.
    * @throws IOException If there is an error with input or output.
    */
-  private static void viewCustomerTotalBalance(BankWorkerServiceSystems machine, 
+  private static void viewCustomerTotalBalance(BankWorkerServiceSystems machine,
       BufferedReader inputReader) throws ConnectionFailedException, IOException {
     System.out.print("Input the ID of the user you want to check the balance of: ");
     String id = inputReader.readLine();
@@ -1206,12 +1200,12 @@ public class Bank {
     User user = DatabaseSelectHelper.getUserDetails(Integer.valueOf(id));
     if (user != null) {
       BigDecimal totalBalance = machine.getTotalBalance(Integer.valueOf(id));
-      System.out.println("The total balance the current customer has is " 
+      System.out.println("The total balance the current customer has is "
       + totalBalance.toString());
     } else {
       System.out.println("The given id does not belong in the database.");
     }
-    
+
   }
 
   /**
@@ -1231,7 +1225,7 @@ public class Bank {
    * @throws ConnectionFailedException If the database can not be connected to.
    * @throws IOException If there is an error with input or output.
    */
-  private static void updateInterestRateOption(AdminTerminal machine, BufferedReader inputReader) 
+  private static void updateInterestRateOption(AdminTerminal machine, BufferedReader inputReader)
       throws ConnectionFailedException, IOException {
     List<Integer> accountIds = DatabaseSelectHelper.getAccountTypesIds();
     // ask which account they would like to make
@@ -1256,7 +1250,7 @@ public class Bank {
       interest = inputReader.readLine();
       try {
         BigDecimal interestRate = new BigDecimal(interest);
-        if (interestRate.compareTo(BigDecimal.ONE) < 0 
+        if (interestRate.compareTo(BigDecimal.ONE) < 0
             && interestRate.compareTo(BigDecimal.ZERO) >= 0) {
           validInterest = true;
         } else {
@@ -1273,10 +1267,10 @@ public class Bank {
       System.out.println("Interest rate was not succesfully updated.");
     }
   }
-  
+
   /**
    * Initialize all the roles in the Roles Table. Reads from the Roles Enum.
-   * 
+   *
    * @param connection The connection to the database.
    */
   private static void initializeRoleTable(Connection connection) {
@@ -1293,7 +1287,7 @@ public class Bank {
 
   /**
    * Initialize all the Account Types in the AccountTypes table. Reads from the AccountTypes Enum.
-   * 
+   *
    * @param connection The connection to the database.
    */
   private static void initializeAccountTypes(Connection connection) {
