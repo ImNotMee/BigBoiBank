@@ -210,6 +210,17 @@ public class UserInterface extends AppCompatActivity {
   public void makeCustomer(View v) {
     OptionDialogs.makeUserDialog((BankWorkerServiceSystems)machine, "customer", context);
   }
+  public void listCurrentCustomers(View v){
+    OptionDialogs.listCurrentUserDialog((AdminTerminal) machine , context, "CUSTOMER");
+  }
+
+  public void listCurrentAdmins(View v){
+    OptionDialogs.listCurrentUserDialog((AdminTerminal) machine , context, "ADMIN");
+  }
+
+  public void listCurrentTellers(View v){
+    OptionDialogs.listCurrentUserDialog((AdminTerminal) machine , context, "TELLER");
+  }
 
   public void makeDeposit(View v) {
     final Dialog depositChequeChoice = new Dialog(context);

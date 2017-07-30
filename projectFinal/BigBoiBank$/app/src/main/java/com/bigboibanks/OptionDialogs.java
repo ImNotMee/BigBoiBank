@@ -686,4 +686,36 @@ public abstract class OptionDialogs {
     final Dialog dialog = new Dialog(context);
   }
 
+  public static void listCurrentUserDialog(final AdminTerminal machine, final Context context, String role) {
+    List<User> users = machine.listUsers(role);
+
+    if (users == null) {
+      Toast.makeText(context, context.getString(R.string.noCurrentUser) + role, Toast.LENGTH_SHORT).show();
+    } else {
+      final Dialog makeTransaction = new Dialog(context);
+      makeTransaction.setContentView(R.layout.list_users);
+      RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
+      ((TextView) layout.findViewById(R.id.title)).setText("List of " + role);
+      final ScrollView scrollView = (ScrollView) layout.findViewById(R.id.scrollView);
+      final LayoutInflater inflater = (LayoutInflater) context
+              .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      for (User user : users) {
+        RelativeLayout details = (RelativeLayout) inflater.inflate(R.layout.account, null);
+        String id = context.getString(R.string.userID) + String.valueOf(user.getId());
+        String name = context.getString(R.string.userName) + user.getName();
+        String address = context.getString(R.string.userAddress) + user.getAddress();
+        String type = context.getString(R.string.userAge) + String.valueOf(user.getAge());
+        ((TextView) details.findViewById(R.id.id)).setText(id);
+        ((TextView) details.findViewById(R.id.name)).setText(name);
+        ((TextView) details.findViewById(R.id.balance)).setText(address);
+        ((TextView) details.findViewById(R.id.type)).setText(type);
+        ((LinearLayout) scrollView.findViewById(R.id.linearLayout)).addView(details);
+
+      }
+      makeTransaction.show();
+    }
+
+
+  }
+
 }

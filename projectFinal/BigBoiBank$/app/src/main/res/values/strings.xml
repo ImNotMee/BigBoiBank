@@ -137,4 +137,11 @@
     <string name="closeCustomerSession">Current Customer Session Closed</string>
 
     <string name="setCustomerFirst">Set and authenticate a customer first!</string>
+
+    <string name="userName">User Name: </string>
+    <string name="userAge">User Age: </string>
+    <string name="userAddress">User Address: </string>
+    <string name="userID">User ID: </string>
+    <string name="noCurrentUser">There is no current users of type:  </string>
+    <string name="listOfUsers">Current List of Users</string>
 </resources>
