@@ -30,7 +30,7 @@ public class DatabaseBackUp implements Serializable {
   private HashMap<Integer, ArrayList<Integer>> map;
   private HashMap<Integer, ArrayList<Integer>> accountIds;
   private ArrayList<String> roleNames;
-  private DatabaseSelectHelper selector;
+  private transient DatabaseSelectHelper selector;
   
   /**
    * Constructor that initializes all the arrayLists.

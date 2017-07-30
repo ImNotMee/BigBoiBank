@@ -69,13 +69,13 @@ public class DatabaseDriverA extends SQLiteOpenHelper {
 
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-    sqLiteDatabase.execSQL("DROP TABLE IF EXIST USERMESSAGES");
-    sqLiteDatabase.execSQL("DROP TABLE IF EXIST USERPW");
-    sqLiteDatabase.execSQL("DROP TABLE IF EXIST USERACCOUNT");
-    sqLiteDatabase.execSQL("DROP TABLE IF EXIST USERS");
-    sqLiteDatabase.execSQL("DROP TABLE IF EXIST ACCOUNTS");
-    sqLiteDatabase.execSQL("DROP TABLE IF EXIST ACCOUNTTYPES");
-    sqLiteDatabase.execSQL("DROP TABLE IF EXIST ROLES");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS USERMESSAGES");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS USERPW");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS USERACCOUNT");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS USERS");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS ACCOUNTS");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS ACCOUNTTYPES");
+    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS ROLES");
 
     onCreate(sqLiteDatabase);
   }

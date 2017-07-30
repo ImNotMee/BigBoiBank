@@ -263,7 +263,13 @@ public class DatabaseSelectHelper {
     if (messageId < 1) {
       return null;
     }
-    return driverExtender.getSpecificMessage(messageId);
+    String message;
+    try {
+      message = driverExtender.getSpecificMessage(messageId);
+    } catch (Exception e) {
+      message = null;
+    }
+    return message;
   }
   
   /**
