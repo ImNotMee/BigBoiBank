@@ -1,14 +1,29 @@
 package com.bigboibanks;
 
+// credits to https://stackoverflow.com/questions/11300847/load-and-display-all-the-images-from-a-folder
+//https://developer.android.com/training/camera/photobasics.html#TaskGallery
+
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.bank.machines.AdminTerminal;
 import com.bank.machines.AutomatedTellerMachine;
@@ -16,7 +31,11 @@ import com.bank.machines.BankServiceSystems;
 import com.bank.machines.BankWorkerServiceSystems;
 import com.bank.machines.TellerTerminal;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserInterface extends AppCompatActivity {
@@ -26,6 +45,31 @@ public class UserInterface extends AppCompatActivity {
   private Context context;
   private int currSelection = 0;
   private String machineTerminal;
+  final int REQUEST_IMAGE_CAPTURE = 1;
+
+  static File storageDir;
+  static File file;
+
+  // array of supported extensions (use a List if you prefer)
+  static final String[] EXTENSIONS = new String[]{
+          "jpg", "png", "bmp" // and other formats you need
+  };
+
+  // filter to identify images based on their extensions
+  static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
+
+    @Override
+    public boolean accept(final File dir, final String name) {
+      for (final String ext : EXTENSIONS) {
+        if (name.endsWith("." + ext)) {
+          return (true);
+        }
+      }
+      return (false);
+    }
+  };
+
+  ImageView image;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +90,8 @@ public class UserInterface extends AppCompatActivity {
     List<Button> staffOptions = new ArrayList<>();
     List<Button> bankOptions = new ArrayList<>();
     List<Button> databaseOptions = new ArrayList<>();
+
+    image = (ImageView) findViewById(R.id.picture);
 
     if (machineTerminal.equals("customer")) {
       // list customer accounts button
@@ -151,6 +197,8 @@ public class UserInterface extends AppCompatActivity {
 
   }
 
+
+
   public void makeAdmin(View v) {
     OptionDialogs.makeUserDialog((BankWorkerServiceSystems) machine, "admin", context);
   }
@@ -164,7 +212,75 @@ public class UserInterface extends AppCompatActivity {
   }
 
   public void makeDeposit(View v) {
-    OptionDialogs.moneyTransactionDialog(machine, "deposit", context);
+    final Dialog depositChequeChoice = new Dialog(context);
+    depositChequeChoice.setContentView(R.layout.cheque_option);
+    (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.yes)).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+          // Create the File where the photo should go
+          try {
+            file = createImageFile();
+          } catch (IOException ex) {
+            // Error occurred while creating the File
+          }
+          // Continue only if the File was successfully created
+          if (file != null) {
+            Uri photoURI = FileProvider.getUriForFile(context,
+                    "com.bigboibanks.android.fileprovider",
+                    file);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+          }
+        }
+      }
+    });
+    (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.no)).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        OptionDialogs.moneyTransactionDialog(machine, "deposit", context);
+      }
+    });
+    depositChequeChoice.show();
+  }
+
+  String mCurrentPhotoPath;
+
+  private File createImageFile() throws IOException {
+    // Create an image file name
+    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    String imageFileName = "JPEG_" + timeStamp + "_";
+    storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    File image = File.createTempFile(
+            imageFileName,  /* prefix */
+            ".jpg",         /* suffix */
+            storageDir      /* directory */
+    );
+
+    // Save a file: path for use with ACTION_VIEW intents
+    mCurrentPhotoPath = image.getAbsolutePath();
+    return image;
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+
+
+
+    if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+      Toast.makeText(context, "PICTURE WAS TAKEN", Toast.LENGTH_SHORT).show();
+      int i = 0;
+      for (final File f : storageDir.listFiles(IMAGE_FILTER)) {
+        Bitmap img = null;
+
+        Toast.makeText(context, "PICTURE WAS TAKEN " + String.valueOf(i), Toast.LENGTH_SHORT).show();
+        i++;
+      }
+    }
   }
 
   public void makeWithdrawal(View v) {
@@ -179,5 +295,41 @@ public class UserInterface extends AppCompatActivity {
     OptionDialogs.makeAccountDialog((BankWorkerServiceSystems) machine, context);
   }
 
+  public void listAccounts(View v) {
+    OptionDialogs.listAccountsDialog(machine, context);
+  }
+
+  public void checkBalance(View v) {
+    OptionDialogs.checkBalanceDialog(machine, context);
+  }
+
+  public void giveInterest(View v) {
+    OptionDialogs.giveInterestDialog((BankWorkerServiceSystems) machine, context);
+  }
+
+  public void updateName(View v) {
+    OptionDialogs.updateNameDialog((BankWorkerServiceSystems) machine, context);
+  }
+
+  public void updateAge(View v) {
+    OptionDialogs.updateAgeDialog((BankWorkerServiceSystems) machine, context);
+  }
+
+  public void updateAddress(View v) {
+    OptionDialogs.updateAddressDialog((BankWorkerServiceSystems) machine, context);
+  }
+
+  public void updatePassword(View v) {
+    OptionDialogs.updatePasswordDialog((BankWorkerServiceSystems) machine, context);
+  }
+
+  public void closeCustomerSession(View v) {
+    ((BankWorkerServiceSystems) machine).deAuthenticateCustomer();
+    Toast.makeText(context, context.getString(R.string.closeCustomerSession), Toast.LENGTH_SHORT).show();
+  }
+
+  public void transferFunds(View v) {
+    OptionDialogs.transferFunds(machine, context);
+  }
 
 }

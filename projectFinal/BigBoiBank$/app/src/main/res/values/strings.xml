@@ -6,8 +6,7 @@
     <string name="admin_terminal">Admin Terminal</string>
     <string name="teller_terminal">Teller Terminal</string>
     <string name="atm">Automated Teller Machine (ATM)</string>
-    <string name="prompt_id">Input User ID</string>
-    <string name="prompt_password">Input password</string>
+    <string name="promptUserId">Input User ID</string>
     <string name="logIn">Log In</string>
 
     <string-array name="adminOptionsArray">
@@ -72,7 +71,7 @@
     <string name="promptName">Input Name</string>
     <string name="promptAge">Input Age</string>
     <string name="promptAddress">Input Address (100 Character Limit)</string>
-    <string name="promptPassword">Input Password></string>
+    <string name="promptPassword">Input Password</string>
     <string name="promptConfirmPassword">Confirm Password</string>
     <string name="confirm">Confirm</string>
 
@@ -87,6 +86,12 @@
     <string name="balanceOwing">Balance Owing Account</string>
     <string name="savings">Savings Account</string>
 
+    <string name="accountId">Account ID: </string>
+    <string name="accountName">Account Name: </string>
+    <string name="accountBalance">Account Balance: </string>
+    <string name="accountType">Account Type: </string>
+    <string name="noAccounts">Customer has no accounts</string>
+
     <string name="promptAccountId">Input Account ID</string>
     <string name="promptAmount">Input Amount</string>
 
@@ -97,6 +102,17 @@
     <string name="transactionCompleted">Transaction successful! New balance: </string>
     <string name="transactionFailed">Transaction was not successful. </string>
 
+    <string name="interestAdded">Interest Added! New balance: </string>
+    <string name="interestNotAdded">Interest was not added successfully. </string>
+    <string name="balance">Account Balance is: </string>
+    <string name="check">Check</string>
+
+    <string name="update">Update</string>
+    <string name="nameUpdated">Name successfully updated. </string>
+    <string name="addressUpdated">Address successfully updated. </string>
+    <string name="ageUpdated">Age successfully updated. </string>
+    <string name="passwordUpdated">Password successfully updated. </string>
+
     <string name="customerSet">Customer has been set and authenticated. </string>
     <string name="incorrectPassword">Incorrect Password .</string>
 
@@ -105,6 +121,20 @@
     <string name="userAdded">User successfully added with ID: </string>
     <string name="userNotAdded">User was not successfully created. </string>
     <string name="back">Exit</string>
+
+    <string name="transfer">Transfer</string>
+    <string name="insufficientFunds">Insufficient Funds. </string>
+    <string name="transferCompleted">Transfer successfully completed. </string>
+    <string name="transferFailed">Transfer was not successfully completed. </string>
+
+    <string name="depositChequeChoice">Would you like to deposit a cheque?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="promptTransferFromId">Input Account ID to transfer from</string>
+    <string name="promptTransferToId">Input Account ID to transfer to</string>
+
+    <string name="closeCustomerSession">Current Customer Session Closed</string>
 
     <string name="setCustomerFirst">Set and authenticate a customer first!</string>
 </resources>
