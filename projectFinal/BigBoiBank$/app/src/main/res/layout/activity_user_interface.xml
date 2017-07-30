@@ -181,7 +181,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/viewAdmins"
                 android:text="@string/viewAdmins"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="listCurrentAdmins"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -189,7 +190,8 @@
                 android:id="@+id/viewTellers"
                 android:text="@string/viewTellers"
                 android:layout_below="@id/viewAdmins"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="listCurrentTellers"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -197,7 +199,8 @@
                 android:id="@+id/viewCustomers"
                 android:text="@string/viewCustomers"
                 android:layout_below="@id/viewTellers"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="listCurrentCustomers"/>
 
             <Button
                 android:layout_width="match_parent"
