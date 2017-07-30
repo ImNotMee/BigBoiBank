@@ -22,7 +22,7 @@
         <activity android:name=".TellerInterface" />
         <activity android:name=".CustomerInterface" />
         <activity android:name=".CustomerUserSession" />
-        <activity android:name=".CustomerUserSessionChoice"></activity>
+        <activity android:name=".CustomerUserSessionChoice" />
     </application>
 
 </manifest>
