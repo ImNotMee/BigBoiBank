@@ -7,6 +7,11 @@
     tools:context="com.bigboibanks.UserInterface"
     android:id="@+id/home">
 
+    <ImageView
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:id="@+id/picture"/>
+
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +42,8 @@
                 android:id="@+id/listAccounts"
                 android:text="@string/listAccounts"
                 android:layout_below="@id/setCustomer"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="listAccounts"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -54,7 +60,8 @@
                 android:id="@+id/giveInterest"
                 android:text="@string/giveInterest"
                 android:layout_below="@id/makeAccount"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="giveInterest"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -80,7 +87,8 @@
                 android:id="@+id/checkBalance"
                 android:text="@string/checkBalance"
                 android:layout_below="@id/makeWithdrawal"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="checkBalance"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -88,7 +96,8 @@
                 android:id="@+id/transferFunds"
                 android:text="@string/transferFunds"
                 android:layout_below="@id/checkBalance"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="transferFunds"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -96,7 +105,8 @@
                 android:id="@+id/updateName"
                 android:text="@string/updateName"
                 android:layout_below="@id/transferFunds"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="updateName"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -104,7 +114,8 @@
                 android:id="@+id/updateAge"
                 android:text="@string/updateAge"
                 android:layout_below="@id/updateName"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="updateAge"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -112,7 +123,8 @@
                 android:id="@+id/updateAddress"
                 android:text="@string/updateAddress"
                 android:layout_below="@id/updateAge"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="updateAddress"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -120,7 +132,8 @@
                 android:id="@+id/updatePassword"
                 android:text="@string/updatePassword"
                 android:layout_below="@id/updateAddress"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="updatePassword"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -128,7 +141,8 @@
                 android:id="@+id/closeCustomer"
                 android:text="@string/closeCustomer"
                 android:layout_below="@id/updatePassword"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="closeCustomerSession"/>
 
             <Button
                 android:layout_width="match_parent"

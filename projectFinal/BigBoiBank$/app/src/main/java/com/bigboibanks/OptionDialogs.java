@@ -1,19 +1,31 @@
 package com.bigboibanks;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.icu.math.BigDecimal;
+import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bank.accounts.Account;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.IllegalAmountException;
+import com.bank.exceptions.InsufficientFundsException;
 import com.bank.generics.AccountTypesEnumMap;
 import com.bank.machines.AdminTerminal;
 import com.bank.machines.BankServiceSystems;
@@ -21,7 +33,12 @@ import com.bank.machines.BankWorkerServiceSystems;
 import com.bank.users.Customer;
 import com.bank.users.User;
 
+import java.io.File;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
+import java.util.List;
 
 public abstract class OptionDialogs {
 
@@ -180,43 +197,74 @@ public abstract class OptionDialogs {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
     } else {
-      final Dialog makeTransaction = new Dialog(context);
-      makeTransaction.setContentView(R.layout.money_transaction);
-      RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
-      TextView title = (TextView) layout.findViewById(R.id.title);
       if (transaction.equals("deposit")) {
-        title.setText(context.getText(R.string.makeDeposit));
-      } else if (transaction.equals("withdrawal")) {
-        title.setText(context.getText(R.string.makeWithdrawal));
-      }
-      final EditText inputAccountId = (EditText) layout.findViewById(R.id.account);
-      final EditText inputAmount = (EditText) layout.findViewById(R.id.amount);
-      final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
-      final Button confirm = (Button) layout.findViewById(R.id.confirm);
-      confirm.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          boolean validInput = true;
-          String confirmationMessage = "";
-          int id = -1;
-          try {
-            id = Integer.parseInt(inputAccountId.getText().toString());
-            if (!machine.getCurrentCustomer().getAccounts().contains(id)) {
-              confirmationMessage += context.getString(R.string.invalidId);
-              validInput = false;
+        final Dialog depositChequeChoice = new Dialog(context);
+        depositChequeChoice.setContentView(R.layout.cheque_option);
+        (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.yes)).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            final int REQUEST_IMAGE_CAPTURE = 1;
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
+              ((Activity) context).startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-          } catch (NumberFormatException e) {
+          }
+        });
+        (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.no)).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            inputMoneyTransaction(machine, transaction, context);
+          }
+        });
+        depositChequeChoice.show();
+      } else {
+        inputMoneyTransaction(machine, transaction, context);
+      }
+
+    }
+  }
+
+
+  private static void inputMoneyTransaction(final BankServiceSystems machine, final String transaction, final Context context) {
+
+    final Dialog makeTransaction = new Dialog(context);
+    makeTransaction.setContentView(R.layout.money_transaction);
+    RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
+    TextView title = (TextView) layout.findViewById(R.id.title);
+    if (transaction.equals("deposit")) {
+      title.setText(context.getText(R.string.makeDeposit));
+    } else if (transaction.equals("withdrawal")) {
+      title.setText(context.getText(R.string.makeWithdrawal));
+    }
+    final EditText inputAccountId = (EditText) layout.findViewById(R.id.account);
+    final EditText inputAmount = (EditText) layout.findViewById(R.id.amount);
+    final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+    final Button confirm = (Button) layout.findViewById(R.id.confirm);
+    confirm.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        boolean validInput = true;
+        String confirmationMessage = "";
+        int id = -1;
+        try {
+          id = Integer.parseInt(inputAccountId.getText().toString());
+          if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
             confirmationMessage += context.getString(R.string.invalidId);
             validInput = false;
           }
-          java.math.BigDecimal amount = new java.math.BigDecimal(BigInteger.ZERO);
-          try {
-            amount = new java.math.BigDecimal(inputAmount.getText().toString());
-          } catch (NumberFormatException e) {
-            confirmationMessage += context.getString(R.string.invalidAmount);
-            validInput = false;
-          }
-          if (validInput) {
+        } catch (NumberFormatException e) {
+          confirmationMessage += context.getString(R.string.invalidId);
+          validInput = false;
+        }
+        java.math.BigDecimal amount = new java.math.BigDecimal(BigInteger.ZERO);
+        try {
+          amount = new java.math.BigDecimal(inputAmount.getText().toString());
+        } catch (NumberFormatException e) {
+          confirmationMessage += context.getString(R.string.invalidAmount);
+          validInput = false;
+        }
+        if (validInput) {
+          if (transaction.equals("deposit")) {
             try {
               machine.makeDeposit(amount, id);
               confirm.setText(context.getString(R.string.back));
@@ -232,12 +280,31 @@ public abstract class OptionDialogs {
             } catch (IllegalAmountException e) {
               confirmationMessage += context.getString(R.string.invalidAmount);
             }
+          } else {
+            try {
+              machine.makeWithdrawal(amount, id);
+              confirm.setText(context.getString(R.string.back));
+              confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                  makeTransaction.dismiss();
+                }
+              });
+              confirmationMessage += context.getString(R.string.transactionCompleted);
+              DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
+              confirmationMessage += selector.getBalance(id).toString();
+            } catch (IllegalAmountException e) {
+              confirmationMessage += context.getString(R.string.invalidAmount);
+            } catch (InsufficientFundsException e) {
+              confirmationMessage += context.getString(R.string.insufficientFunds);
+            }
           }
-          confirmMessage.setText(confirmationMessage);
+
         }
-      });
-      makeTransaction.show();
-    }
+        confirmMessage.setText(confirmationMessage);
+      }
+    });
+    makeTransaction.show();
   }
 
   public static void setCustomerDialog(final BankWorkerServiceSystems machine, final Context context) {
@@ -287,6 +354,294 @@ public abstract class OptionDialogs {
       }
     });
     setCustomer.show();
+  }
+
+  public static void listAccountsDialog(final BankServiceSystems machine, final Context context) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+    } else {
+
+      List<Account> accounts = machine.listCustomerAccounts();
+      if (accounts.size() == 0) {
+        Toast.makeText(context, context.getString(R.string.noAccounts), Toast.LENGTH_SHORT).show();
+      } else {
+        final Dialog makeTransaction = new Dialog(context);
+        makeTransaction.setContentView(R.layout.list_accounts);
+        RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
+        final ScrollView scrollView = (ScrollView) layout.findViewById(R.id.scrollView);
+        final LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for (Account currAccount : accounts) {
+          RelativeLayout details = (RelativeLayout) inflater.inflate(R.layout.account, null);
+          String id = context.getString(R.string.accountId) + String.valueOf(currAccount.getId());
+          String name = context.getString(R.string.accountName) + currAccount.getName();
+          String balance = context.getString(R.string.accountBalance) + currAccount.getBalance().toString();
+          String type = context.getString(R.string.accountType) + new DatabaseSelectHelper(context).getAccountTypeName(currAccount.getType());
+          ((TextView) details.findViewById(R.id.id)).setText(id);
+          ((TextView) details.findViewById(R.id.name)).setText(name);
+          ((TextView) details.findViewById(R.id.balance)).setText(balance);
+          ((TextView) details.findViewById(R.id.type)).setText(type);
+          ((LinearLayout) scrollView.findViewById(R.id.linearLayout)).addView(details);
+
+        }
+        makeTransaction.show();
+      }
+
+    }
+  }
+
+  public static void checkBalanceDialog(final BankServiceSystems machine, final Context context) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+    } else {
+      final Dialog checkBalance = new Dialog(context);
+      checkBalance.setContentView(R.layout.one_input);
+      RelativeLayout layout = (RelativeLayout) checkBalance.findViewById(R.id.layout);
+      final EditText inputAccountId = (EditText) layout.findViewById(R.id.input);
+      final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
+      final Button check = (Button) layout.findViewById(R.id.confirm);
+      check.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          boolean validInput = true;
+          String confirmationMessage = "";
+          int id = -1;
+          try {
+            id = Integer.parseInt(inputAccountId.getText().toString());
+            if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
+              confirmationMessage += context.getString(R.string.invalidId);
+              validInput = false;
+            }
+          } catch (NumberFormatException e) {
+            confirmationMessage += context.getString(R.string.invalidId);
+            validInput = false;
+          }
+          if (validInput) {
+            confirmationMessage += context.getString(R.string.balance);
+            confirmationMessage += machine.checkBalance(id).toString();
+          }
+          balance.setText(confirmationMessage);
+        }
+      });
+      checkBalance.show();
+    }
+  }
+
+  public static void giveInterestDialog(final BankWorkerServiceSystems machine, final Context context) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+    } else {
+      final Dialog checkBalance = new Dialog(context);
+      checkBalance.setContentView(R.layout.one_input);
+      RelativeLayout layout = (RelativeLayout) checkBalance.findViewById(R.id.layout);
+      final EditText inputAccountId = (EditText) layout.findViewById(R.id.input);
+      final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
+      final Button check = (Button) layout.findViewById(R.id.confirm);
+      check.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          boolean validInput = true;
+          String confirmationMessage = "";
+          int id = -1;
+          try {
+            id = Integer.parseInt(inputAccountId.getText().toString());
+            if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
+              confirmationMessage += context.getString(R.string.invalidId);
+              validInput = false;
+            }
+          } catch (NumberFormatException e) {
+            confirmationMessage += context.getString(R.string.invalidId);
+            validInput = false;
+          }
+          if (validInput) {
+            if (machine.giveInterest(id)) {
+              confirmationMessage += context.getString(R.string.interestAdded);
+              confirmationMessage += machine.checkBalance(id).toString();
+            } else {
+              confirmationMessage += context.getString(R.string.interestNotAdded);
+            }
+          }
+          balance.setText(confirmationMessage);
+        }
+      });
+      checkBalance.show();
+    }
+  }
+
+  public static void updateNameDialog(final BankWorkerServiceSystems machine, final Context context) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+    } else {
+      final Dialog updateName = new Dialog(context);
+      updateName.setContentView(R.layout.one_input);
+      RelativeLayout layout = (RelativeLayout) updateName.findViewById(R.id.layout);
+      ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.updateName));
+      final EditText inputName = (EditText) layout.findViewById(R.id.input);
+      inputName.setInputType(InputType.TYPE_NULL);
+      inputName.setHint(context.getString(R.string.promptName));
+      final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+      final Button update = (Button) layout.findViewById(R.id.confirm);
+      update.setText(R.string.update);
+      update.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          String confirmationMessage = "";
+          String name = inputName.getText().toString();
+          if (name.length() == 0) {
+            confirmationMessage += context.getString(R.string.invalidName);
+          } else {
+            machine.updateUserName(name);
+            confirmationMessage += context.getString(R.string.nameUpdated);
+          }
+          confirmMessage.setText(confirmationMessage);
+        }
+      });
+      updateName.show();
+    }
+  }
+
+  public static void updateAgeDialog(final BankWorkerServiceSystems machine, final Context context) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+    } else {
+      final Dialog updateAge = new Dialog(context);
+      updateAge.setContentView(R.layout.one_input);
+      RelativeLayout layout = (RelativeLayout) updateAge.findViewById(R.id.layout);
+      ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.updateAge));
+      final EditText inputAge = (EditText) layout.findViewById(R.id.input);
+      inputAge.setHint(context.getString(R.string.promptAge));
+      final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+      final Button update = (Button) layout.findViewById(R.id.confirm);
+      update.setText(R.string.update);
+      update.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          String confirmationMessage = "";
+          try {
+            int age = Integer.parseInt(inputAge.getText().toString());
+            if (age != 0) {
+              machine.updateUserAge(age);
+              confirmationMessage += context.getString(R.string.ageUpdated);
+            } else {
+              confirmationMessage += context.getString(R.string.invalidAge);
+            }
+          } catch (NumberFormatException e) {
+            confirmationMessage += context.getString(R.string.invalidId);
+          }
+          confirmMessage.setText(confirmationMessage);
+        }
+      });
+      updateAge.show();
+    }
+  }
+
+  public static void updateAddressDialog(final BankWorkerServiceSystems machine, final Context context) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+    } else {
+      final Dialog updateAddress = new Dialog(context);
+      updateAddress.setContentView(R.layout.one_input);
+      RelativeLayout layout = (RelativeLayout) updateAddress.findViewById(R.id.layout);
+      ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.updateAddress));
+      final EditText inputAddress = (EditText) layout.findViewById(R.id.input);
+      inputAddress.setInputType(InputType.TYPE_NULL);
+      inputAddress.setHint(context.getString(R.string.promptAddress));
+      final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+      final Button update = (Button) layout.findViewById(R.id.confirm);
+      update.setText(R.string.update);
+      update.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          String confirmationMessage = "";
+          String address = inputAddress.getText().toString();
+          if (address.length() == 0 || address.length() > 100) {
+            confirmationMessage += context.getString(R.string.invalidAddress);
+          } else {
+            machine.updateUserName(address);
+            confirmationMessage += context.getString(R.string.addressUpdated);
+          }
+          confirmMessage.setText(confirmationMessage);
+        }
+      });
+      updateAddress.show();
+    }
+  }
+
+  public static void updatePasswordDialog(final BankWorkerServiceSystems machine, final Context context) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+    } else {
+      final Dialog updatePassword = new Dialog(context);
+      updatePassword.setContentView(R.layout.update_password);
+      RelativeLayout layout = (RelativeLayout) updatePassword.findViewById(R.id.layout);
+      final EditText inputPassword = (EditText) layout.findViewById(R.id.password);
+      final EditText confirmPassword = (EditText) layout.findViewById(R.id.confirmPassword);
+      final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+      final Button update = (Button) layout.findViewById(R.id.confirm);
+      update.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          String confirmationMessage = "";
+          if (inputPassword.getText().toString().equals(confirmPassword.getText().toString())) {
+            machine.updateUserPassword(inputPassword.getText().toString());
+            confirmationMessage += context.getString(R.string.passwordUpdated);
+          } else {
+            confirmationMessage += context.getString(R.string.passwordNoMatch);
+          }
+          confirmMessage.setText(confirmationMessage);
+        }
+      });
+      updatePassword.show();
+    }
+  }
+
+  public static void transferFunds(final BankServiceSystems machine, final Context context) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+    } else {
+      final Dialog transferFunds = new Dialog(context);
+      transferFunds.setContentView(R.layout.transfer_funds);
+      RelativeLayout layout = (RelativeLayout) transferFunds.findViewById(R.id.layout);
+      final EditText transferFrom = (EditText) layout.findViewById(R.id.transferFrom);
+      final EditText transferTo = (EditText) layout.findViewById(R.id.transferTo);
+      final EditText inputAmount = (EditText) layout.findViewById(R.id.amount);
+      final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+      final Button transfer = (Button) layout.findViewById(R.id.transfer);
+      transfer.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          String confirmationMessage = "";
+          try {
+            int fromId = Integer.parseInt(transferFrom.getText().toString());
+            int toId = Integer.parseInt(transferTo.getText().toString());
+            DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
+            if (selector.getAccountIds(machine.getCurrentCustomer().getId()).contains(fromId)
+                    && selector.getAccountType(toId) != -1) {
+              try {
+                BigDecimal amount = new BigDecimal(inputAmount.getText().toString());
+                machine.makeWithdrawal(amount, fromId);
+                if (machine.makeDeposit(amount, toId)) {
+                  confirmationMessage += context.getString(R.string.transferCompleted);
+                } else {
+                  confirmationMessage += context.getString(R.string.transferFailed);
+                }
+              } catch (NumberFormatException | IllegalAmountException e) {
+                confirmationMessage += context.getString(R.string.invalidAmount);
+              } catch (InsufficientFundsException e) {
+                confirmationMessage += context.getString(R.string.insufficientFunds);
+              }
+            } else {
+              confirmationMessage += context.getString(R.string.invalidId);
+            }
+          } catch (NumberFormatException e) {
+            confirmationMessage += context.getString(R.string.invalidId);
+          }
+
+          confirmMessage.setText(confirmationMessage);
+        }
+      });
+      transferFunds.show();
+    }
   }
 
 }

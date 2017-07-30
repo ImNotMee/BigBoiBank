@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/inputId"
-        android:hint="@string/prompt_id"
+        android:hint="@string/promptUserId"
         android:layout_below="@+id/title"/>
 
     <EditText
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/inputPassword"
-        android:hint="@string/prompt_password"
+        android:hint="@string/promptPassword"
         android:layout_below="@+id/inputId"/>
 
     <RadioGroup
