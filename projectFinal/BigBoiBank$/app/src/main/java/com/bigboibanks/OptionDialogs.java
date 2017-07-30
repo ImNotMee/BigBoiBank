@@ -729,7 +729,8 @@ public abstract class OptionDialogs {
         // now add each id to the scroll view using a textview
         for (Integer id : ids) {
           TextView textView = new TextView(context);
-          textView.setText("id: " + Integer.toString((int) id));
+          String text = context.getString(R.string.idPrefix) + Integer.toString((int) id);
+          textView.setText(text);
           layout.addView(textView);
         }
       } catch (Exception e) {
@@ -743,8 +744,8 @@ public abstract class OptionDialogs {
     final Dialog dialog = new Dialog(context);
     dialog.setContentView(R.layout.one_input);
     // change the text in the layout
-    ((TextView) dialog.findViewById(R.id.title)).setText("See specific message");
-    ((EditText) dialog.findViewById(R.id.input)).setHint("Input message id");
+    ((TextView) dialog.findViewById(R.id.title)).setText(context.getString(R.string.seeSpecificMessage));
+    ((EditText) dialog.findViewById(R.id.input)).setHint(context.getString(R.string.inputMessageId));
     final EditText input = (EditText) dialog.findViewById(R.id.input);
     final TextView confirmationMessage = (TextView) dialog.findViewById(R.id.confirmationMessage);
     final Button button = (Button) dialog.findViewById(R.id.confirm);
@@ -753,8 +754,24 @@ public abstract class OptionDialogs {
       public void onClick(View v) {
         try {
           int id = Integer.parseInt(input.getText().toString());
-          String message = machine.getMessage(id);
-          confirmationMessage.setText(message);
+          // admins can see all messages
+          if (machine instanceof AdminTerminal) {
+            String message = machine.getMessage(id);
+            confirmationMessage.setText(message);
+          } else {
+            ArrayList<Integer> ids;
+            if (machine instanceof TellerTerminal) {
+               ids = (ArrayList<Integer>) ((TellerTerminal) machine).getUserMessageIds();
+            } else {
+              ids = (ArrayList<Integer>) machine.getCustomerMessageIds();
+            }
+            if (ids.contains(id)) {
+              String message = machine.getMessage(id);
+              confirmationMessage.setText(message);
+            } else {
+              confirmationMessage.setText(context.getString(R.string.noAccess));
+            }
+          }
         } catch (Exception e) {
           confirmationMessage.setText(R.string.invalidId);
         }
@@ -794,4 +811,23 @@ public abstract class OptionDialogs {
 
   }
 
+  public static void showUserMessageIds(final BankWorkerServiceSystems machine, final Context context) {
+    final Dialog dialog = new Dialog(context);
+    dialog.setContentView(R.layout.list_message_ids);
+    final LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.layout);
+    // show the user all of the message Ids that are for them
+    try {
+      ArrayList<Integer> ids = (ArrayList<Integer>) machine.getUserMessageIds();
+      // now add each id to the scroll view using a textview
+      for (Integer id : ids) {
+        TextView textView = new TextView(context);
+        String text = context.getString(R.string.idPrefix) + Integer.toString((int) id);
+        textView.setText(text);
+        layout.addView(textView);
+      }
+    } catch (Exception e) {
+      e.getMessage();
+    }
+    dialog.show();
+  }
 }

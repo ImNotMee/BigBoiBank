@@ -153,4 +153,8 @@
 
     <string name="totalBalance">The total balance of this customer is: </string>
     <string name="totalBankBalance">Total Bank Balance is: </string>
+    <string name="seeSpecificMessage">See specific message</string>
+    <string name="inputMessageId">Input message id</string>
+    <string name="idPrefix">id: </string>
+    <string name="noAccess">You do not have access to the message</string>
 </resources>
