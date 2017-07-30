@@ -377,4 +377,6 @@ public class UserInterface extends AppCompatActivity {
   public void seeSpecificMessage(View v) {
     OptionDialogs.seeSpecificMessage(machine, context);
   }
+
+  public void showUserMessageIds(View v) { OptionDialogs.showUserMessageIds((BankWorkerServiceSystems) machine, context);}
 }

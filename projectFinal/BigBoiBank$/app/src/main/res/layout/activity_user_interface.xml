@@ -167,7 +167,8 @@
                 android:id="@+id/userMessages"
                 android:text="@string/userMessages"
                 android:layout_below="@id/customerMessages"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="showUserMessageIds"/>
 
             <Button
                 android:layout_width="match_parent"
