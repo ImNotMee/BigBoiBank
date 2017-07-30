@@ -158,7 +158,8 @@
                 android:id="@+id/customerMessages"
                 android:text="@string/customerMessages"
                 android:layout_below="@id/leaveMessage"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="showMessageIds"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -174,7 +175,8 @@
                 android:id="@+id/seeMessage"
                 android:text="@string/seeMessage"
                 android:layout_below="@id/userMessages"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="seeSpecificMessage"/>
 
             <Button
                 android:layout_width="match_parent"

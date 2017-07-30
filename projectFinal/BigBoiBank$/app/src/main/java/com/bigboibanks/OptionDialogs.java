@@ -29,9 +29,11 @@ import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
 import com.bank.generics.AccountTypesEnumMap;
+import com.bank.generics.RolesEnumMap;
 import com.bank.machines.AdminTerminal;
 import com.bank.machines.BankServiceSystems;
 import com.bank.machines.BankWorkerServiceSystems;
+import com.bank.machines.TellerTerminal;
 import com.bank.users.Customer;
 import com.bank.users.User;
 
@@ -41,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -681,44 +684,84 @@ public abstract class OptionDialogs {
   }
 
   public static void leaveMessage(final BankServiceSystems machine, final Context context) {
+    final Dialog leaveMessage = new Dialog(context);
+    leaveMessage.setContentView(R.layout.leave_message);
+    RelativeLayout layout = (RelativeLayout) leaveMessage.findViewById(R.id.layout);
+    // references to the editText and TextEdits
+    final TextView notification = (TextView) layout.findViewById(R.id.notification);
+    final EditText inputId = (EditText) layout.findViewById(R.id.inputId);
+    final EditText inputMessage = (EditText) layout.findViewById(R.id.inputMessage);
+    final Button confirm = (Button) layout.findViewById(R.id.confirmButton);
+    // if the customer clicks confirm
+    confirm.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        String confirmationMessage = "";
+        try {
+          int userId = Integer.parseInt(inputId.getText().toString());
+          String message = inputMessage.getText().toString();
+          DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
+          if (selector.getUserDetails(userId) != null) {
+            int id = ((BankWorkerServiceSystems) machine).leaveMessage(message, userId);
+            confirmationMessage += "Successfully left a message with id : " + id;
+          }
+        } catch (Exception e) {
+          confirmationMessage += "Invalid input";
+        }
+        notification.setText(confirmationMessage);
+      }
+    });
+    leaveMessage.show();
+  }
+
+  public static void showMessageIds(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
     } else {
-      final Dialog leaveMessage = new Dialog(context);
-      leaveMessage.setContentView(R.layout.leave_message);
-      RelativeLayout layout = (RelativeLayout) leaveMessage.findViewById(R.id.layout);
-      // references to the editText and TextEdits
-      final TextView notification = (TextView) layout.findViewById(R.id.notification);
-      final EditText inputId = (EditText) layout.findViewById(R.id.inputId);
-      final EditText inputMessage = (EditText) layout.findViewById(R.id.inputMessage);
-      final Button confirm = (Button) layout.findViewById(R.id.confirmButton);
-      // if the customer clicks confirm
-      confirm.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          String confirmationMessage = "";
-          try {
-            int userId = Integer.parseInt(inputId.getText().toString());
-            String message = inputMessage.getText().toString();
-            DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
-            if (selector.getUserDetails(userId) != null) {
-              int id = ((BankWorkerServiceSystems) machine).leaveMessage(message, userId);
-              confirmationMessage += "Successfully left a message with id : " + id;
-            }
-          } catch (Exception e) {
-            confirmationMessage += "Invalid input";
-          }
-          notification.setText(confirmationMessage);
+      final Dialog dialog = new Dialog(context);
+      dialog.setContentView(R.layout.list_message_ids);
+      final LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.layout);
+      final TextView notification = (TextView) dialog.findViewById(R.id.notification);
+      // show the user all of the message Ids that are for them
+      try {
+        ArrayList<Integer> ids = (ArrayList<Integer>) machine.getCustomerMessageIds();
+        TextView textView = new TextView(context);
+        layout.addView(notification);
+        // now add each id to the scroll view using a textview
+        for (Integer id : ids) {
+          textView.setText(id.toString());
+          layout.addView(textView);
         }
-      });
-      leaveMessage.show();
+      } catch (Exception e) {
+        e.getMessage();
+      }
+      dialog.show();
     }
   }
 
-  public static void showMessagesForCustomer(final Context context) {
+  public static void seeSpecificMessage(final BankServiceSystems machine, final Context context) {
     final Dialog dialog = new Dialog(context);
+    dialog.setContentView(R.layout.one_input);
+    // change the text in the layout
+    ((TextView) dialog.findViewById(R.id.title)).setText("See specific message");
+    ((EditText) dialog.findViewById(R.id.input)).setHint("Input message id");
+    final EditText input = (EditText) dialog.findViewById(R.id.input);
+    final TextView confirmationMessage = (TextView) dialog.findViewById(R.id.confirmationMessage);
+    final Button button = (Button) dialog.findViewById(R.id.confirm);
+    button.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        try {
+          int id = Integer.parseInt(input.getText().toString());
+          String message = machine.getMessage(id);
+          confirmationMessage.setText(message);
+        } catch (Exception e) {
+          confirmationMessage.setText(R.string.invalidId);
+        }
+      }
+    });
+    dialog.show();
   }
-
   public static void listCurrentUserDialog(final AdminTerminal machine, final Context context, String role) {
     List<User> users = machine.listUsers(role);
 

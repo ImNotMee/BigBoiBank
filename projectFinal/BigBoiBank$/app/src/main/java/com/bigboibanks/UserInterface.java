@@ -369,4 +369,12 @@ public class UserInterface extends AppCompatActivity {
   public void leaveMessage(View v) {
     OptionDialogs.leaveMessage(machine, context);
   }
+
+  public void showMessageIds(View v) {
+    OptionDialogs.showMessageIds(machine, context);
+  }
+
+  public void seeSpecificMessage(View v) {
+    OptionDialogs.seeSpecificMessage(machine, context);
+  }
 }
