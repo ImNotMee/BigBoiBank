@@ -332,4 +332,7 @@ public class UserInterface extends AppCompatActivity {
     OptionDialogs.transferFunds(machine, context);
   }
 
+  public void leaveMessage(View v) {
+    OptionDialogs.leaveMessage(machine, context);
+  }
 }
