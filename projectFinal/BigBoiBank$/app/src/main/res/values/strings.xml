@@ -50,7 +50,7 @@
     <string name="customerMessages">View message ID\'s the customer can see</string>
     <string name="userMessages">View message ID\'s you can see</string>
     <string name="seeMessage">See a specific message</string>
-    
+
     <string name="staffOptions">Staff and Customer Interactions</string>
     <string name="viewTellers">View Current Tellers</string>
     <string name="viewAdmins">View current admins</string>
@@ -64,11 +64,11 @@
     <string name="customerBalance">View total balance of all the accounts of a customer</string>
     <string name="bankBalance">View the total balance of the bank</string>
     <string name="updateInterest">Update account interest rate</string>
-    
+
     <string name="databaseOptions">Database Interactions</string>
     <string name="backup">Backup current database</string>
     <string name="load">Load saved database</string>
-    
+
     <string name="promptName">Input Name</string>
     <string name="promptAge">Input Age</string>
     <string name="promptAddress">Input Address (100 Character Limit)</string>
