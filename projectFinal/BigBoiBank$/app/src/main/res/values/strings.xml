@@ -144,4 +144,13 @@
     <string name="userID">User ID: </string>
     <string name="noCurrentUser">There is no current users of type:  </string>
     <string name="listOfUsers">Current List of Users</string>
+
+    <string name="databaseBackedUp">Database has been successfully backed up. </string>
+    <string name="databaseBackUpFailed">Database has not been successfully backed up. </string>
+
+    <string name="databaseLoaded">Saved database has been successfully loaded. </string>
+    <string name="databaseNotLoaded">Database was not successfully not loaded. </string>
+
+    <string name="totalBalance">The total balance of this customer is: </string>
+    <string name="totalBankBalance">Total Bank Balance is: </string>
 </resources>

@@ -242,7 +242,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/customerBalance"
                 android:text="@string/customerBalance"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="viewCustomerBalance"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -250,7 +251,8 @@
                 android:id="@+id/bankBalance"
                 android:text="@string/bankBalance"
                 android:layout_below="@id/customerBalance"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="viewTotalBankBalance"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -265,7 +267,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/backup"
                 android:text="@string/backup"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="backUpDatabase"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -273,7 +276,8 @@
                 android:id="@+id/load"
                 android:text="@string/load"
                 android:layout_below="@id/backup"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="loadSavedDatabase"/>
 
         </RelativeLayout>
 

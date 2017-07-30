@@ -94,7 +94,7 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     int currId = 1;
     Account account = selector.getAccountDetails(currId);
     while (account != null) {
-      totalBalance.add(account.getBalance());
+      totalBalance = totalBalance.add(account.getBalance());
       currId ++;
       account = selector.getAccountDetails(currId);
     }

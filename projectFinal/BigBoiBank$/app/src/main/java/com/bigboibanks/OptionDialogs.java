@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.NumberFormat;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Environment;
@@ -647,6 +648,38 @@ public abstract class OptionDialogs {
     }
   }
 
+  public static void viewUserBalanceDialog(final BankWorkerServiceSystems machine, final Context context) {
+    final Dialog customerBalance = new Dialog(context);
+    customerBalance.setContentView(R.layout.one_input);
+    RelativeLayout layout = (RelativeLayout) customerBalance.findViewById(R.id.layout);
+    ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.customerBalance));
+    final EditText inputID = (EditText) layout.findViewById(R.id.input);
+    inputID.setHint(context.getString(R.string.promptUserId));
+    final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
+    final Button check = (Button) layout.findViewById(R.id.confirm);
+    check.setText(R.string.check);
+    check.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        String confirmationMessage = "";
+        try {
+          int id = Integer.parseInt(inputID.getText().toString());
+          User user = new DatabaseSelectHelper(context).getUserDetails(id);
+          if (user instanceof Customer) {
+            confirmationMessage += context.getString(R.string.totalBalance);
+            confirmationMessage += machine.getTotalBalance(id).toString();
+          } else {
+            confirmationMessage += context.getString(R.string.invalidId);
+          }
+        } catch (NumberFormatException e) {
+          confirmationMessage += context.getString(R.string.invalidId);
+        }
+        balance.setText(confirmationMessage);
+      }
+    });
+    customerBalance.show();
+  }
+
   public static void leaveMessage(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
@@ -714,7 +747,6 @@ public abstract class OptionDialogs {
       }
       makeTransaction.show();
     }
-
 
   }
 
