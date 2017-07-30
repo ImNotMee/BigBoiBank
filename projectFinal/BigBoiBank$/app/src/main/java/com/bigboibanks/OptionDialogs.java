@@ -721,15 +721,13 @@ public abstract class OptionDialogs {
       final Dialog dialog = new Dialog(context);
       dialog.setContentView(R.layout.list_message_ids);
       final LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.layout);
-      final TextView notification = (TextView) dialog.findViewById(R.id.notification);
       // show the user all of the message Ids that are for them
       try {
         ArrayList<Integer> ids = (ArrayList<Integer>) machine.getCustomerMessageIds();
-        TextView textView = new TextView(context);
-        layout.addView(notification);
         // now add each id to the scroll view using a textview
         for (Integer id : ids) {
-          textView.setText(id.toString());
+          TextView textView = new TextView(context);
+          textView.setText("id: " + Integer.toString((int) id));
           layout.addView(textView);
         }
       } catch (Exception e) {
@@ -762,6 +760,7 @@ public abstract class OptionDialogs {
     });
     dialog.show();
   }
+
   public static void listCurrentUserDialog(final AdminTerminal machine, final Context context, String role) {
     List<User> users = machine.listUsers(role);
 
