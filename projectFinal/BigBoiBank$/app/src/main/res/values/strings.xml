@@ -6,8 +6,8 @@
     <string name="admin_terminal">Admin Terminal</string>
     <string name="teller_terminal">Teller Terminal</string>
     <string name="atm">Automated Teller Machine (ATM)</string>
-    <string name="prompt_id">Input your ID</string>
-    <string name="prompt_password">Input your password</string>
+    <string name="prompt_id">Input User ID</string>
+    <string name="prompt_password">Input password</string>
     <string name="logIn">Log In</string>
 
     <string-array name="adminOptionsArray">
@@ -75,4 +75,36 @@
     <string name="promptPassword">Input Password></string>
     <string name="promptConfirmPassword">Confirm Password</string>
     <string name="confirm">Confirm</string>
+
+    <string name="promptAccountName">Input Account Name</string>
+    <string name="promptBalance">Input balance</string>
+    <string name="invalidBalance">Invalid Balance</string>
+    <string name="accountAdded">Account successfully added. </string>
+    <string name="accountNotAdded">Account was not successfully added.</string>
+    <string name="tfsa">Tax Free Saving Account</string>
+    <string name="chequing">Chequing Account</string>
+    <string name="restrictedSaving">Restricted Savings Account</string>
+    <string name="balanceOwing">Balance Owing Account</string>
+    <string name="savings">Savings Account</string>
+
+    <string name="promptAccountId">Input Account ID</string>
+    <string name="promptAmount">Input Amount</string>
+
+    <string name="invalidAge">Invalid Age. </string>
+    <string name="invalidId">Invalid ID. </string>
+    <string name="invalidName">Invalid Name. </string>
+    <string name="invalidAmount">Invalid Amount. </string>
+    <string name="transactionCompleted">Transaction successful! New balance: </string>
+    <string name="transactionFailed">Transaction was not successful. </string>
+
+    <string name="customerSet">Customer has been set and authenticated. </string>
+    <string name="incorrectPassword">Incorrect Password .</string>
+
+    <string name="invalidAddress">Address is too long. </string>
+    <string name="passwordNoMatch">Passwords do not match. </string>
+    <string name="userAdded">User successfully added with ID: </string>
+    <string name="userNotAdded">User was not successfully created. </string>
+    <string name="back">Exit</string>
+
+    <string name="setCustomerFirst">Set and authenticate a customer first!</string>
 </resources>

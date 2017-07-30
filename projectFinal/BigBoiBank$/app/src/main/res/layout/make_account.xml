@@ -13,23 +13,62 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:id="@+id/accountName"
-        android:hint="Input Name of the Account" />
+        android:hint="@string/promptAccountName" />
 
     <EditText
         android:id="@+id/balance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Input Balance"
+        android:hint="@string/promptBalance"
         android:layout_below="@+id/accountName"
         android:layout_alignParentStart="true" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/accounts"
+        android:orientation="vertical"
+        android:layout_below="@+id/balance">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tfsa"
+            android:id="@+id/tfsa"
+            android:checked="true"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chequing"
+            android:text="@string/chequing"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/savings"
+            android:text="@string/savings"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/restrictedSavings"
+            android:text="@string/restrictedSaving"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/balanceOwing"
+            android:text="@string/balanceOwing" />
+
+    </RadioGroup>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/confirm"
         android:id="@+id/confirm"
-        android:layout_marginTop="29dp"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/accounts"
         android:layout_centerHorizontal="true" />
 
     <TextView

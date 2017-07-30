@@ -163,5 +163,21 @@ public class UserInterface extends AppCompatActivity {
     OptionDialogs.makeUserDialog((BankWorkerServiceSystems)machine, "customer", context);
   }
 
+  public void makeDeposit(View v) {
+    OptionDialogs.moneyTransactionDialog(machine, "deposit", context);
+  }
+
+  public void makeWithdrawal(View v) {
+    OptionDialogs.moneyTransactionDialog(machine, "withdrawal", context);
+  }
+
+  public void setCustomer(View v) {
+    OptionDialogs.setCustomerDialog((BankWorkerServiceSystems) machine, context);
+  }
+
+  public void makeAccount(View v) {
+    OptionDialogs.makeAccountDialog((BankWorkerServiceSystems) machine, context);
+  }
+
 
 }
