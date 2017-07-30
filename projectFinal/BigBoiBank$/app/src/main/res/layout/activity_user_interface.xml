@@ -28,7 +28,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/setCustomer"
                 android:text="@string/setCustomer"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="setCustomer"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -44,7 +45,8 @@
                 android:id="@+id/makeAccount"
                 android:text="@string/makeAccount"
                 android:layout_below="@id/listAccounts"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="makeAccount"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -60,7 +62,8 @@
                 android:id="@+id/makeDeposit"
                 android:text="@string/makeDeposit"
                 android:layout_below="@id/giveInterest"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="makeDeposit"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -68,7 +71,8 @@
                 android:id="@+id/makeWithdrawal"
                 android:text="@string/makeWithdrawal"
                 android:layout_below="@id/makeDeposit"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="makeWithdrawal"/>
 
             <Button
                 android:layout_width="match_parent"
