@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -88,6 +89,8 @@ public class LogIn extends AppCompatActivity {
         }
         User user = selector.getUserDetails(id);
         if (user != null) {
+          MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.mr_krabs);
+          mediaPlayer.start();
           boolean authenticated = user.authenticate(password.getText().toString());
           if (authenticated) {
             if (user instanceof Admin && admin.isChecked()) {
