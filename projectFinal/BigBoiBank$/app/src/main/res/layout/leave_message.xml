@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@id/layout">
+
+    <EditText
+        android:id="@+id/inputId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="User ID message will be sent to"
+         />
+
+    <EditText
+        android:id="@+id/inputMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="The message you want to send"
+        android:layout_below="@+id/inputId"
+        />
+
+    <Button
+        android:id="@+id/confirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inputMessage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="confirm" />
+
+    <TextView
+        android:id="@+id/notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inputMessage"
+        android:layout_centerHorizontal="true"
+        android:text="Leave a message" />
+
+</RelativeLayout>

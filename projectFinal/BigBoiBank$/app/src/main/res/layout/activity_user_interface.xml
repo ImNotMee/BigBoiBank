@@ -149,7 +149,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/leaveMessage"
                 android:text="@string/leaveMessage"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="leaveMessage"/>
 
             <Button
                 android:layout_width="match_parent"

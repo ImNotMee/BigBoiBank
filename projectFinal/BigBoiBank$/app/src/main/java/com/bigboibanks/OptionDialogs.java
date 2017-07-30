@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bank.accounts.Account;
+import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
@@ -32,6 +33,8 @@ import com.bank.machines.BankServiceSystems;
 import com.bank.machines.BankWorkerServiceSystems;
 import com.bank.users.Customer;
 import com.bank.users.User;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -641,6 +644,42 @@ public abstract class OptionDialogs {
         }
       });
       transferFunds.show();
+    }
+  }
+
+  public static void leaveMessage(final BankServiceSystems machine, final Context context) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+    } else {
+      final Dialog leaveMessage = new Dialog(context);
+      leaveMessage.setContentView(R.layout.leave_message);
+      RelativeLayout layout = (RelativeLayout) leaveMessage.findViewById(R.id.layout);
+      // references to the editText and Textedits
+      final TextView notification = (TextView) layout.findViewById(R.id.notification);
+      final EditText inputId = (EditText) layout.findViewById(R.id.inputId);
+      final EditText inputMessage = (EditText) layout.findViewById(R.id.inputMessage);
+      final Button confirm = (Button) layout.findViewById(R.id.confirmButton);
+      // if the customer clicks confirm
+      confirm.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          String confirmationMessage = "";
+          try {
+            int userId = Integer.parseInt(inputId.getText().toString());
+            String message = inputMessage.getText().toString();
+            DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
+            DatabaseInsertHelper insert = new DatabaseInsertHelper(context);
+            if (selector.getUserDetails(userId) != null) {
+              int id = insert.insertMessage(userId, message);
+              confirmationMessage += "Successfully left a message with id : " + id;
+            }
+          } catch (Exception e) {
+            confirmationMessage += "Invalid input";
+          }
+          notification.setText(confirmationMessage);
+        }
+      });
+      leaveMessage.show();
     }
   }
 
