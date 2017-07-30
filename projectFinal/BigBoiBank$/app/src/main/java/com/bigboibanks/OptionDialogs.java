@@ -654,7 +654,7 @@ public abstract class OptionDialogs {
       final Dialog leaveMessage = new Dialog(context);
       leaveMessage.setContentView(R.layout.leave_message);
       RelativeLayout layout = (RelativeLayout) leaveMessage.findViewById(R.id.layout);
-      // references to the editText and Textedits
+      // references to the editText and TextEdits
       final TextView notification = (TextView) layout.findViewById(R.id.notification);
       final EditText inputId = (EditText) layout.findViewById(R.id.inputId);
       final EditText inputMessage = (EditText) layout.findViewById(R.id.inputMessage);
@@ -668,9 +668,8 @@ public abstract class OptionDialogs {
             int userId = Integer.parseInt(inputId.getText().toString());
             String message = inputMessage.getText().toString();
             DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
-            DatabaseInsertHelper insert = new DatabaseInsertHelper(context);
             if (selector.getUserDetails(userId) != null) {
-              int id = insert.insertMessage(userId, message);
+              int id = ((BankWorkerServiceSystems) machine).leaveMessage(message, userId);
               confirmationMessage += "Successfully left a message with id : " + id;
             }
           } catch (Exception e) {
@@ -681,6 +680,10 @@ public abstract class OptionDialogs {
       });
       leaveMessage.show();
     }
+  }
+
+  public static void showMessagesForCustomer(final Context context) {
+    final Dialog dialog = new Dialog(context);
   }
 
 }
