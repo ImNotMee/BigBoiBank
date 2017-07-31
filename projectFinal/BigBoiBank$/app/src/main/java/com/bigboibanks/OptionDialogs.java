@@ -153,11 +153,11 @@ public abstract class OptionDialogs {
             accountType = "TFSA";
           } else if (chequing.isChecked()) {
             accountType = "CHEQUING";
-          } else if(savings.isChecked()) {
+          } else if (savings.isChecked()) {
             accountType = "SAVING";
-          } else if(restrictedSavings.isChecked()) {
+          } else if (restrictedSavings.isChecked()) {
             accountType = "RESTRICTEDSAVING";
-          } else if(balanceOwing.isChecked()) {
+          } else if (balanceOwing.isChecked()) {
             accountType = "BALANCEOWING";
           }
           boolean validInput = true;
@@ -180,7 +180,7 @@ public abstract class OptionDialogs {
           if (validInput) {
 
             int AccountTypeID = AccountEnum.getAccountId(accountType);
-            if (machine.makeNewAccount(name, balance , AccountTypeID)) {
+            if (machine.makeNewAccount(name, balance, AccountTypeID)) {
               confirmationMessage += context.getString(R.string.accountAdded);
               confirm.setText(context.getString(R.string.back));
               confirm.setOnClickListener(new View.OnClickListener() {
@@ -734,7 +734,7 @@ public abstract class OptionDialogs {
           } else {
             ArrayList<Integer> ids;
             if (machine instanceof TellerTerminal) {
-               ids = (ArrayList<Integer>) ((TellerTerminal) machine).getUserMessageIds();
+              ids = (ArrayList<Integer>) ((TellerTerminal) machine).getUserMessageIds();
             } else {
               ids = (ArrayList<Integer>) machine.getCustomerMessageIds();
             }
@@ -821,19 +821,65 @@ public abstract class OptionDialogs {
           int tellerId = Integer.parseInt(tellerToPromote.getText().toString());
           DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
           User user = selector.getUserDetails(Integer.valueOf(tellerId));
-          if (machine.promoteTellerToAdmin(tellerId)){
+          if (machine.promoteTellerToAdmin(tellerId)) {
             confirmationMessage += "Teller successfully promoted to admin.";
           } else {
             confirmationMessage += "Teller was not successfully promoted to admin.";
           }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           confirmationMessage += "Invalid input";
         }
         confirmMessage.setText(confirmationMessage);
         promoteTeller.show();
       }
-      confirmMessage.setText(confirmationMessage);
+    });
+  }
+
+  public static void updateInterestRateDialog(final AdminTerminal machine, final Context context) {
+    final Dialog updateInterest = new Dialog(context);
+    updateInterest.setContentView(R.layout.account_role);
+    RelativeLayout layout = (RelativeLayout) updateInterest.findViewById(R.id.updateAccountInterest);
+    final EditText inputInterest = (EditText) layout.findViewById(R.id.updateInterest);
+    final EditText inputType = (EditText) layout.findViewById(R.id.updateType);
+    final Button update = (Button) layout.findViewById(R.id.confirm);
+    final TextView confirm = (TextView) layout.findViewById(R.id.confirmationMessage);
+
+
+    update.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        String confirmMessage = "";
+        java.math.BigDecimal interest = java.math.BigDecimal.ZERO;
+        boolean validinput = true;
+        String accountType = inputType.getText().toString();
+        AccountTypesEnumMap AccountEnum = new AccountTypesEnumMap(context);
+        Integer accountId = AccountEnum.getAccountId(accountType);
+        if (!new DatabaseSelectHelper(context).getRoles().contains(accountId)) {
+          confirmMessage += "Invalid Account Type";
+          validinput = false;
+        }
+        if (interest.compareTo(BigDecimal.ZERO) == -1 || interest == null) {
+          confirmMessage += "Invalid Amount";
+          validinput = false;
+        }
+
+        interest = BigDecimal.valueOf(Double.parseDouble(inputInterest.getText().toString()));
+
+        if (validinput) {
+          if (machine.updateInterestRate(interest, accountId)) {
+            confirmMessage += context.getString(R.string.accountAdded);
+            update.setText(context.getString(R.string.back));
+            update.setOnClickListener(new View.OnClickListener() {
+              public void onClick(View v) {
+                updateInterest.dismiss();
+              }
+            });
+          } else {
+            confirmMessage += context.getString(R.string.accountNotAdded);
+          }
+        }
+        confirm.setText(confirmMessage);
+      }
     });
   }
 }
