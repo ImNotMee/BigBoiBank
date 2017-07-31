@@ -160,7 +160,7 @@
     <string name="idPrefix">id: </string>
     <string name="noAccess">You do not have access to the message</string>
     <string name="promptUserIdForMessage">User ID to send message to</string>
-    <string name="promptMessage">Message to send (542 Character limit)</string>
+    <string name="promptMessage">Message to send (512 Character limit)</string>
 
     <string name="noCheques">There are no Cheques</string>
     <string name="cheque">Cheque</string>
