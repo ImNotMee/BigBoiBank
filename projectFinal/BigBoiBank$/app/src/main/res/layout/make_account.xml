@@ -15,7 +15,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:id="@+id/accountName"
-        android:hint="@string/promptAccountName" />
+        android:hint="@string/promptAccountName"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dialog_title"/>
 
     <EditText
         android:id="@+id/balance"
