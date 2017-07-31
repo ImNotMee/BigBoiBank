@@ -10,6 +10,8 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="@dimen/spinner_height"
+        android:dropDownWidth="match_parent"
+        android:dropDownHeight="wrap_content"
         android:id="@+id/options"/>
 
     <ScrollView
@@ -350,8 +352,6 @@
                 android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
         </RelativeLayout>
-
-
 
     </ScrollView>
 

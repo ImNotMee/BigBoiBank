@@ -7,4 +7,6 @@
     <color name="dark">#0E010C</color>
     <color name="backgroundDark">#352D2D</color>
     <color name="white">#FFF</color>
+    <color name="darkYellow">#FFCF0C</color>
+    <color name="orange">#FF890C</color>
 </resources>

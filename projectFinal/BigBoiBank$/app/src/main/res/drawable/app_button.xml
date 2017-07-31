@@ -4,7 +4,7 @@
 
 
     <gradient android:startColor="@color/colorPrimary"
-              android:endColor="@color/white"/>
+              android:endColor="@color/orange"/>
 
     <corners android:bottomRightRadius="8dp"
              android:bottomLeftRadius="8dp"
