@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.bigboibanks.UserInterface"
-    android:id="@+id/home">
+    android:id="@+id/home"
+    android:background="@color/colorPrimaryDark">
 
     <Spinner
         android:layout_width="match_parent"
@@ -16,7 +16,8 @@
         android:layout_below="@+id/options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollView">
+        android:id="@+id/scrollView"
+        android:padding="@dimen/scroll_view_padding">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,298 +25,329 @@
             android:id="@+id/buttons">
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/setCustomer"
                 android:text="@string/setCustomer"
                 android:visibility="gone"
-                android:onClick="setCustomer"/>
+                android:onClick="setCustomer"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/listAccounts"
                 android:text="@string/listAccounts"
                 android:layout_below="@id/setCustomer"
                 android:visibility="gone"
-                android:onClick="listAccounts"/>
+                android:onClick="listAccounts"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeAccount"
                 android:text="@string/makeAccount"
                 android:layout_below="@id/listAccounts"
                 android:visibility="gone"
-                android:onClick="makeAccount"/>
+                android:onClick="makeAccount"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/giveInterest"
                 android:text="@string/giveInterest"
                 android:layout_below="@id/makeAccount"
                 android:visibility="gone"
-                android:onClick="giveInterest"/>
+                android:onClick="giveInterest"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeDeposit"
                 android:text="@string/makeDeposit"
                 android:layout_below="@id/giveInterest"
                 android:visibility="gone"
-                android:onClick="makeDeposit"/>
+                android:onClick="makeDeposit"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeWithdrawal"
                 android:text="@string/makeWithdrawal"
                 android:layout_below="@id/makeDeposit"
                 android:visibility="gone"
-                android:onClick="makeWithdrawal"/>
+                android:onClick="makeWithdrawal"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/checkBalance"
                 android:text="@string/checkBalance"
                 android:layout_below="@id/makeWithdrawal"
                 android:visibility="gone"
-                android:onClick="checkBalance"/>
+                android:onClick="checkBalance"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/transferFunds"
                 android:text="@string/transferFunds"
                 android:layout_below="@id/checkBalance"
                 android:visibility="gone"
-                android:onClick="transferFunds"/>
+                android:onClick="transferFunds"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updateName"
                 android:text="@string/updateName"
                 android:layout_below="@id/transferFunds"
                 android:visibility="gone"
-                android:onClick="updateName"/>
+                android:onClick="updateName"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updateAge"
                 android:text="@string/updateAge"
                 android:layout_below="@id/updateName"
                 android:visibility="gone"
-                android:onClick="updateAge"/>
+                android:onClick="updateAge"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updateAddress"
                 android:text="@string/updateAddress"
                 android:layout_below="@id/updateAge"
                 android:visibility="gone"
-                android:onClick="updateAddress"/>
+                android:onClick="updateAddress"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updatePassword"
                 android:text="@string/updatePassword"
                 android:layout_below="@id/updateAddress"
                 android:visibility="gone"
-                android:onClick="updatePassword"/>
+                android:onClick="updatePassword"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/closeCustomer"
                 android:text="@string/closeCustomer"
                 android:layout_below="@id/updatePassword"
                 android:visibility="gone"
-                android:onClick="closeCustomerSession"/>
+                android:onClick="closeCustomerSession"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/leaveMessage"
                 android:text="@string/leaveMessage"
                 android:visibility="gone"
-                android:onClick="leaveMessage"/>
+                android:onClick="leaveMessage"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/customerMessages"
                 android:text="@string/customerMessages"
                 android:layout_below="@id/leaveMessage"
                 android:visibility="gone"
-                android:onClick="showMessageIds"/>
+                android:onClick="showMessageIds"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/userMessages"
                 android:text="@string/userMessages"
                 android:layout_below="@id/customerMessages"
                 android:visibility="gone"
-                android:onClick="showUserMessageIds"/>
+                android:onClick="showUserMessageIds"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/seeMessage"
                 android:text="@string/seeMessage"
                 android:layout_below="@id/userMessages"
                 android:visibility="gone"
-                android:onClick="seeSpecificMessage"/>
+                android:onClick="seeSpecificMessage"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/viewAdmins"
                 android:text="@string/viewAdmins"
                 android:visibility="gone"
-                android:onClick="listCurrentAdmins"/>
+                android:onClick="listCurrentAdmins"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/viewTellers"
                 android:text="@string/viewTellers"
                 android:layout_below="@id/viewAdmins"
                 android:visibility="gone"
-                android:onClick="listCurrentTellers"/>
+                android:onClick="listCurrentTellers"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/viewCustomers"
                 android:text="@string/viewCustomers"
                 android:layout_below="@id/viewTellers"
                 android:visibility="gone"
-                android:onClick="listCurrentCustomers"/>
+                android:onClick="listCurrentCustomers"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeAdmin"
                 android:text="@string/makeAdmin"
                 android:layout_below="@id/viewCustomers"
                 android:visibility="gone"
-                android:onClick="makeAdmin"/>
+                android:onClick="makeAdmin"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeTeller"
                 android:text="@string/makeTeller"
                 android:layout_below="@id/makeAdmin"
                 android:visibility="gone"
-                android:onClick="makeTeller"/>
+                android:onClick="makeTeller"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makeCustomer"
                 android:text="@string/makeCustomer"
                 android:layout_below="@id/makeTeller"
                 android:visibility="gone"
-                android:onClick="makeCustomer"/>
+                android:onClick="makeCustomer"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/promoteTeller"
                 android:text="@string/promoteTeller"
                 android:layout_below="@id/makeCustomer"
                 android:visibility="gone"
-                android:onClick="promoteTeller"/>
+                android:onClick="promoteTeller"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/customerBalance"
                 android:text="@string/customerBalance"
                 android:visibility="gone"
-                android:onClick="viewCustomerBalance"/>
+                android:onClick="viewCustomerBalance"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/bankBalance"
                 android:text="@string/bankBalance"
                 android:layout_below="@id/customerBalance"
                 android:visibility="gone"
-                android:onClick="viewTotalBankBalance"/>
+                android:onClick="viewTotalBankBalance"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updateInterest"
                 android:text="@string/updateInterest"
                 android:layout_below="@id/bankBalance"
                 android:visibility="gone"
-                android:onClick="updateAccountInterest"/>
+                android:onClick="updateAccountInterest"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorAccent"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/verifyCheque"
                 android:text="@string/verifyCheque"
                 android:visibility="gone"
                 android:layout_below="@id/updateInterest"
-                android:onClick="verifyCheques"/>
+                android:onClick="verifyCheques"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/backup"
                 android:text="@string/backup"
                 android:visibility="gone"
-                android:onClick="backUpDatabase"/>
+                android:onClick="backUpDatabase"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
             <Button
-                android:background="@color/colorButtonYellow"
+                android:background="@drawable/app_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/load"
                 android:text="@string/load"
                 android:layout_below="@id/backup"
                 android:visibility="gone"
-                android:onClick="loadSavedDatabase"/>
+                android:onClick="loadSavedDatabase"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
         </RelativeLayout>
 
