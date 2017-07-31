@@ -4,12 +4,15 @@
     android:id="@+id/layout">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/title"
         android:text="@string/makeAccount"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dialog_title"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -17,7 +20,8 @@
         android:id="@+id/account"
         android:inputType="number"
         android:layout_below="@+id/title"
-        android:hint="@string/promptAccountId"/>
+        android:hint="@string/promptAccountId"
+        />
 
     <EditText
         android:layout_width="match_parent"

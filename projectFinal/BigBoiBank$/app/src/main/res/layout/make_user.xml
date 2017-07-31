@@ -8,7 +8,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/title"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dialog_title"/>
 
     <EditText
         android:layout_width="match_parent"

@@ -5,4 +5,5 @@
     <dimen name="large">24dp</dimen>
     <dimen name="cheque_size">500sp</dimen>
     <dimen name="spinner_height">50sp</dimen>
+    <dimen name="dialog_title">20sp</dimen>
 </resources>

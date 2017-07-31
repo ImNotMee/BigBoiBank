@@ -14,16 +14,19 @@
         <LinearLayout
             android:id="@+id/layout"
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/notification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Message Ids"
-                android:textColor="@color/colorPrimaryDark"
-                android:backgroundTint="@color/colorAccent"/>
+                android:text="@string/messageIds"
+                android:textAlignment="center"
+                android:backgroundTint="@color/colorAccent"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dialog_title"/>
         </LinearLayout>
     </ScrollView>
 

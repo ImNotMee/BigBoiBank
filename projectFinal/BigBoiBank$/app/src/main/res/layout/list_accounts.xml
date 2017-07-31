@@ -10,7 +10,10 @@
         android:id="@+id/title"
         android:text="@string/listAccounts"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dialog_title"/>
 
     <ScrollView
         android:layout_width="match_parent"

@@ -190,5 +190,6 @@
     <string name="interestNotUpdated">Interest was not successfully updated</string>
 
     <string name="customerInfo">Customer Information</string>
+    <string name="messageIds">Message Ids</string>
 
 </resources>
