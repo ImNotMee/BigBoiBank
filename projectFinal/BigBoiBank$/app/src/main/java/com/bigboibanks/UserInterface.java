@@ -425,4 +425,9 @@ public class UserInterface extends AppCompatActivity {
     Intent intent = new Intent(context, VerifyCheuqes.class);
     context.startActivity(intent);
   }
+
+  public void updateAccountInterest(View v){
+    OptionDialogs.updateInterestRateDialog((AdminTerminal) machine, context);
+  }
+
 }

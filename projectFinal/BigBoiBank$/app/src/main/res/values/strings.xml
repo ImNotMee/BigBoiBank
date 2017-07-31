@@ -165,4 +165,8 @@
     <string name="decline">Decline</string>
     <string name="chequeVerified">Cheque has been verified and deposited. </string>
     <string name="chequeChecked">Cheque has already been checked</string>
+
+    <string name="promptAccountType">Input Account Type</string>
+    <string name="promptAccountInterest">Input Account Interest</string>
+
 </resources>
