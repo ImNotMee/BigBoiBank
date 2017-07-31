@@ -63,6 +63,8 @@
     <string name="customerBalance">View total balance of all the accounts of a customer</string>
     <string name="bankBalance">View the total balance of the bank</string>
     <string name="updateInterest">Update account interest rate</string>
+    <string name="verifyCheque">Verify Cheques</string>
+
 
     <string name="databaseOptions">Database Interactions</string>
     <string name="backup">Backup current database</string>
@@ -157,4 +159,10 @@
     <string name="inputMessageId">Input message id</string>
     <string name="idPrefix">id: </string>
     <string name="noAccess">You do not have access to the message</string>
+
+    <string name="cheque">Cheque</string>
+    <string name="verify">Verify</string>
+    <string name="decline">Decline</string>
+    <string name="chequeVerified">Cheque has been verified and deposited. </string>
+    <string name="chequeChecked">Cheque has already been checked</string>
 </resources>

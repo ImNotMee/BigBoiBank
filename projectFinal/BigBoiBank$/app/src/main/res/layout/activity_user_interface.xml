@@ -296,6 +296,15 @@
                 android:background="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/verifyCheque"
+                android:text="@string/verifyCheque"
+                android:visibility="gone"
+                android:layout_below="@id/updateInterest"
+                android:onClick="verifyCheques"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/backup"
                 android:text="@string/backup"
                 android:visibility="gone"

@@ -29,8 +29,8 @@ import java.math.BigDecimal;
 
 public class LogIn extends AppCompatActivity {
 
-  private static SharedPreferences savedInfo;
-  private static SharedPreferences.Editor savedInfoWriter;
+  protected static SharedPreferences savedInfo;
+  protected static SharedPreferences.Editor savedInfoWriter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

@@ -204,115 +204,89 @@ public abstract class OptionDialogs {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
     } else {
+
+      final Dialog makeTransaction = new Dialog(context);
+      makeTransaction.setContentView(R.layout.money_transaction);
+      RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
+      TextView title = (TextView) layout.findViewById(R.id.title);
       if (transaction.equals("deposit")) {
-        final Dialog depositChequeChoice = new Dialog(context);
-        depositChequeChoice.setContentView(R.layout.cheque_option);
-        (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.yes)).setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            final int REQUEST_IMAGE_CAPTURE = 1;
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
-              ((Activity) context).startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-          }
-        });
-        (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.no)).setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            inputMoneyTransaction(machine, transaction, context);
-          }
-        });
-        depositChequeChoice.show();
-      } else {
-        inputMoneyTransaction(machine, transaction, context);
+        title.setText(context.getText(R.string.makeDeposit));
+      } else if (transaction.equals("withdrawal")) {
+        title.setText(context.getText(R.string.makeWithdrawal));
       }
-
-    }
-  }
-
-
-  private static void inputMoneyTransaction(final BankServiceSystems machine, final String transaction, final Context context) {
-
-    final Dialog makeTransaction = new Dialog(context);
-    makeTransaction.setContentView(R.layout.money_transaction);
-    RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
-    TextView title = (TextView) layout.findViewById(R.id.title);
-    if (transaction.equals("deposit")) {
-      title.setText(context.getText(R.string.makeDeposit));
-    } else if (transaction.equals("withdrawal")) {
-      title.setText(context.getText(R.string.makeWithdrawal));
-    }
-    final EditText inputAccountId = (EditText) layout.findViewById(R.id.account);
-    final EditText inputAmount = (EditText) layout.findViewById(R.id.amount);
-    final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
-    final Button confirm = (Button) layout.findViewById(R.id.confirm);
-    confirm.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        boolean validInput = true;
-        String confirmationMessage = "";
-        int id = -1;
-        try {
-          id = Integer.parseInt(inputAccountId.getText().toString());
-          if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
+      final EditText inputAccountId = (EditText) layout.findViewById(R.id.account);
+      final EditText inputAmount = (EditText) layout.findViewById(R.id.amount);
+      final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+      final Button confirm = (Button) layout.findViewById(R.id.confirm);
+      confirm.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          boolean validInput = true;
+          String confirmationMessage = "";
+          int id = -1;
+          try {
+            id = Integer.parseInt(inputAccountId.getText().toString());
+            if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
+              confirmationMessage += context.getString(R.string.invalidId);
+              validInput = false;
+            }
+          } catch (NumberFormatException e) {
             confirmationMessage += context.getString(R.string.invalidId);
             validInput = false;
           }
-        } catch (NumberFormatException e) {
-          confirmationMessage += context.getString(R.string.invalidId);
-          validInput = false;
-        }
-        java.math.BigDecimal amount = new java.math.BigDecimal(BigInteger.ZERO);
-        try {
-          amount = new java.math.BigDecimal(inputAmount.getText().toString());
-        } catch (NumberFormatException e) {
-          confirmationMessage += context.getString(R.string.invalidAmount);
-          validInput = false;
-        }
-        if (validInput) {
-          if (transaction.equals("deposit")) {
-            try {
-              machine.makeDeposit(amount, id);
-              confirm.setText(context.getString(R.string.back));
-              confirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                  makeTransaction.dismiss();
-                }
-              });
-              confirmationMessage += context.getString(R.string.transactionCompleted);
-              DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
-              confirmationMessage += selector.getBalance(id).toString();
-            } catch (IllegalAmountException e) {
-              confirmationMessage += context.getString(R.string.invalidAmount);
-            }
-          } else {
-            try {
-              machine.makeWithdrawal(amount, id);
-              confirm.setText(context.getString(R.string.back));
-              confirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                  makeTransaction.dismiss();
-                }
-              });
-              confirmationMessage += context.getString(R.string.transactionCompleted);
-              DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
-              confirmationMessage += selector.getBalance(id).toString();
-            } catch (IllegalAmountException e) {
-              confirmationMessage += context.getString(R.string.invalidAmount);
-            } catch (InsufficientFundsException e) {
-              confirmationMessage += context.getString(R.string.insufficientFunds);
-            }
+          java.math.BigDecimal amount = new java.math.BigDecimal(BigInteger.ZERO);
+          try {
+            amount = new java.math.BigDecimal(inputAmount.getText().toString());
+          } catch (NumberFormatException e) {
+            confirmationMessage += context.getString(R.string.invalidAmount);
+            validInput = false;
           }
+          if (validInput) {
+            if (transaction.equals("deposit")) {
+              try {
+                machine.makeDeposit(amount, id);
+                confirm.setText(context.getString(R.string.back));
+                confirm.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                    makeTransaction.dismiss();
+                  }
+                });
+                confirmationMessage += context.getString(R.string.transactionCompleted);
+                DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
+                confirmationMessage += selector.getBalance(id).toString();
+              } catch (IllegalAmountException e) {
+                confirmationMessage += context.getString(R.string.invalidAmount);
+              }
+            } else {
+              try {
+                machine.makeWithdrawal(amount, id);
+                confirm.setText(context.getString(R.string.back));
+                confirm.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                    makeTransaction.dismiss();
+                  }
+                });
+                confirmationMessage += context.getString(R.string.transactionCompleted);
+                DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
+                confirmationMessage += selector.getBalance(id).toString();
+              } catch (IllegalAmountException e) {
+                confirmationMessage += context.getString(R.string.invalidAmount);
+              } catch (InsufficientFundsException e) {
+                confirmationMessage += context.getString(R.string.insufficientFunds);
+              }
+            }
 
+          }
+          confirmMessage.setText(confirmationMessage);
         }
-        confirmMessage.setText(confirmationMessage);
-      }
-    });
-    makeTransaction.show();
+      });
+      makeTransaction.show();
+
+    }
   }
+
 
   public static void setCustomerDialog(final BankWorkerServiceSystems machine, final Context context) {
     final Dialog setCustomer = new Dialog(context);
@@ -345,17 +319,16 @@ public abstract class OptionDialogs {
           machine.setCurrentCustomer((Customer) user);
           if (machine.authenticateCurrentCustomer(inputPassword.getText().toString())) {
             confirmationMessage += context.getString(R.string.customerSet);
+            confirm.setText(context.getString(R.string.back));
+            confirm.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                setCustomer.dismiss();
+              }
+            });
           } else {
             confirmationMessage += context.getString(R.string.incorrectPassword);
           }
-          confirm.setText(context.getString(R.string.back));
-          confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              setCustomer.dismiss();
-            }
-          });
-
         }
         confirmMessage.setText(confirmationMessage);
       }

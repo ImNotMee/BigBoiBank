@@ -15,15 +15,19 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.machines.AdminTerminal;
 import com.bank.machines.AutomatedTellerMachine;
 import com.bank.machines.BankServiceSystems;
@@ -40,14 +44,15 @@ import java.util.List;
 public class UserInterface extends AppCompatActivity {
 
   final private List<List<Button>> buttons = new ArrayList<>();
-  private BankServiceSystems machine;
+  protected static BankServiceSystems machine;
   private Context context;
   private int currSelection = 0;
   private String machineTerminal;
   final int REQUEST_IMAGE_CAPTURE = 1;
 
-  static File storageDir;
+  public static File storageDir;
   static File file;
+  static int accountIdForCheque = -1;
 
   // array of supported extensions (use a List if you prefer)
   static final String[] EXTENSIONS = new String[]{
@@ -55,7 +60,7 @@ public class UserInterface extends AppCompatActivity {
   };
 
   // filter to identify images based on their extensions
-  static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
+  public static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
 
     @Override
     public boolean accept(final File dir, final String name) {
@@ -68,13 +73,12 @@ public class UserInterface extends AppCompatActivity {
     }
   };
 
-  ImageView image;
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_user_interface);
     context = this;
+    storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
     machineTerminal = getIntent().getStringExtra("machine");
     if (machineTerminal.equals("admin")) {
       machine = new AdminTerminal(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
@@ -89,8 +93,6 @@ public class UserInterface extends AppCompatActivity {
     List<Button> staffOptions = new ArrayList<>();
     List<Button> bankOptions = new ArrayList<>();
     List<Button> databaseOptions = new ArrayList<>();
-
-    image = (ImageView) findViewById(R.id.picture);
 
     if (machineTerminal.equals("customer")) {
       // list customer accounts button
@@ -138,20 +140,21 @@ public class UserInterface extends AppCompatActivity {
     }
 
     if (machineTerminal.equals("admin")) {
-      // add the 3 bank options
-      for (int i = 24; i < 27; i++) {
+      // add the 4 bank options
+      for (int i = 24; i < 28; i++) {
         bankOptions.add((Button) buttonsContainer.getChildAt(i));
       }
       buttons.add(bankOptions);
     } else if (machineTerminal.equals("teller")) {
       // find total balance of a customer
       bankOptions.add((Button) buttonsContainer.findViewById(R.id.customerBalance));
+      bankOptions.add((Button) buttonsContainer.findViewById(R.id.verifyCheque));
       buttons.add(bankOptions);
     }
 
     if (machineTerminal.equals("admin")) {
       // add the 2 database options
-      for (int i = 27; i < 29; i++) {
+      for (int i = 28; i < 30; i++) {
         databaseOptions.add((Button) buttonsContainer.getChildAt(i));
       }
       buttons.add(databaseOptions);
@@ -227,24 +230,57 @@ public class UserInterface extends AppCompatActivity {
     (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.yes)).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-          // Create the File where the photo should go
-          try {
-            file = createImageFile();
-          } catch (IOException ex) {
-            // Error occurred while creating the File
+        // open a dialog to get account id
+        final Dialog accountCheck = new Dialog(context);
+        accountCheck.setContentView(R.layout.one_input);
+        RelativeLayout layout = (RelativeLayout) accountCheck.findViewById(R.id.layout);
+        final EditText inputAccountId = (EditText) layout.findViewById(R.id.input);
+        final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
+        final Button check = (Button) layout.findViewById(R.id.confirm);
+        check.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            boolean validInput = true;
+            String confirmationMessage = "";
+            int id = -1;
+            try {
+              id = Integer.parseInt(inputAccountId.getText().toString());
+              if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
+                confirmationMessage += context.getString(R.string.invalidId);
+                validInput = false;
+              }
+            } catch (NumberFormatException e) {
+              confirmationMessage += context.getString(R.string.invalidId);
+              validInput = false;
+            }
+            if (validInput) {
+              accountIdForCheque = id;
+              accountCheck.dismiss();
+              // take a picture of the cheque
+              Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+              // Ensure that there's a camera activity to handle the intent
+              if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                // Create the File where the photo should go
+                try {
+                  file = createImageFile();
+                } catch (IOException ex) {
+                  // Error occurred while creating the File
+                }
+                // Continue only if the File was successfully created
+                if (file != null) {
+                  Uri photoURI = FileProvider.getUriForFile(context,
+                          "com.bigboibanks.android.fileprovider",
+                          file);
+                  takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                  startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+              }
+            }
+            balance.setText(confirmationMessage);
           }
-          // Continue only if the File was successfully created
-          if (file != null) {
-            Uri photoURI = FileProvider.getUriForFile(context,
-                    "com.bigboibanks.android.fileprovider",
-                    file);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-          }
-        }
+        });
+        accountCheck.show();
+        depositChequeChoice.dismiss();
       }
     });
     (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.no)).setOnClickListener(new View.OnClickListener() {
@@ -262,7 +298,6 @@ public class UserInterface extends AppCompatActivity {
     // Create an image file name
     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     String imageFileName = "JPEG_" + timeStamp + "_";
-    storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
     File image = File.createTempFile(
             imageFileName,  /* prefix */
             ".jpg",         /* suffix */
@@ -277,19 +312,25 @@ public class UserInterface extends AppCompatActivity {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-
-
-
-
     if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-      Toast.makeText(context, "PICTURE WAS TAKEN", Toast.LENGTH_SHORT).show();
       int i = 0;
-      for (final File f : storageDir.listFiles(IMAGE_FILTER)) {
-        Bitmap img = null;
-
-        Toast.makeText(context, "PICTURE WAS TAKEN " + String.valueOf(i), Toast.LENGTH_SHORT).show();
+      // loop to find current photo number
+      for (File f : storageDir.listFiles(IMAGE_FILTER)) {
         i++;
       }
+
+      String verified = "ChequeVerified" + String.valueOf(i);
+      // set that the cheque has not been verified
+      LogIn.savedInfoWriter.putBoolean(verified, false);
+      // set the corresponding account to be deposited to
+      String account = "ChequeAccount" + String.valueOf(i);
+      LogIn.savedInfoWriter.putInt(account, accountIdForCheque);
+      // set the path of the photo for retrieval
+      String filePath = mCurrentPhotoPath;
+      String file = "ChequeFilePath" + String.valueOf(i);
+      LogIn.savedInfoWriter.putString(file, filePath);
+      Toast.makeText(context, filePath, Toast.LENGTH_SHORT).show();
+      LogIn.savedInfoWriter.apply();
     }
   }
 
@@ -379,4 +420,9 @@ public class UserInterface extends AppCompatActivity {
   }
 
   public void showUserMessageIds(View v) { OptionDialogs.showUserMessageIds((BankWorkerServiceSystems) machine, context);}
+
+  public void verifyCheques(View v) {
+    Intent intent = new Intent(context, VerifyCheuqes.class);
+    context.startActivity(intent);
+  }
 }
