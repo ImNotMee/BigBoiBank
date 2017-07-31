@@ -822,7 +822,6 @@ public abstract class OptionDialogs {
     }
 
   }
-
   public static void promoteTeller(final AdminTerminal machine, final Context context) {
     final Dialog promoteTeller = new Dialog(context);
     promoteTeller.setContentView(R.layout.promote_teller);
