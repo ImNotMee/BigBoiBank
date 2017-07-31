@@ -12,6 +12,7 @@
         android:text="@string/customerInfo"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:background="@color/colorPrimary"/>
+        android:background="@color/colorPrimary"
+        android:textSize="@dimen/dialog_title"/>
 
 </LinearLayout>

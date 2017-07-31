@@ -11,7 +11,8 @@
         android:text="@string/updateInterest"
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
-        android:background="@color/colorPrimary"/>
+        android:background="@color/colorPrimary"
+        android:textSize="@dimen/dialog_title"/>
 
     <EditText
         android:layout_width="match_parent"
