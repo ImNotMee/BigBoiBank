@@ -13,18 +13,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.IllegalAmountException;
-import com.bank.users.User;
 
 import java.io.File;
 import java.math.BigDecimal;
 
-public class VerifyCheuqes extends AppCompatActivity {
+public class VerifyCheques extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +39,20 @@ public class VerifyCheuqes extends AppCompatActivity {
       TextView number = (TextView) details.findViewById(R.id.chequeNumber);
       TextView verified = (TextView) details.findViewById(R.id.verified);
       final String currNumber = getString(R.string.cheque) + " " + String.valueOf(i);
-      final boolean currVerified = LogIn.savedInfo.getBoolean("ChequeVerified" + String.valueOf(i), true);
+      boolean currVerified = LogIn.savedInfo.getBoolean("ChequeVerified" + String.valueOf(i), true);
       final int chequeAccount = LogIn.savedInfo.getInt("ChequeAccount" + String.valueOf(i), -1);
+      if (currVerified) {
+        verified.setText(getString(R.string.chequeStatusChecked));
+      } else {
+        verified.setText(getString(R.string.chequeStatusUnchecked));
+      }
       number.setText(currNumber);
-      verified.setText(String.valueOf(currVerified));
       String filePath = LogIn.savedInfo.getString("ChequeFilePath" + String.valueOf(i), "");
       final Bitmap chequeImage = BitmapFactory.decodeFile(filePath);
       details.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+          boolean stillVerified = LogIn.savedInfo.getBoolean("ChequeVerified" + String.valueOf(iCopy), true);
           final Dialog verifyCheque = new Dialog(context);
           verifyCheque.setContentView(R.layout.verify_cheque);
           RelativeLayout layout = (RelativeLayout) verifyCheque.findViewById(R.id.layout);
@@ -60,7 +62,7 @@ public class VerifyCheuqes extends AppCompatActivity {
           final TextView confirm = (TextView) layout.findViewById(R.id.confirmationMessage);
           final Button verify = (Button) layout.findViewById(R.id.verify);
           final Button decline = (Button) layout.findViewById(R.id.decline);
-          if (currVerified) {
+          if (stillVerified) {
             confirm.setText(context.getString(R.string.chequeChecked));
             inputAmount.setVisibility(View.GONE);
             verify.setVisibility(View.GONE);

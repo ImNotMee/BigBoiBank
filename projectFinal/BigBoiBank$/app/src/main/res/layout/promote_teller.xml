@@ -1,40 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/layout">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:text="@string/promoteTeller"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"/>
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Promote a teller to admin" />
+    <EditText
+        android:id="@+id/inputTellerId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/promptTellerId"
+        android:layout_below="@+id/title"
+        android:inputType="number" />
 
-        <EditText
-            android:id="@+id/editText4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title"
-            android:hint="@string/promptUserId"
-            android:inputType="number" />
+    <Button
+        android:id="@+id/promote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inputTellerId"
+        android:text="@string/confirm" />
 
-        <Button
-            android:id="@+id/promote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/password"
-            android:layout_centerHorizontal="true"
-            android:text="@string/confirm" />
+    <TextView
+        android:id="@+id/confirmationMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/promote"
+        android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/confirm"
-            android:textAlignment="center" />
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

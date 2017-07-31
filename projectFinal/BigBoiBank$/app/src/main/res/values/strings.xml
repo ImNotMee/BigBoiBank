@@ -101,12 +101,12 @@
     <string name="invalidId">Invalid ID. </string>
     <string name="invalidName">Invalid Name. </string>
     <string name="invalidAmount">Invalid Amount. </string>
-    <string name="transactionCompleted">Transaction successful! New balance: </string>
+    <string name="transactionCompleted">Transaction successful! New balance: $</string>
     <string name="transactionFailed">Transaction was not successful. </string>
 
-    <string name="interestAdded">Interest Added! New balance: </string>
+    <string name="interestAdded">Interest Added! New balance: $</string>
     <string name="interestNotAdded">Interest was not added successfully. </string>
-    <string name="balance">Account Balance is: </string>
+    <string name="balance">Account Balance is: $</string>
     <string name="check">Check</string>
 
     <string name="update">Update</string>
@@ -144,7 +144,7 @@
     <string name="userAge">User Age: </string>
     <string name="userAddress">User Address: </string>
     <string name="userID">User ID: </string>
-    <string name="noCurrentUser">There is no current users of type:  </string>
+    <string name="noCurrentUser">There are no current users of type. </string>
     <string name="listOfUsers">Current List of Users</string>
 
     <string name="databaseBackedUp">Database has been successfully backed up. </string>
@@ -153,20 +153,40 @@
     <string name="databaseLoaded">Saved database has been successfully loaded. </string>
     <string name="databaseNotLoaded">Database was not successfully not loaded. </string>
 
-    <string name="totalBalance">The total balance of this customer is: </string>
-    <string name="totalBankBalance">Total Bank Balance is: </string>
+    <string name="totalBalance">The total balance of this customer is: $</string>
+    <string name="totalBankBalance">Total Bank Balance is: $</string>
     <string name="seeSpecificMessage">See specific message</string>
     <string name="inputMessageId">Input message id</string>
     <string name="idPrefix">id: </string>
     <string name="noAccess">You do not have access to the message</string>
+    <string name="promptUserIdForMessage">User ID to send message to</string>
+    <string name="promptMessage">Message to send (542 Character limit)</string>
 
+    <string name="noCheques">There are no Cheques</string>
     <string name="cheque">Cheque</string>
     <string name="verify">Verify</string>
     <string name="decline">Decline</string>
     <string name="chequeVerified">Cheque has been verified and deposited. </string>
     <string name="chequeChecked">Cheque has already been checked</string>
+    <string name="chequeStatusChecked">Checked</string>
+    <string name="chequeStatusUnchecked">Not yet checked</string>
 
-    <string name="promptAccountType">Input Account Type</string>
-    <string name="promptAccountInterest">Input Account Interest</string>
+    <string name="promptTellerId">Input Teller ID</string>
+    <string name="tellerPromoted">Teller Successfully promoted to an admin. </string>
+    <string name="tellerNotPromoted">Teller was not successfully promoted. </string>
+
+    <string name="notCustomer">ID does not belong to a customer. </string>
+    <string name="notTeller">ID does not belong to a teller. </string>
+    <string name="notAdmin">ID does not belong to an admin. </string>
+
+    <string name="messageLeft">Successfully left a message with ID: </string>
+    <string name="cantLeaveMessage">You can not a leave a message for this user. </string>
+    <string name="noAccountAccess">You do not have access to this account. </string>
+
+    <string name="noMessages">No message ID\'s available to see</string>
+    
+    <string name="promptAccountInterest">Input Account Interest (Between 0.0 and 1.0) </string>
+    <string name="interestUpdated">Interest successfully updated</string>
+    <string name="interestNotUpdated">Interest was not successfully updated</string>
 
 </resources>

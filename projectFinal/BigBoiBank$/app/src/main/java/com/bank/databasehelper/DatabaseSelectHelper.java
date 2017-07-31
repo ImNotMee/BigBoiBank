@@ -33,9 +33,13 @@ public class DatabaseSelectHelper {
   public String getRole(int id) {
     // if the id given is an invalid number
     if (id < 1) {
+      driverExtender.close();
       return "Id given is invalid";
     }
-    return driverExtender.getRole(id);
+    String role = driverExtender.getRole(id);
+    driverExtender.close();
+    return role;
+
   }
    
   /**
@@ -47,10 +51,12 @@ public class DatabaseSelectHelper {
   public String getPassword(int userId) {
     // if the userId given is an invalid number 
     if (userId < 1) {
+      driverExtender.close();
       return "UserId given is invalid";
     }
-    return driverExtender.getPassword(userId);
-
+    String password = driverExtender.getPassword(userId);
+    driverExtender.close();
+    return password;
   }
   
   /**
@@ -62,6 +68,7 @@ public class DatabaseSelectHelper {
   public User getUserDetails(int userId) {
     // if the userId given is an invalid number 
     if (userId < 1) {
+      driverExtender.close();
       return null;
     }
     // try to get the User details of the given userId
@@ -73,8 +80,10 @@ public class DatabaseSelectHelper {
               cursor.getInt(cursor.getColumnIndex("AGE")),
               cursor.getString(cursor.getColumnIndex("ADDRESS")), role, this.context);
       cursor.close();
+      driverExtender.close();
       return user;
     } else {
+      driverExtender.close();
       return null;
     }
   }
@@ -88,6 +97,7 @@ public class DatabaseSelectHelper {
   public List<Integer> getAccountIds(int userId) {
     // if the userId given is an invalid number 
     if (userId < 1) {
+      driverExtender.close();
       return null;
     }
     List<Integer> accountIds = new ArrayList<>();
@@ -99,6 +109,7 @@ public class DatabaseSelectHelper {
       accountIds.add(cursor.getInt(cursor.getColumnIndex("ACCOUNTID")));
     }
     cursor.close();
+    driverExtender.close();
     return accountIds;
   }
   
@@ -111,6 +122,7 @@ public class DatabaseSelectHelper {
   public Account getAccountDetails(int accountId) {
     // if the accountId given is an invalid number 
     if (accountId < 1) {
+      driverExtender.close();
       return null;
     }
     // try to get the Account details of the given accountId
@@ -122,8 +134,10 @@ public class DatabaseSelectHelper {
               cursor.getString(cursor.getColumnIndex("NAME")),
               new BigDecimal(cursor.getString(cursor.getColumnIndex("BALANCE"))), type, this.context);
       cursor.close();
+      driverExtender.close();
       return account;
     } else {
+      driverExtender.close();
       return null;
     }
 
@@ -138,9 +152,12 @@ public class DatabaseSelectHelper {
   public BigDecimal getBalance(int accountId) {
     // if the accountId given is an invalid number 
     if (accountId < 1) {
+      driverExtender.close();
       return null;
     }
-    return driverExtender.getBalance(accountId);
+    BigDecimal balance = driverExtender.getBalance(accountId);
+    driverExtender.close();
+    return balance;
   }
 
   
@@ -153,9 +170,12 @@ public class DatabaseSelectHelper {
   public BigDecimal getInterestRate(int accountType) {
     // if the accountType given is an invalid number 
     if (accountType < 1) {
+      driverExtender.close();
       return null;
     }
-    return driverExtender.getInterestRate(accountType);
+    BigDecimal interestRate = driverExtender.getInterestRate(accountType);
+    driverExtender.close();
+    return interestRate;
   }
   
   /**
@@ -172,6 +192,7 @@ public class DatabaseSelectHelper {
       accountTypeIds.add(cursor.getInt(cursor.getColumnIndex("ID")));
     }
     cursor.close();
+    driverExtender.close();
     return accountTypeIds;
   }
   
@@ -184,9 +205,12 @@ public class DatabaseSelectHelper {
   public String getAccountTypeName(int accountTypeId) {
     // if the accountType given is an invalid number 
     if (accountTypeId < 1) {
+      driverExtender.close();
       return "accountTypeId given is invalid";
     }
-    return driverExtender.getAccountTypeName(accountTypeId);
+    String accountType = driverExtender.getAccountTypeName(accountTypeId);
+    driverExtender.close();
+    return accountType;
   }
   
   /**
@@ -203,6 +227,7 @@ public class DatabaseSelectHelper {
       roleIds.add(cursor.getInt(cursor.getColumnIndex("ID")));
     }
     cursor.close();
+    driverExtender.close();
     return roleIds;
   }
 
@@ -215,9 +240,12 @@ public class DatabaseSelectHelper {
   public int getAccountType(int accountId) {
     // ensure the accountId given is a valid number 
     if (accountId < 1) {
+      driverExtender.close();
       return -1;
     } 
-    return driverExtender.getAccountType(accountId);
+    int accountType = driverExtender.getAccountType(accountId);
+    driverExtender.close();
+    return accountType;
   }
   
   /**
@@ -229,9 +257,12 @@ public class DatabaseSelectHelper {
   public int getUserRole(int userId) {
     // ensure the userId given is a valid number 
     if (userId < 1) {
+      driverExtender.close();
       return -1;
     } 
-    return driverExtender.getUserRole(userId);
+    int role = driverExtender.getUserRole(userId);
+    driverExtender.close();
+    return role;
   }
   
   /**
@@ -250,6 +281,7 @@ public class DatabaseSelectHelper {
       messageIds.add(new Integer(cursor.getInt(cursor.getColumnIndex("ID"))));
     }
     cursor.close();
+    driverExtender.close();
     return messageIds;
   }
   
@@ -261,15 +293,17 @@ public class DatabaseSelectHelper {
    */
   public String getSpecificMessage(int messageId) {
     if (messageId < 1) {
+      driverExtender.close();
       return null;
     }
-    String message;
     try {
-      message = driverExtender.getSpecificMessage(messageId);
+      String message = driverExtender.getSpecificMessage(messageId);
+      driverExtender.close();
+      return message;
     } catch (Exception e) {
-      message = null;
+      driverExtender.close();
+      return null;
     }
-    return message;
   }
   
   /**
@@ -279,6 +313,7 @@ public class DatabaseSelectHelper {
    */
   public int getUserFromAccount(int accountId) {
     if (accountId < 1) {
+      driverExtender.close();
       return -1;
     }
     int userId;
@@ -289,12 +324,14 @@ public class DatabaseSelectHelper {
       List<Integer> accounts = getAccountIds(userId);
       // if we find that this user owns this account then return the id of the user we found
       if (accounts.contains(accountId)){
+        driverExtender.close();
         return userId;
       }
       // increment to continue to the next user
       currId ++;
       user = getUserDetails(currId);
     }
+    driverExtender.close();
     return -1;
   }
  }

@@ -28,6 +28,7 @@ public class DatabaseInsertHelper {
    * @return accountId of inserted account, -1 otherwise
    */
   public int insertAccount(String name, BigDecimal balance, int typeId) {
+    int id = -1;
     // gets the the id's of the types of accounts in the database
     List<Integer> accountTypeIds = selector.getAccountTypesIds();
     // ensure the name, balance, and typeId are valid
@@ -35,11 +36,10 @@ public class DatabaseInsertHelper {
             && accountTypeIds.contains(typeId)) {
       // set the balance to have two decimal places
       balance = balance.setScale(2, BigDecimal.ROUND_HALF_UP);
-      return (int) driverExtender.insertAccount(name, balance, typeId);
-      // return -1 if the given parameters were not valid
-    } else {
-      return -1;
+      id = (int) driverExtender.insertAccount(name, balance, typeId);
     }
+    driverExtender.close();
+    return id;
   }
   
   /**
@@ -51,11 +51,13 @@ public class DatabaseInsertHelper {
    * @return True if successful, false otherwise.
    */
   public int insertAccountType(String name, BigDecimal interestRate) {
+    int id = -1;
     if (interestRate.compareTo(BigDecimal.ONE) < 0 && interestRate.compareTo(BigDecimal.ZERO) >= 0
             && AccountTypesContains.contains(name)) {
-      return (int) driverExtender.insertAccountType(name.toUpperCase(), interestRate);
+      id = (int) driverExtender.insertAccountType(name.toUpperCase(), interestRate);
     }
-    return -1;
+    driverExtender.close();
+    return id;
   }
   
   /**
@@ -68,15 +70,16 @@ public class DatabaseInsertHelper {
    * @return The id of the user if added successfully and -1 otherwise.
    */
   public int insertNewUser(String name, int age, String address, int roleId, String password) {
+    int id = -1;
     // get the id's of the available roles in the database
     List<Integer> roleIds = selector.getRoles();
     // ensure the name, age, address, roleId, and password are all valid
     if (name != null && name.length() > 0 && age > 0 && address != null && address.length() <= 100
             && roleIds.contains(roleId) && password != null) {
-      return (int) driverExtender.insertNewUser(name, age, address, roleId, password);
-    } else {
-      return -1;
+      id = (int) driverExtender.insertNewUser(name, age, address, roleId, password);
     }
+    driverExtender.close();
+    return id;
   }
   
   /**
@@ -86,11 +89,13 @@ public class DatabaseInsertHelper {
    * @return True if successful, false otherwise.
    */
   public int insertRole(String role) {
+    int id = -1;
     // ensure the role is in the enum
     if (RolesContains.contains(role)) {
-      return (int) driverExtender.insertRole(role.toUpperCase());
+      id = (int) driverExtender.insertRole(role.toUpperCase());
     }
-    return -1;
+    driverExtender.close();
+    return id;
   }
   
   /**
@@ -100,10 +105,12 @@ public class DatabaseInsertHelper {
    * @return True if successful, false otherwise.
    */
   public int insertUserAccount(int userId, int accountId) {
+    int id = -1;
     if (!selector.getAccountIds(userId).contains(accountId)) {
-      return (int) driverExtender.insertUserAccount(userId, accountId);
+      id = (int) driverExtender.insertUserAccount(userId, accountId);
     }
-    return -1;
+    driverExtender.close();
+    return id;
   }
   
   /**
@@ -113,11 +120,13 @@ public class DatabaseInsertHelper {
    * @return The id of the inserted message.
    */
   public int insertMessage(int userId, String message) {
+    int id = -1;
     if (selector.getUserRole(userId) != -1 && message.length() <= 512) {
       // insert the message
-      return (int) driverExtender.insertMessage(userId, message);
+      id = (int) driverExtender.insertMessage(userId, message);
     }
-    return -1;
+    driverExtender.close();
+    return id;
   }
   
 }

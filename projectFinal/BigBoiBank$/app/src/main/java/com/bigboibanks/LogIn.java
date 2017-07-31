@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,14 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bank.database.DatabaseDriverA;
 import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.generics.AccountTypes;
 import com.bank.generics.Roles;
-import com.bank.machines.AdminTerminal;
 import com.bank.users.Admin;
 import com.bank.users.Customer;
 import com.bank.users.Teller;
@@ -89,6 +86,13 @@ public class LogIn extends AppCompatActivity {
         }
         User user = selector.getUserDetails(id);
         if (user != null) {
+          if (admin.isChecked() && !(user instanceof Admin)) {
+            Toast.makeText(context, context.getString(R.string.notAdmin), Toast.LENGTH_LONG).show();
+          } else if (teller.isChecked() && !(user instanceof Teller)) {
+            Toast.makeText(context, context.getString(R.string.notTeller), Toast.LENGTH_LONG).show();
+          } else if (customer.isChecked() && !(user instanceof Customer)) {
+            Toast.makeText(context, context.getString(R.string.notCustomer), Toast.LENGTH_LONG).show();
+          }
           boolean authenticated = user.authenticate(password.getText().toString());
           if (authenticated) {
             if (user instanceof Admin && admin.isChecked()) {
@@ -97,24 +101,34 @@ public class LogIn extends AppCompatActivity {
               intent.putExtra("password", password.getText().toString());
               intent.putExtra("machine", "admin" );
               startActivity(intent);
+              idText.setText("");
+              password.setText("");
             } else if (user instanceof Teller && teller.isChecked()) {
               Intent intent = new Intent(context, UserInterface.class);
               intent.putExtra("id", user.getId());
               intent.putExtra("password", password.getText().toString());
               intent.putExtra("machine", "teller");
               startActivity(intent);
+              idText.setText("");
+              password.setText("");
             } else if (user instanceof Customer && customer.isChecked()) {
               Intent intent = new Intent(context, UserInterface.class);
               intent.putExtra("id", user.getId());
               intent.putExtra("password", password.getText().toString());
               intent.putExtra("machine", "customer");
               startActivity(intent);
+              idText.setText("");
+              password.setText("");
             } else {
               // this means they logged in as a wrong user
               Intent intent = new Intent(context, FeelsBadMan.class);
               startActivity(intent);
             }
+          } else {
+            Toast.makeText(context, context.getString(R.string.incorrectPassword), Toast.LENGTH_LONG).show();
           }
+        } else {
+          Toast.makeText(context, context.getString(R.string.invalidId), Toast.LENGTH_LONG).show();
         }
       }
     });

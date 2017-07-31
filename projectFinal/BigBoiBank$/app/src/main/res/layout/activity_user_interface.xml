@@ -7,11 +7,6 @@
     tools:context="com.bigboibanks.UserInterface"
     android:id="@+id/home">
 
-    <ImageView
-        android:layout_width="50px"
-        android:layout_height="50px"
-        android:id="@+id/picture"/>
-
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -262,7 +257,8 @@
                 android:id="@+id/promoteTeller"
                 android:text="@string/promoteTeller"
                 android:layout_below="@id/makeCustomer"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="promoteTeller"/>
 
             <Button
                 android:background="@color/colorButtonYellow"
@@ -290,7 +286,8 @@
                 android:id="@+id/updateInterest"
                 android:text="@string/updateInterest"
                 android:layout_below="@id/bankBalance"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:onClick="updateAccountInterest"/>
 
             <Button
                 android:background="@color/colorAccent"

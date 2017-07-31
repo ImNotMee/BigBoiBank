@@ -7,22 +7,58 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/title"
-        android:text="@string/updateInterest"/>
+        android:text="@string/updateInterest"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/updateInterest"
         android:hint="@string/promptAccountInterest"
-        android:layout_below="@+id/updateType"
+        android:layout_below="@+id/title"
+        android:inputType="numberDecimal"
         android:layout_alignParentStart="true" />
 
-    <EditText
-        android:id="@+id/updateType"
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:hint="@string/promptAccountType" />
+        android:id="@+id/accounts"
+        android:orientation="vertical"
+        android:layout_below="@+id/updateInterest">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tfsa"
+            android:id="@+id/tfsa"
+            android:checked="true"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chequing"
+            android:text="@string/chequing"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/savings"
+            android:text="@string/savings"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/restrictedSavings"
+            android:text="@string/restrictedSaving"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/balanceOwing"
+            android:text="@string/balanceOwing" />
+
+    </RadioGroup>
 
     <Button
         android:layout_width="match_parent"
@@ -30,8 +66,7 @@
         android:id="@+id/confirm"
         android:text="@string/update"
         android:textAlignment="center"
-        android:layout_below="@+id/updateInterest"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/accounts"/>
 
     <TextView
         android:layout_width="match_parent"

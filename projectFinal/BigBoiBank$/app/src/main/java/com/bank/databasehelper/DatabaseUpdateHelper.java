@@ -25,18 +25,20 @@ public class DatabaseUpdateHelper {
    * @return true if successful, false otherwise.
    */
   public boolean updateRoleName(String name, int id) {
+    boolean success = false;
     // ensure the name is valid
     if (name != null) {
       // loop through possible role names
       for (Roles roleName : Roles.values()) {
         // check if the name given matches the current AccountType
         if (roleName.name().equals(name.toUpperCase())) {
-            return driverExtender.updateRoleName(name.toUpperCase(), id);
+          success = driverExtender.updateRoleName(name.toUpperCase(), id);
         }
       }
     }
+    driverExtender.close();
     // will return false if it was not updated successfully
-    return false;
+    return success;
   }
 
   /**
@@ -46,13 +48,15 @@ public class DatabaseUpdateHelper {
    * @return true if it works, false otherwise.
    */
   public boolean updateUserName(String name, int id) {
+    boolean success = false;
     // ensure the name and id are valid
     if (name != null && id > 0) {
       // try to update the user name in the database, seeing if it worked
-      return driverExtender.updateUserName(name, id);
+      success = driverExtender.updateUserName(name, id);
     }
     // return whether the user name was updated successfully
-    return false;
+    driverExtender.close();
+    return success;
   }
 
   /**
@@ -62,10 +66,12 @@ public class DatabaseUpdateHelper {
    * @return true if it succeeds, false otherwise.
    */
   public boolean updateUserAge(int age, int id) {
+    boolean success = false;
     if (age > 0 && id > 0) {
-      return driverExtender.updateUserAge(age, id);
+      success = driverExtender.updateUserAge(age, id);
     }
-    return false;
+    driverExtender.close();
+    return success;
   }
 
   /**
@@ -75,12 +81,13 @@ public class DatabaseUpdateHelper {
    * @return true if successful, false otherwise.
    */
   public boolean updateUserRole(int roleId, int id) {
+    boolean success = false;
     if (selector.getRoles().contains(roleId) && id > 0) {
-        return driverExtender.updateUserRole(roleId, id);
+      success = driverExtender.updateUserRole(roleId, id);
     }
-    return false;
+    driverExtender.close();
+    return success;
   }
-  
 
   /**
    * Use this to update user's address.
@@ -88,25 +95,33 @@ public class DatabaseUpdateHelper {
    * @param id The current id.
    */
   public boolean updateUserAddress(String address, int id) {
+    boolean success = false;
     // ensure the Address and id are valid
     if (address != null && address.length() <= 100 && id > 0) {
       // try to update the user address in the database, seeing if it worked
-      return driverExtender.updateUserAddress(address, id);
+      success = driverExtender.updateUserAddress(address, id);
     }
-    return false;
+    driverExtender.close();
+    return success;
   }
+
   public boolean updateUserPassword(String password, int id) {
+    boolean success = false;
 	  if (id > 0) {
-      return driverExtender.updateUserPassword(password, id);
+      success = driverExtender.updateUserPassword(password, id);
 	  }
-	  return false;
+    driverExtender.close();
+	  return success;
   }
   
   public boolean updateUserMessageState(int id) {
-	if (id > 0) {
-    return driverExtender.updateUserMessageState(id);
-	}
-	return false;
+    boolean success = false;
+    if (id > 0) {
+      success = driverExtender.updateUserMessageState(id);
+      return success;
+  	}
+    driverExtender.close();
+  	return success;
 	  
   }
 
@@ -118,12 +133,13 @@ public class DatabaseUpdateHelper {
    */
   public boolean updateAccountName(String name, int id) {
     // set that the account name was updated as false for default
-    boolean complete = false;
+    boolean success = false;
     // ensure the account name and id are valid
     if (name != null && name.length() > 0 && id > 0) {
-      return driverExtender.updateAccountName(name, id);
+      success = driverExtender.updateAccountName(name, id);
     }
-    return false;
+    driverExtender.close();
+    return success;
   }
 
   /**
@@ -133,10 +149,12 @@ public class DatabaseUpdateHelper {
    * @return true if successful, false otherwise.
    */
   public boolean updateAccountBalance(BigDecimal balance, int id) {
+    boolean success = false;
     if (balance != null && id > 0) {
-      return driverExtender.updateAccountBalance(balance, id);
+      success = driverExtender.updateAccountBalance(balance, id);
     }
-    return false;
+    driverExtender.close();
+    return success;
   }
 
   /**
@@ -146,11 +164,13 @@ public class DatabaseUpdateHelper {
    * @return true if successful, false otherwise.
    */
   public boolean updateAccountType(int typeId, int id) {
+    boolean success = false;
     // ensure the typeId and id are valid
     if (selector.getAccountTypesIds().contains(typeId) && id > 0) {
       // try to update the account type id for the given user
-      return driverExtender.updateAccountType(typeId, id);
+      success = driverExtender.updateAccountType(typeId, id);
     }
+    driverExtender.close();
     return false;
   }
 
@@ -160,11 +180,12 @@ public class DatabaseUpdateHelper {
    * @param id The id of the accountType.
    * @return true if successful, false otherwise.
    */
-  public boolean updateAccountTypeName(String name, int id)
-      {
+  public boolean updateAccountTypeName(String name, int id) {
+    boolean success = false;
     if (AccountTypesContains.contains(name) && id > 0) {
-      return driverExtender.updateAccountTypeName(name, id);
+      success = driverExtender.updateAccountTypeName(name, id);
     }
+    driverExtender.close();
     return false;
   }
 
@@ -174,14 +195,15 @@ public class DatabaseUpdateHelper {
    * @param id The id of the accountType.
    * @return true if successful, false otherwise.
    */
-  public boolean updateAccountTypeInterestRate(BigDecimal interestRate, int id)
-      {
+  public boolean updateAccountTypeInterestRate(BigDecimal interestRate, int id) {
+    boolean success = false;
     // ensure the interest rate and id are valid
     if (interestRate.compareTo(BigDecimal.ONE) < 0 && interestRate.compareTo(BigDecimal.ZERO) >= 0
         && id > 0) {
-        return driverExtender.updateAccountTypeInterestRate(
+        success = driverExtender.updateAccountTypeInterestRate(
             interestRate.setScale(2, BigDecimal.ROUND_HALF_UP), id);
     }
+    driverExtender.close();
     return false;
   }
 }
