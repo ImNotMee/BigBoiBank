@@ -4,18 +4,27 @@
     android:layout_height="match_parent"
     android:id="@id/layout">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:id="@+id/title"
+        android:text="@string/leaveMessage"/>
+
     <EditText
         android:id="@+id/inputId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="User ID message will be sent to"
-         />
+        android:hint="@string/promptUserIdForMessage"
+        android:inputType="number"
+        android:layout_below="@id/title"/>
 
     <EditText
         android:id="@+id/inputMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="The message you want to send"
+        android:hint="@string/promptMessage"
         android:layout_below="@+id/inputId"
         />
 
@@ -26,14 +35,13 @@
         android:layout_below="@+id/inputMessage"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="confirm" />
+        android:text="@string/confirm" />
 
     <TextView
         android:id="@+id/notification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/inputMessage"
-        android:layout_centerHorizontal="true"
-        android:text="Leave a message" />
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

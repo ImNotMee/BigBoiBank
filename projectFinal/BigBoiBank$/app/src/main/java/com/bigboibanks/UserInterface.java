@@ -1,13 +1,8 @@
 package com.bigboibanks;
 
-// credits to https://stackoverflow.com/questions/11300847/load-and-display-all-the-images-from-a-folder
-//https://developer.android.com/training/camera/photobasics.html#TaskGallery
-// https://androidkennel.org/android-camera-access-tutorial/
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Environment;
@@ -15,13 +10,11 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,6 +34,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * CREDITS GO TO https://developer.android.com FOR HELP ON CREATING AND IMPLEMENTING SPINNER AND
+ * CAMERA FUNCTIONS.
+ * CREDITS ALSO GO TO https://androidkennel.org/android-camera-access-tutorial/ AND
+ * https://stackoverflow.com/questions/11300847/load-and-display-all-the-images-from-a-folder
+ * FOR HELP IN SETTING UP AND CONFIGURING THE CAMERA TO TAKE, SAVE, AND READ PICTURES.
+ */
+
 public class UserInterface extends AppCompatActivity {
 
   final private List<List<Button>> buttons = new ArrayList<>();
@@ -54,12 +55,11 @@ public class UserInterface extends AppCompatActivity {
   static File file;
   static int accountIdForCheque = -1;
 
-  // array of supported extensions (use a List if you prefer)
+  String currentPhotoFilePath;
   static final String[] EXTENSIONS = new String[]{
           "jpg", "png", "bmp" // and other formats you need
   };
 
-  // filter to identify images based on their extensions
   public static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
 
     @Override
@@ -199,8 +199,6 @@ public class UserInterface extends AppCompatActivity {
 
   }
 
-
-
   public void makeAdmin(View v) {
     OptionDialogs.makeUserDialog((BankWorkerServiceSystems) machine, "admin", context);
   }
@@ -225,41 +223,42 @@ public class UserInterface extends AppCompatActivity {
   }
 
   public void makeDeposit(View v) {
-    final Dialog depositChequeChoice = new Dialog(context);
-    depositChequeChoice.setContentView(R.layout.cheque_option);
-    (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.yes)).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        // open a dialog to get account id
-        final Dialog accountCheck = new Dialog(context);
-        accountCheck.setContentView(R.layout.one_input);
-        RelativeLayout layout = (RelativeLayout) accountCheck.findViewById(R.id.layout);
-        final EditText inputAccountId = (EditText) layout.findViewById(R.id.input);
-        final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
-        final Button check = (Button) layout.findViewById(R.id.confirm);
-        check.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            boolean validInput = true;
-            String confirmationMessage = "";
-            int id = -1;
-            try {
-              id = Integer.parseInt(inputAccountId.getText().toString());
-              if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
+    if (machine.getCurrentCustomer() == null) {
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
+    } else {
+      final Dialog depositChequeChoice = new Dialog(context);
+      depositChequeChoice.setContentView(R.layout.cheque_option);
+      (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.yes)).setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          // open a dialog to get account id
+          final Dialog accountCheck = new Dialog(context);
+          accountCheck.setContentView(R.layout.one_input);
+          RelativeLayout layout = (RelativeLayout) accountCheck.findViewById(R.id.layout);
+          final EditText inputAccountId = (EditText) layout.findViewById(R.id.input);
+          final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
+          final Button check = (Button) layout.findViewById(R.id.confirm);
+          check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              boolean validInput = true;
+              String confirmationMessage = "";
+              int id = -1;
+              try {
+                id = Integer.parseInt(inputAccountId.getText().toString());
+                if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
+                  confirmationMessage += context.getString(R.string.noAccountAccess);
+                  validInput = false;
+                }
+              } catch (NumberFormatException e) {
                 confirmationMessage += context.getString(R.string.invalidId);
                 validInput = false;
               }
-            } catch (NumberFormatException e) {
-              confirmationMessage += context.getString(R.string.invalidId);
-              validInput = false;
-            }
-            if (validInput) {
-              accountIdForCheque = id;
-              accountCheck.dismiss();
-              // take a picture of the cheque
-              Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-              // Ensure that there's a camera activity to handle the intent
-              if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+              if (validInput) {
+                accountIdForCheque = id;
+                accountCheck.dismiss();
+                // create an intent to take a picture
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // Create the File where the photo should go
                 try {
                   file = createImageFile();
@@ -275,40 +274,36 @@ public class UserInterface extends AppCompatActivity {
                   startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
               }
+              balance.setText(confirmationMessage);
             }
-            balance.setText(confirmationMessage);
-          }
-        });
-        accountCheck.show();
-        depositChequeChoice.dismiss();
-      }
-    });
-    (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.no)).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        OptionDialogs.moneyTransactionDialog(machine, "deposit", context);
-      }
-    });
-    depositChequeChoice.show();
+          });
+          accountCheck.show();
+          depositChequeChoice.dismiss();
+        }
+      });
+      (depositChequeChoice.findViewById(R.id.layout).findViewById(R.id.no)).setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          depositChequeChoice.dismiss();
+          OptionDialogs.moneyTransactionDialog(machine, "deposit", context);
+        }
+      });
+      depositChequeChoice.show();
+    }
   }
 
-  String mCurrentPhotoPath;
-
+  // create the image file with a unique name based on the time it was taken
   private File createImageFile() throws IOException {
     // Create an image file name
     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     String imageFileName = "JPEG_" + timeStamp + "_";
-    File image = File.createTempFile(
-            imageFileName,  /* prefix */
-            ".jpg",         /* suffix */
-            storageDir      /* directory */
-    );
-
+    File image = File.createTempFile(imageFileName, ".jpg", storageDir);
     // Save a file: path for use with ACTION_VIEW intents
-    mCurrentPhotoPath = image.getAbsolutePath();
+    currentPhotoFilePath = image.getAbsolutePath();
     return image;
   }
 
+  // called when the picture is taken
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -318,7 +313,6 @@ public class UserInterface extends AppCompatActivity {
       for (File f : storageDir.listFiles(IMAGE_FILTER)) {
         i++;
       }
-
       String verified = "ChequeVerified" + String.valueOf(i);
       // set that the cheque has not been verified
       LogIn.savedInfoWriter.putBoolean(verified, false);
@@ -326,10 +320,9 @@ public class UserInterface extends AppCompatActivity {
       String account = "ChequeAccount" + String.valueOf(i);
       LogIn.savedInfoWriter.putInt(account, accountIdForCheque);
       // set the path of the photo for retrieval
-      String filePath = mCurrentPhotoPath;
+      String filePath = currentPhotoFilePath;
       String file = "ChequeFilePath" + String.valueOf(i);
       LogIn.savedInfoWriter.putString(file, filePath);
-      Toast.makeText(context, filePath, Toast.LENGTH_SHORT).show();
       LogIn.savedInfoWriter.apply();
     }
   }
@@ -376,7 +369,7 @@ public class UserInterface extends AppCompatActivity {
 
   public void closeCustomerSession(View v) {
     ((BankWorkerServiceSystems) machine).deAuthenticateCustomer();
-    Toast.makeText(context, context.getString(R.string.closeCustomerSession), Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, context.getString(R.string.closeCustomerSession), Toast.LENGTH_LONG).show();
   }
 
   public void transferFunds(View v) {
@@ -385,17 +378,17 @@ public class UserInterface extends AppCompatActivity {
 
   public void backUpDatabase(View v) {
     if (((AdminTerminal) machine).backUpDatabase("database_copy.ser")) {
-      Toast.makeText(context, context.getString(R.string.databaseBackedUp), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.databaseBackedUp), Toast.LENGTH_LONG).show();
     } else {
-      Toast.makeText(context, context.getString(R.string.databaseBackUpFailed), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.databaseBackUpFailed), Toast.LENGTH_LONG).show();
     }
   }
 
   public void loadSavedDatabase(View v) {
     if (((AdminTerminal) machine).loadDatabase("database_copy.ser")) {
-      Toast.makeText(context, context.getString(R.string.databaseLoaded), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.databaseLoaded), Toast.LENGTH_LONG).show();
     } else {
-      Toast.makeText(context, context.getString(R.string.databaseNotLoaded), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.databaseNotLoaded), Toast.LENGTH_LONG).show();
     }
   }
 
@@ -404,7 +397,7 @@ public class UserInterface extends AppCompatActivity {
   }
 
   public void viewTotalBankBalance(View v) {
-    Toast.makeText(context, (context.getString(R.string.totalBankBalance) + ((AdminTerminal)machine).getTotalBankBalance().toString()), Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, (context.getString(R.string.totalBankBalance) + ((AdminTerminal)machine).getTotalBankBalance().toString()), Toast.LENGTH_LONG).show();
   }
 
   public void leaveMessage(View v) {
@@ -422,8 +415,17 @@ public class UserInterface extends AppCompatActivity {
   public void showUserMessageIds(View v) { OptionDialogs.showUserMessageIds((BankWorkerServiceSystems) machine, context);}
 
   public void verifyCheques(View v) {
-    Intent intent = new Intent(context, VerifyCheuqes.class);
-    context.startActivity(intent);
+    if (LogIn.savedInfo.contains("ChequeAccount1")) {
+      Intent intent = new Intent(context, VerifyCheques.class);
+      context.startActivity(intent);
+    } else {
+      Toast.makeText(context, context.getString(R.string.noCheques), Toast.LENGTH_LONG).show();
+    }
+
+  }
+
+  public void promoteTeller(View v) {
+    OptionDialogs.promoteTeller((AdminTerminal) machine, context);
   }
 
   public void updateAccountInterest(View v){

@@ -1,15 +1,7 @@
 package com.bigboibanks;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.icu.text.NumberFormat;
-import android.icu.text.SimpleDateFormat;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,28 +16,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bank.accounts.Account;
-import com.bank.databasehelper.DatabaseInsertHelper;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
 import com.bank.generics.AccountTypesEnumMap;
-import com.bank.generics.RolesEnumMap;
 import com.bank.machines.AdminTerminal;
 import com.bank.machines.BankServiceSystems;
 import com.bank.machines.BankWorkerServiceSystems;
 import com.bank.machines.TellerTerminal;
 import com.bank.users.Customer;
+import com.bank.users.Teller;
 import com.bank.users.User;
 
-import org.w3c.dom.Text;
-
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+
 
 public abstract class OptionDialogs {
 
@@ -127,7 +115,7 @@ public abstract class OptionDialogs {
 
   public static void makeAccountDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
 
       final Dialog makeAccount = new Dialog(context);
@@ -161,9 +149,8 @@ public abstract class OptionDialogs {
             accountType = "BALANCEOWING";
           }
           boolean validInput = true;
-          final Context finalContext = context;
           // Find the account type ID
-          AccountTypesEnumMap AccountEnum = new AccountTypesEnumMap(finalContext);
+          AccountTypesEnumMap AccountEnum = new AccountTypesEnumMap(context);
           String confirmationMessage = "";
           String name = inputName.getText().toString();
           java.math.BigDecimal balance = java.math.BigDecimal.ZERO;
@@ -202,7 +189,7 @@ public abstract class OptionDialogs {
 
   public static void moneyTransactionDialog(final BankServiceSystems machine, final String transaction, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
 
       final Dialog makeTransaction = new Dialog(context);
@@ -227,7 +214,7 @@ public abstract class OptionDialogs {
           try {
             id = Integer.parseInt(inputAccountId.getText().toString());
             if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
-              confirmationMessage += context.getString(R.string.invalidId);
+              confirmationMessage += context.getString(R.string.noAccountAccess);
               validInput = false;
             }
           } catch (NumberFormatException e) {
@@ -308,7 +295,7 @@ public abstract class OptionDialogs {
           DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
           user = selector.getUserDetails(id);
           if (!(user instanceof Customer)) {
-            confirmationMessage += context.getString(R.string.invalidId);
+            confirmationMessage += context.getString(R.string.notCustomer);
             validInput = false;
           }
         } catch (NumberFormatException e) {
@@ -338,12 +325,12 @@ public abstract class OptionDialogs {
 
   public static void listAccountsDialog(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
 
       List<Account> accounts = machine.listCustomerAccounts();
       if (accounts.size() == 0) {
-        Toast.makeText(context, context.getString(R.string.noAccounts), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getString(R.string.noAccounts), Toast.LENGTH_LONG).show();
       } else {
         final Dialog makeTransaction = new Dialog(context);
         makeTransaction.setContentView(R.layout.list_accounts);
@@ -372,7 +359,7 @@ public abstract class OptionDialogs {
 
   public static void checkBalanceDialog(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
       final Dialog checkBalance = new Dialog(context);
       checkBalance.setContentView(R.layout.one_input);
@@ -389,7 +376,7 @@ public abstract class OptionDialogs {
           try {
             id = Integer.parseInt(inputAccountId.getText().toString());
             if (!new DatabaseSelectHelper(context).getAccountIds(machine.getCurrentCustomer().getId()).contains(id)) {
-              confirmationMessage += context.getString(R.string.invalidId);
+              confirmationMessage += context.getString(R.string.noAccountAccess);
               validInput = false;
             }
           } catch (NumberFormatException e) {
@@ -409,7 +396,7 @@ public abstract class OptionDialogs {
 
   public static void giveInterestDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
       final Dialog checkBalance = new Dialog(context);
       checkBalance.setContentView(R.layout.one_input);
@@ -450,7 +437,7 @@ public abstract class OptionDialogs {
 
   public static void updateNameDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
       final Dialog updateName = new Dialog(context);
       updateName.setContentView(R.layout.one_input);
@@ -482,7 +469,7 @@ public abstract class OptionDialogs {
 
   public static void updateAgeDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
       final Dialog updateAge = new Dialog(context);
       updateAge.setContentView(R.layout.one_input);
@@ -506,7 +493,7 @@ public abstract class OptionDialogs {
               confirmationMessage += context.getString(R.string.invalidAge);
             }
           } catch (NumberFormatException e) {
-            confirmationMessage += context.getString(R.string.invalidId);
+            confirmationMessage += context.getString(R.string.invalidAge);
           }
           confirmMessage.setText(confirmationMessage);
         }
@@ -517,7 +504,7 @@ public abstract class OptionDialogs {
 
   public static void updateAddressDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
       final Dialog updateAddress = new Dialog(context);
       updateAddress.setContentView(R.layout.one_input);
@@ -549,7 +536,7 @@ public abstract class OptionDialogs {
 
   public static void updatePasswordDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
       final Dialog updatePassword = new Dialog(context);
       updatePassword.setContentView(R.layout.update_password);
@@ -577,7 +564,7 @@ public abstract class OptionDialogs {
 
   public static void transferFunds(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
       final Dialog transferFunds = new Dialog(context);
       transferFunds.setContentView(R.layout.transfer_funds);
@@ -645,7 +632,7 @@ public abstract class OptionDialogs {
             confirmationMessage += context.getString(R.string.totalBalance);
             confirmationMessage += machine.getTotalBalance(id).toString();
           } else {
-            confirmationMessage += context.getString(R.string.invalidId);
+            confirmationMessage += context.getString(R.string.notCustomer);
           }
         } catch (NumberFormatException e) {
           confirmationMessage += context.getString(R.string.invalidId);
@@ -674,12 +661,21 @@ public abstract class OptionDialogs {
           int userId = Integer.parseInt(inputId.getText().toString());
           String message = inputMessage.getText().toString();
           DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
-          if (selector.getUserDetails(userId) != null) {
-            int id = ((BankWorkerServiceSystems) machine).leaveMessage(message, userId);
-            confirmationMessage += "Successfully left a message with id : " + id;
+          boolean canLeaveMessage = true;
+          if (machine instanceof TellerTerminal) {
+            if (!(selector.getUserDetails(userId) instanceof Customer)) {
+              confirmationMessage += context.getString(R.string.cantLeaveMessage);
+              canLeaveMessage = false;
+            }
           }
-        } catch (Exception e) {
-          confirmationMessage += "Invalid input";
+          if (canLeaveMessage) {
+            if (selector.getUserDetails(userId) != null) {
+              int id = ((BankWorkerServiceSystems) machine).leaveMessage(message, userId);
+              confirmationMessage += context.getString(R.string.messageLeft) + String.valueOf(id);
+            }
+          }
+        } catch (NumberFormatException e) {
+          confirmationMessage += context.getString(R.string.invalidId);
         }
         notification.setText(confirmationMessage);
       }
@@ -689,7 +685,9 @@ public abstract class OptionDialogs {
 
   public static void showMessageIds(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
-      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
+    } else if (machine.getCustomerMessageIds().size() == 0){
+      Toast.makeText(context, context.getString(R.string.noMessages), Toast.LENGTH_LONG).show();
     } else {
       final Dialog dialog = new Dialog(context);
       dialog.setContentView(R.layout.list_message_ids);
@@ -755,9 +753,8 @@ public abstract class OptionDialogs {
 
   public static void listCurrentUserDialog(final AdminTerminal machine, final Context context, String role) {
     List<User> users = machine.listUsers(role);
-
-    if (users == null) {
-      Toast.makeText(context, context.getString(R.string.noCurrentUser) + role, Toast.LENGTH_SHORT).show();
+    if (users.size() == 0) {
+      Toast.makeText(context, context.getString(R.string.noCurrentUser), Toast.LENGTH_LONG).show();
     } else {
       final Dialog makeTransaction = new Dialog(context);
       makeTransaction.setContentView(R.layout.list_users);
@@ -785,12 +782,14 @@ public abstract class OptionDialogs {
   }
 
   public static void showUserMessageIds(final BankWorkerServiceSystems machine, final Context context) {
-    final Dialog dialog = new Dialog(context);
-    dialog.setContentView(R.layout.list_message_ids);
-    final LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.layout);
-    // show the user all of the message Ids that are for them
-    try {
-      ArrayList<Integer> ids = (ArrayList<Integer>) machine.getUserMessageIds();
+    ArrayList<Integer> ids = (ArrayList<Integer>) machine.getUserMessageIds();
+    if (ids.size() == 0) {
+      Toast.makeText(context, context.getString(R.string.noMessages), Toast.LENGTH_LONG).show();
+    } else {
+      final Dialog dialog = new Dialog(context);
+      dialog.setContentView(R.layout.list_message_ids);
+      final LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.layout);
+      // show the user all of the message Ids that are for them
       // now add each id to the scroll view using a textview
       for (Integer id : ids) {
         TextView textView = new TextView(context);
@@ -798,21 +797,18 @@ public abstract class OptionDialogs {
         textView.setText(text);
         layout.addView(textView);
       }
-    } catch (Exception e) {
-      e.getMessage();
+      dialog.show();
     }
-    dialog.show();
+
   }
 
   public static void promoteTeller(final AdminTerminal machine, final Context context) {
     final Dialog promoteTeller = new Dialog(context);
     promoteTeller.setContentView(R.layout.promote_teller);
     RelativeLayout layout = (RelativeLayout) promoteTeller.findViewById(R.id.layout);
-    final EditText tellerToPromote = (EditText) layout.findViewById(R.id.editText4);
-    final TextView pageTitle = (TextView) layout.findViewById(R.id.textView4);
-    final TextView confirmMessage = (TextView) layout.findViewById(R.id.textView2);
+    final EditText tellerToPromote = (EditText) layout.findViewById(R.id.inputTellerId);
+    final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
     final Button promote = (Button) layout.findViewById(R.id.promote);
-    promoteTeller.setContentView(R.layout.promote_teller);
     promote.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -821,18 +817,22 @@ public abstract class OptionDialogs {
           int tellerId = Integer.parseInt(tellerToPromote.getText().toString());
           DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
           User user = selector.getUserDetails(Integer.valueOf(tellerId));
-          if (machine.promoteTellerToAdmin(tellerId)) {
-            confirmationMessage += "Teller successfully promoted to admin.";
+          if (user instanceof Teller){
+            if (machine.promoteTellerToAdmin(tellerId)){
+              confirmationMessage += context.getString(R.string.tellerPromoted);
+            } else {
+              confirmationMessage += context.getString(R.string.tellerNotPromoted);
+            }
           } else {
-            confirmationMessage += "Teller was not successfully promoted to admin.";
+            confirmationMessage += context.getString(R.string.notTeller);
           }
         } catch (Exception e) {
-          confirmationMessage += "Invalid input";
+          confirmationMessage += context.getString(R.string.invalidId);
         }
         confirmMessage.setText(confirmationMessage);
-        promoteTeller.show();
       }
     });
+    promoteTeller.show();
   }
 
   public static void updateInterestRateDialog(final AdminTerminal machine, final Context context) {
@@ -840,34 +840,48 @@ public abstract class OptionDialogs {
     updateInterest.setContentView(R.layout.account_role);
     RelativeLayout layout = (RelativeLayout) updateInterest.findViewById(R.id.updateAccountInterest);
     final EditText inputInterest = (EditText) layout.findViewById(R.id.updateInterest);
-    final EditText inputType = (EditText) layout.findViewById(R.id.updateType);
     final Button update = (Button) layout.findViewById(R.id.confirm);
     final TextView confirm = (TextView) layout.findViewById(R.id.confirmationMessage);
 
+    RadioGroup accountTypes = (RadioGroup) layout.findViewById(R.id.accounts);
+    final RadioButton tfsa = (RadioButton) accountTypes.findViewById(R.id.tfsa);
+    final RadioButton chequing = (RadioButton) accountTypes.findViewById(R.id.chequing);
+    final RadioButton savings = (RadioButton) accountTypes.findViewById(R.id.savings);
+    final RadioButton restrictedSavings = (RadioButton) accountTypes.findViewById(R.id.restrictedSavings);
+    final RadioButton balanceOwing = (RadioButton) accountTypes.findViewById(R.id.balanceOwing);
 
     update.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        String accountType = "";
+        if (tfsa.isChecked()) {
+          accountType = "TFSA";
+        } else if (chequing.isChecked()) {
+          accountType = "CHEQUING";
+        } else if (savings.isChecked()) {
+          accountType = "SAVING";
+        } else if (restrictedSavings.isChecked()) {
+          accountType = "RESTRICTEDSAVING";
+        } else if (balanceOwing.isChecked()) {
+          accountType = "BALANCEOWING";
+        }
         String confirmMessage = "";
         java.math.BigDecimal interest = java.math.BigDecimal.ZERO;
-        boolean validinput = true;
-        String accountType = inputType.getText().toString();
-        AccountTypesEnumMap AccountEnum = new AccountTypesEnumMap(context);
-        Integer accountId = AccountEnum.getAccountId(accountType);
-        if (!new DatabaseSelectHelper(context).getRoles().contains(accountId)) {
-          confirmMessage += "Invalid Account Type";
-          validinput = false;
+        boolean validInput = true;
+        try {
+          interest = java.math.BigDecimal.valueOf(Double.parseDouble(inputInterest.getText().toString()));
+          if (interest.doubleValue() < 0.00 || interest.doubleValue() >= 1.00) {
+            confirmMessage = context.getString(R.string.invalidAmount);
+            validInput = false;
+          }
+        } catch (NumberFormatException e) {
+          confirmMessage += context.getString(R.string.invalidAmount);
+          validInput = false;
         }
-        if (interest.compareTo(BigDecimal.ZERO) == -1 || interest == null) {
-          confirmMessage += "Invalid Amount";
-          validinput = false;
-        }
-
-        interest = BigDecimal.valueOf(Double.parseDouble(inputInterest.getText().toString()));
-
-        if (validinput) {
-          if (machine.updateInterestRate(interest, accountId)) {
-            confirmMessage += context.getString(R.string.accountAdded);
+        if (validInput) {
+          AccountTypesEnumMap accountEnumMap = new AccountTypesEnumMap(context);
+          if (machine.updateInterestRate(interest, accountEnumMap.getAccountId(accountType))) {
+            confirmMessage += context.getString(R.string.interestUpdated);
             update.setText(context.getString(R.string.back));
             update.setOnClickListener(new View.OnClickListener() {
               public void onClick(View v) {
@@ -875,11 +889,12 @@ public abstract class OptionDialogs {
               }
             });
           } else {
-            confirmMessage += context.getString(R.string.accountNotAdded);
+            confirmMessage += context.getString(R.string.interestNotUpdated);
           }
         }
         confirm.setText(confirmMessage);
       }
     });
+    updateInterest.show();
   }
 }
