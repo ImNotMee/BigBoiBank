@@ -189,4 +189,6 @@
     <string name="interestUpdated">Interest successfully updated</string>
     <string name="interestNotUpdated">Interest was not successfully updated</string>
 
+    <string name="customerInfo">Customer Information</string>
+
 </resources>

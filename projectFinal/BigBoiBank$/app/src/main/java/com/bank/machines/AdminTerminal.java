@@ -1,6 +1,7 @@
 package com.bank.machines;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -122,7 +123,8 @@ public class AdminTerminal extends BankWorkerServiceSystems {
     try {
       DatabaseBackUp db = new DatabaseBackUp(this.context);
       db.update();
-      File file = new File(this.context.getFilesDir(), output);
+      File file = new File(this.context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+              , output);
       FileOutputStream outputStream = new FileOutputStream(file);
       ObjectOutputStream serialize = new ObjectOutputStream(outputStream);
       serialize.writeObject(db);

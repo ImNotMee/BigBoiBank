@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/screen_padding"
-    tools:context="com.bigboibanks.LogIn">
+    tools:context="com.bigboibanks.LogIn"
+    android:background="@color/colorPrimaryDark">
 
     <TextView
         android:id="@+id/title"
@@ -15,8 +16,7 @@
         android:text="@string/app_name"
         android:textAlignment="center"
         android:textSize="25sp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true" />
+        android:textColor="@color/white"/>
 
     <EditText
         android:inputType="number"
@@ -24,7 +24,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/inputId"
         android:hint="@string/promptUserId"
-        android:layout_below="@+id/title"/>
+        android:textColorHint="@color/white"
+        android:layout_below="@+id/title"
+        android:textColor="@color/white"/>
 
     <EditText
         android:inputType="textPassword"
@@ -32,7 +34,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/inputPassword"
         android:hint="@string/promptPassword"
-        android:layout_below="@+id/inputId"/>
+        android:textColorHint="@color/white"
+        android:layout_below="@+id/inputId"
+        android:textColor="@color/white"/>
 
     <RadioGroup
         android:layout_width="wrap_content"
@@ -46,16 +50,19 @@
             android:layout_height="wrap_content"
             android:id="@+id/admin"
             android:text="@string/admin"
+            android:textColor="@color/white"
             android:checked="true"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/teller"
+            android:textColor="@color/white"
             android:text="@string/teller"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/customer"
+            android:textColor="@color/white"
             android:text="@string/customer"/>
     </RadioGroup>
 

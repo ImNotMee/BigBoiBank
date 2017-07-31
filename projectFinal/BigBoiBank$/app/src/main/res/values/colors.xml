@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorButtonYellow">#ff0</color>
     <color name="dark">#0E010C</color>
+    <color name="backgroundDark">#352D2D</color>
+    <color name="white">#FFF</color>
 </resources>

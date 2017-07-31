@@ -3,4 +3,6 @@
     <dimen name="screen_padding">16dp</dimen>
     <dimen name="scroll_view_padding">20dp</dimen>
     <dimen name="large">24dp</dimen>
+    <dimen name="cheque_size">500sp</dimen>
+    <dimen name="spinner_height">50sp</dimen>
 </resources>
