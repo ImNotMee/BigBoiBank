@@ -2,7 +2,6 @@ package com.bigboibanks;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bank.accounts.Account;
+import com.bank.accounts.RestrictedSavingsAccount;
 import com.bank.databasehelper.DatabaseSelectHelper;
 import com.bank.exceptions.IllegalAmountException;
 import com.bank.exceptions.InsufficientFundsException;
@@ -41,7 +41,7 @@ public abstract class OptionDialogs {
   public static void makeUserDialog(final BankWorkerServiceSystems machine, final String user, final Context context) {
     final Dialog makeUser = new Dialog(context);
     makeUser.setContentView(R.layout.make_user);
-    makeUser.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+    makeUser.getWindow().setBackgroundDrawable(null);
     RelativeLayout layout = (RelativeLayout) makeUser.findViewById(R.id.makeUser);
     TextView title = (TextView) layout.findViewById(R.id.title);
     if (user.equals("admin")) {
@@ -119,9 +119,9 @@ public abstract class OptionDialogs {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
-
       final Dialog makeAccount = new Dialog(context);
       makeAccount.setContentView(R.layout.make_account);
+      makeAccount.getWindow().setBackgroundDrawable(null);
       RelativeLayout layout = (RelativeLayout) makeAccount.findViewById(R.id.makeAccount);
       final EditText inputName = (EditText) layout.findViewById(R.id.accountName);
       final EditText inputBalance = (EditText) layout.findViewById(R.id.balance);
@@ -193,9 +193,9 @@ public abstract class OptionDialogs {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
-
       final Dialog makeTransaction = new Dialog(context);
       makeTransaction.setContentView(R.layout.money_transaction);
+      makeTransaction.getWindow().setBackgroundDrawable(null);
       RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
       TextView title = (TextView) layout.findViewById(R.id.title);
       if (transaction.equals("deposit")) {
@@ -249,7 +249,6 @@ public abstract class OptionDialogs {
               }
             } else {
               try {
-                machine.makeWithdrawal(amount, id);
                 confirm.setText(context.getString(R.string.back));
                 confirm.setOnClickListener(new View.OnClickListener() {
                   @Override
@@ -257,9 +256,17 @@ public abstract class OptionDialogs {
                     makeTransaction.dismiss();
                   }
                 });
-                confirmationMessage += context.getString(R.string.transactionCompleted);
                 DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
-                confirmationMessage += selector.getBalance(id).toString();
+                if (selector.getAccountDetails(id) instanceof RestrictedSavingsAccount) {
+                  confirmationMessage += context.getString(R.string.withdrawWithWorker);
+                } else if (machine.makeWithdrawal(amount, id)) {
+                  confirmationMessage += context.getString(R.string.transactionCompleted);
+                  confirmationMessage += selector.getBalance(id).toString();
+
+                } else {
+                  confirmationMessage += context.getString(R.string.transactionFailed);
+                }
+
               } catch (IllegalAmountException e) {
                 confirmationMessage += context.getString(R.string.invalidAmount);
               } catch (InsufficientFundsException e) {
@@ -280,6 +287,7 @@ public abstract class OptionDialogs {
   public static void setCustomerDialog(final BankWorkerServiceSystems machine, final Context context) {
     final Dialog setCustomer = new Dialog(context);
     setCustomer.setContentView(R.layout.set_customer);
+    setCustomer.getWindow().setBackgroundDrawable(null);
     RelativeLayout layout = (RelativeLayout) setCustomer.findViewById(R.id.layout);
     final EditText inputId = (EditText) layout.findViewById(R.id.id);
     final EditText inputPassword = (EditText) layout.findViewById(R.id.password);
@@ -330,13 +338,13 @@ public abstract class OptionDialogs {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
-
       List<Account> accounts = machine.listCustomerAccounts();
       if (accounts.size() == 0) {
         Toast.makeText(context, context.getString(R.string.noAccounts), Toast.LENGTH_LONG).show();
       } else {
         final Dialog makeTransaction = new Dialog(context);
         makeTransaction.setContentView(R.layout.list_accounts);
+        makeTransaction.getWindow().setBackgroundDrawable(null);
         RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
         final ScrollView scrollView = (ScrollView) layout.findViewById(R.id.scrollView);
         final LayoutInflater inflater = (LayoutInflater) context
@@ -366,6 +374,7 @@ public abstract class OptionDialogs {
     } else {
       final Dialog checkBalance = new Dialog(context);
       checkBalance.setContentView(R.layout.one_input);
+      checkBalance.getWindow().setBackgroundDrawable(null);
       RelativeLayout layout = (RelativeLayout) checkBalance.findViewById(R.id.layout);
       final EditText inputAccountId = (EditText) layout.findViewById(R.id.input);
       final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
@@ -401,9 +410,10 @@ public abstract class OptionDialogs {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
-      final Dialog checkBalance = new Dialog(context);
-      checkBalance.setContentView(R.layout.one_input);
-      RelativeLayout layout = (RelativeLayout) checkBalance.findViewById(R.id.layout);
+      final Dialog giveInterest = new Dialog(context);
+      giveInterest.setContentView(R.layout.one_input);
+      giveInterest.getWindow().setBackgroundDrawable(null);
+      RelativeLayout layout = (RelativeLayout) giveInterest.findViewById(R.id.layout);
       ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.giveInterest));
       final EditText inputAccountId = (EditText) layout.findViewById(R.id.input);
       final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
@@ -436,7 +446,7 @@ public abstract class OptionDialogs {
           balance.setText(confirmationMessage);
         }
       });
-      checkBalance.show();
+      giveInterest.show();
     }
   }
 
@@ -446,6 +456,7 @@ public abstract class OptionDialogs {
     } else {
       final Dialog updateName = new Dialog(context);
       updateName.setContentView(R.layout.one_input);
+      updateName.getWindow().setBackgroundDrawable(null);
       RelativeLayout layout = (RelativeLayout) updateName.findViewById(R.id.layout);
       ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.updateName));
       final EditText inputName = (EditText) layout.findViewById(R.id.input);
@@ -478,6 +489,7 @@ public abstract class OptionDialogs {
     } else {
       final Dialog updateAge = new Dialog(context);
       updateAge.setContentView(R.layout.one_input);
+      updateAge.getWindow().setBackgroundDrawable(null);
       RelativeLayout layout = (RelativeLayout) updateAge.findViewById(R.id.layout);
       ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.updateAge));
       final EditText inputAge = (EditText) layout.findViewById(R.id.input);
@@ -513,6 +525,7 @@ public abstract class OptionDialogs {
     } else {
       final Dialog updateAddress = new Dialog(context);
       updateAddress.setContentView(R.layout.one_input);
+      updateAddress.getWindow().setBackgroundDrawable(null);
       RelativeLayout layout = (RelativeLayout) updateAddress.findViewById(R.id.layout);
       ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.updateAddress));
       final EditText inputAddress = (EditText) layout.findViewById(R.id.input);
@@ -544,6 +557,7 @@ public abstract class OptionDialogs {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
       final Dialog updatePassword = new Dialog(context);
+      updatePassword.getWindow().setBackgroundDrawable(null);
       updatePassword.setContentView(R.layout.update_password);
       RelativeLayout layout = (RelativeLayout) updatePassword.findViewById(R.id.layout);
       final EditText inputPassword = (EditText) layout.findViewById(R.id.password);
@@ -572,6 +586,7 @@ public abstract class OptionDialogs {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
     } else {
       final Dialog transferFunds = new Dialog(context);
+      transferFunds.getWindow().setBackgroundDrawable(null);
       transferFunds.setContentView(R.layout.transfer_funds);
       RelativeLayout layout = (RelativeLayout) transferFunds.findViewById(R.id.layout);
       final EditText transferFrom = (EditText) layout.findViewById(R.id.transferFrom);
@@ -620,6 +635,7 @@ public abstract class OptionDialogs {
 
   public static void viewUserBalanceDialog(final BankWorkerServiceSystems machine, final Context context) {
     final Dialog customerBalance = new Dialog(context);
+    customerBalance.getWindow().setBackgroundDrawable(null);
     customerBalance.setContentView(R.layout.one_input);
     RelativeLayout layout = (RelativeLayout) customerBalance.findViewById(R.id.layout);
     ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.customerBalance));
@@ -653,6 +669,7 @@ public abstract class OptionDialogs {
   public static void leaveMessage(final BankServiceSystems machine, final Context context) {
     final Dialog leaveMessage = new Dialog(context);
     leaveMessage.setContentView(R.layout.leave_message);
+    leaveMessage.getWindow().setBackgroundDrawable(null);
     RelativeLayout layout = (RelativeLayout) leaveMessage.findViewById(R.id.layout);
     // references to the editText and TextEdits
     final TextView notification = (TextView) layout.findViewById(R.id.notification);
@@ -698,6 +715,7 @@ public abstract class OptionDialogs {
     } else {
       final Dialog dialog = new Dialog(context);
       dialog.setContentView(R.layout.list_message_ids);
+      dialog.getWindow().setBackgroundDrawable(null);
       final RelativeLayout parent = (RelativeLayout) dialog.findViewById(R.id.parent);
       final ScrollView scrollView = (ScrollView) parent.findViewById(R.id.scrollView);
       final LinearLayout layout = (LinearLayout) scrollView.findViewById(R.id.layout);
@@ -707,7 +725,7 @@ public abstract class OptionDialogs {
         // now add each id to the scroll view using a textview
         for (Integer id : ids) {
           TextView textView = new TextView(context);
-          String text = context.getString(R.string.idPrefix) + Integer.toString((int) id);
+          String text = context.getString(R.string.idPrefix) + Integer.toString( id);
           textView.setText(text);
           layout.addView(textView);
         }
@@ -721,6 +739,7 @@ public abstract class OptionDialogs {
   public static void seeSpecificMessage(final BankServiceSystems machine, final Context context) {
     final Dialog dialog = new Dialog(context);
     dialog.setContentView(R.layout.one_input);
+    dialog.getWindow().setBackgroundDrawable(null);
     // change the text in the layout
     ((TextView) dialog.findViewById(R.id.title)).setText(context.getString(R.string.seeSpecificMessage));
     ((EditText) dialog.findViewById(R.id.input)).setHint(context.getString(R.string.inputMessageId));
@@ -762,6 +781,7 @@ public abstract class OptionDialogs {
     Customer customer = (Customer) machine.getCurrentCustomer();
     final Dialog showCustomer = new Dialog(context);
     showCustomer.setContentView(R.layout.customer_log_in);
+    showCustomer.getWindow().setBackgroundDrawable(null);
     LinearLayout layout = (LinearLayout) showCustomer.findViewById(R.id.layout);
     final LayoutInflater inflater = (LayoutInflater) context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -785,8 +805,17 @@ public abstract class OptionDialogs {
     } else {
       final Dialog makeTransaction = new Dialog(context);
       makeTransaction.setContentView(R.layout.list_users);
+      makeTransaction.getWindow().setBackgroundDrawable(null);
       RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
-      ((TextView) layout.findViewById(R.id.title)).setText("List of " + role);
+      String header;
+      if (role.equals("ADMIN")) {
+        header = context.getString(R.string.viewAdmins);
+      } else if (role.equals("TELLER")) {
+        header = context.getString(R.string.viewTellers);
+      } else {
+        header = context.getString(R.string.viewCustomers);
+      }
+      ((TextView) layout.findViewById(R.id.title)).setText(header);
       final ScrollView scrollView = (ScrollView) layout.findViewById(R.id.scrollView);
       final LayoutInflater inflater = (LayoutInflater) context
               .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -815,6 +844,7 @@ public abstract class OptionDialogs {
     } else {
       final Dialog dialog = new Dialog(context);
       dialog.setContentView(R.layout.list_message_ids);
+      dialog.getWindow().setBackgroundDrawable(null);
       final LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.layout);
       // show the user all of the message Ids that are for them
       // now add each id to the scroll view using a textview
@@ -831,6 +861,7 @@ public abstract class OptionDialogs {
   public static void promoteTeller(final AdminTerminal machine, final Context context) {
     final Dialog promoteTeller = new Dialog(context);
     promoteTeller.setContentView(R.layout.promote_teller);
+    promoteTeller.getWindow().setBackgroundDrawable(null);
     RelativeLayout layout = (RelativeLayout) promoteTeller.findViewById(R.id.layout);
     final EditText tellerToPromote = (EditText) layout.findViewById(R.id.inputTellerId);
     final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
@@ -864,6 +895,7 @@ public abstract class OptionDialogs {
   public static void updateInterestRateDialog(final AdminTerminal machine, final Context context) {
     final Dialog updateInterest = new Dialog(context);
     updateInterest.setContentView(R.layout.account_role);
+    updateInterest.getWindow().setBackgroundDrawable(null);
     RelativeLayout layout = (RelativeLayout) updateInterest.findViewById(R.id.updateAccountInterest);
     final EditText inputInterest = (EditText) layout.findViewById(R.id.updateInterest);
     final Button update = (Button) layout.findViewById(R.id.confirm);

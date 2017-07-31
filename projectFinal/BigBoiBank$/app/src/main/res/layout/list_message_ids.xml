@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/parent">
-
+    android:id="@+id/parent"
+    android:background="@drawable/round_dialog"
+    android:paddingBottom="@dimen/dialog_bottom_padding">
 
 
     <ScrollView
@@ -23,10 +24,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/messageIds"
                 android:textAlignment="center"
-                android:backgroundTint="@color/colorAccent"
                 android:background="@color/colorPrimary"
                 android:textColor="@color/white"
-                android:textSize="@dimen/dialog_title"/>
+                android:textSize="@dimen/dialog_title"
+                android:layout_marginBottom="@dimen/button_margin_bottom"/>
         </LinearLayout>
     </ScrollView>
 

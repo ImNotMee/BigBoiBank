@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout">
+    android:id="@+id/layout"
+    android:background="@drawable/round_dialog"
+    android:paddingBottom="@dimen/dialog_bottom_padding">
 
     <TextView
         android:id="@+id/title"
@@ -13,7 +15,8 @@
         android:textAlignment="center"
         android:background="@color/colorPrimary"
         android:textColor="@color/white"
-        android:textSize="@dimen/dialog_title"/>
+        android:textSize="@dimen/dialog_title"
+        android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
     <EditText
         android:id="@+id/inputTellerId"
@@ -21,20 +24,22 @@
         android:layout_height="wrap_content"
         android:hint="@string/promptTellerId"
         android:layout_below="@+id/title"
-        android:inputType="number" />
+        android:inputType="number"
+        android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
     <Button
         android:id="@+id/promote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/inputTellerId"
+        android:layout_below="@+id/confirmationMessage"
         android:text="@string/confirm" />
 
     <TextView
         android:id="@+id/confirmationMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/promote"
-        android:textAlignment="center" />
+        android:layout_below="@+id/inputTellerId"
+        android:textAlignment="center"
+        android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
 </RelativeLayout>

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:id="@+id/layout">
+    android:id="@+id/layout"
+    android:background="@drawable/round_dialog"
+    android:paddingBottom="@dimen/dialog_bottom_padding">
 
     <TextView
+        android:padding="@dimen/title_padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/title"
@@ -12,7 +15,8 @@
         android:textAlignment="center"
         android:background="@color/colorPrimary"
         android:textColor="@color/white"
-        android:textSize="@dimen/dialog_title"/>
+        android:textSize="@dimen/dialog_title"
+        android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -28,21 +32,23 @@
         android:layout_height="wrap_content"
         android:id="@+id/password"
         android:hint="@string/promptPassword"
-        android:layout_below="@+id/id" />
+        android:layout_below="@+id/id"
+        android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/confirm"
         android:id="@+id/confirm"
-        android:layout_below="@id/password"
+        android:layout_below="@id/confirmationMessage"
         android:layout_centerHorizontal="true"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/confirmationMessage"
-        android:layout_below="@id/confirm"
-        android:textAlignment="center"/>
+        android:layout_below="@id/password"
+        android:textAlignment="center"
+        android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
 </RelativeLayout>

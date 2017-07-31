@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent" android:layout_height="match_parent"
-  android:orientation="vertical" android:id="@+id/scrollView">
+  android:orientation="vertical" android:id="@+id/scrollView"
+  android:background="@drawable/round_dialog"
+  android:paddingBottom="@dimen/dialog_bottom_padding">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,6 +22,7 @@
             android:textSize="@dimen/dialog_title"/>
 
         <ImageView
+            android:contentDescription="@string/chequeImage"
             android:layout_width="@dimen/cheque_size"
             android:layout_height="@dimen/cheque_size"
             android:id="@+id/image"
@@ -40,7 +43,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/confirmationMessage"
             android:layout_below="@+id/balance"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
         <Button
             android:layout_width="match_parent"
