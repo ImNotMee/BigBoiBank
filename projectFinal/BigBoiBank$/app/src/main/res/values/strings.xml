@@ -193,5 +193,9 @@
 
     <string name="customerInfo">Customer Information</string>
     <string name="messageIds">Message Ids</string>
+    <string name="wrongTerminal">UH-OH SOMETHING WENT WRONG, THAT\'S THE WRONG TERMINAL!</string>
+    <string name="chequeImage">Image of cheque</string>
+
+    <string name="withdrawWithWorker">Please see a worker to withdraw from this account. </string>
 
 </resources>

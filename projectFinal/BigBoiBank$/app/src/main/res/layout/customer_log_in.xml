@@ -3,7 +3,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:id="@+id/layout">
+                android:id="@+id/layout"
+              android:background="@drawable/round_dialog"
+              android:paddingBottom="@dimen/dialog_bottom_padding">
 
     <TextView
         android:layout_width="match_parent"
@@ -13,6 +15,7 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:background="@color/colorPrimary"
-        android:textSize="@dimen/dialog_title"/>
+        android:textSize="@dimen/dialog_title"
+        android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
 </LinearLayout>

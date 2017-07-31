@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="screen_padding">16dp</dimen>
-    <dimen name="scroll_view_padding">20dp</dimen>
-    <dimen name="button_margin_bottom">5dp</dimen>
-    <dimen name="large">24dp</dimen>
-    <dimen name="cheque_size">500sp</dimen>
+    <dimen name="scroll_view_padding">20sp</dimen>
+    <dimen name="button_margin_bottom">5sp</dimen>
+    <dimen name="large">24sp</dimen>
+    <dimen name="cheque_size">300sp</dimen>
     <dimen name="spinner_height">50sp</dimen>
     <dimen name="dialog_title">20sp</dimen>
+    <dimen name="dialog_bottom_padding">20sp</dimen>
+    <dimen name="title_padding">4sp</dimen>
+
 </resources>
