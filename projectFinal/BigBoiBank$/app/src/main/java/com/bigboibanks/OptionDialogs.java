@@ -803,4 +803,37 @@ public abstract class OptionDialogs {
     }
     dialog.show();
   }
+
+  public static void promoteTeller(final AdminTerminal machine, final Context context) {
+    final Dialog promoteTeller = new Dialog(context);
+    promoteTeller.setContentView(R.layout.promote_teller);
+    RelativeLayout layout = (RelativeLayout) promoteTeller.findViewById(R.id.layout);
+    final EditText tellerToPromote = (EditText) layout.findViewById(R.id.editText4);
+    final TextView pageTitle = (TextView) layout.findViewById(R.id.textView4);
+    final TextView confirmMessage = (TextView) layout.findViewById(R.id.textView2);
+    final Button promote = (Button) layout.findViewById(R.id.promote);
+    promoteTeller.setContentView(R.layout.promote_teller);
+    promote.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        String confirmationMessage = "";
+        try {
+          int tellerId = Integer.parseInt(tellerToPromote.getText().toString());
+          DatabaseSelectHelper selector = new DatabaseSelectHelper(context);
+          User user = selector.getUserDetails(Integer.valueOf(tellerId));
+          if (machine.promoteTellerToAdmin(tellerId)){
+            confirmationMessage += "Teller successfully promoted to admin.";
+          } else {
+            confirmationMessage += "Teller was not successfully promoted to admin.";
+          }
+        }
+        catch (Exception e) {
+          confirmationMessage += "Invalid input";
+        }
+        confirmMessage.setText(confirmationMessage);
+        promoteTeller.show();
+      }
+      confirmMessage.setText(confirmationMessage);
+    });
+  }
 }
