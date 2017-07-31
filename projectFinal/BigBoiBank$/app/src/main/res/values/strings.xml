@@ -43,6 +43,7 @@
     <string name="updateAddress">Update address</string>
     <string name="updatePassword">Update password</string>
     <string name="closeCustomer">Close the current customer session</string>
+    <string name="makeTransaction">Make a new transaction</string>
 
     <string name="messageOptions">Message Interactions</string>
     <string name="leaveMessage">Leave a message</string>
