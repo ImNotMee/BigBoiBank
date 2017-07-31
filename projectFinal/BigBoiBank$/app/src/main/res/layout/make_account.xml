@@ -20,7 +20,6 @@
         android:layout_below="@id/title"
         android:id="@+id/accountName"
         android:hint="@string/promptAccountName"
-        android:textColor="@color/white"
         android:textSize="@dimen/dialog_title"/>
 
     <EditText
@@ -28,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/promptBalance"
+        android:inputType="numberDecimal"
         android:layout_below="@+id/accountName"
         android:layout_alignParentStart="true" />
 
