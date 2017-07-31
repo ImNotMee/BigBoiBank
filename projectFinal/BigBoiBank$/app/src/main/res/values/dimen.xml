@@ -2,4 +2,5 @@
 <resources>
     <dimen name="screen_padding">16dp</dimen>
     <dimen name="scroll_view_padding">20dp</dimen>
+    <dimen name="large">24dp</dimen>
 </resources>

@@ -89,8 +89,6 @@ public class LogIn extends AppCompatActivity {
         }
         User user = selector.getUserDetails(id);
         if (user != null) {
-          MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.mr_krabs);
-          mediaPlayer.start();
           boolean authenticated = user.authenticate(password.getText().toString());
           if (authenticated) {
             if (user instanceof Admin && admin.isChecked()) {
@@ -110,6 +108,10 @@ public class LogIn extends AppCompatActivity {
               intent.putExtra("id", user.getId());
               intent.putExtra("password", password.getText().toString());
               intent.putExtra("machine", "customer");
+              startActivity(intent);
+            } else {
+              // this means they logged in as a wrong user
+              Intent intent = new Intent(context, FeelsBadMan.class);
               startActivity(intent);
             }
           }
