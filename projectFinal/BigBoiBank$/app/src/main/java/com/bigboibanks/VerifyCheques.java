@@ -2,6 +2,7 @@ package com.bigboibanks;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bank.databasehelper.DatabaseSelectHelper;
@@ -27,6 +29,7 @@ public class VerifyCheques extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_verify_cheuqes);
+    this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
     LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
     final Context context = this;
@@ -55,7 +58,8 @@ public class VerifyCheques extends AppCompatActivity {
           boolean stillVerified = LogIn.savedInfo.getBoolean("ChequeVerified" + String.valueOf(iCopy), true);
           final Dialog verifyCheque = new Dialog(context);
           verifyCheque.setContentView(R.layout.verify_cheque);
-          RelativeLayout layout = (RelativeLayout) verifyCheque.findViewById(R.id.layout);
+          ScrollView scrollView = (ScrollView) verifyCheque.findViewById(R.id.scrollView);
+          RelativeLayout layout = (RelativeLayout) scrollView.findViewById(R.id.relativeLayout);
           final ImageView cheque = (ImageView) layout.findViewById(R.id.image);
           cheque.setImageBitmap(chequeImage);
           final EditText inputAmount = (EditText) layout.findViewById(R.id.balance);

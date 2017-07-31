@@ -306,6 +306,7 @@ public abstract class OptionDialogs {
           machine.setCurrentCustomer((Customer) user);
           if (machine.authenticateCurrentCustomer(inputPassword.getText().toString())) {
             confirmationMessage += context.getString(R.string.customerSet);
+            showCurrentCustomerDialog(machine, context);
             confirm.setText(context.getString(R.string.back));
             confirm.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -749,6 +750,26 @@ public abstract class OptionDialogs {
       }
     });
     dialog.show();
+  }
+
+  public static void showCurrentCustomerDialog(final BankServiceSystems machine, final Context context) {
+    Customer customer = (Customer) machine.getCurrentCustomer();
+    final Dialog showCustomer = new Dialog(context);
+    showCustomer.setContentView(R.layout.customer_log_in);
+    LinearLayout layout = (LinearLayout) showCustomer.findViewById(R.id.layout);
+    final LayoutInflater inflater = (LayoutInflater) context
+            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    RelativeLayout details = (RelativeLayout) inflater.inflate(R.layout.account, null);
+    String id = context.getString(R.string.userID) + String.valueOf(customer.getId());
+    String name = context.getString(R.string.userName) + customer.getName();
+    String address = context.getString(R.string.userAddress) + customer.getAddress();
+    String type = context.getString(R.string.userAge) + String.valueOf(customer.getAge());
+    ((TextView) details.findViewById(R.id.id)).setText(id);
+    ((TextView) details.findViewById(R.id.name)).setText(name);
+    ((TextView) details.findViewById(R.id.balance)).setText(address);
+    ((TextView) details.findViewById(R.id.type)).setText(type);
+    layout.addView(details);
+    showCustomer.show();
   }
 
   public static void listCurrentUserDialog(final AdminTerminal machine, final Context context, String role) {

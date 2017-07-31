@@ -1,50 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent" android:layout_height="match_parent"
-  android:orientation="vertical" android:id="@+id/layout">
+  android:orientation="vertical" android:id="@+id/scrollView">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/verifyCheque"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/image"
-        android:layout_below="@+id/title"
-        android:scaleType="centerInside"
-        android:layout_centerHorizontal="true"/>
-
-    <EditText
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/balance"
-        android:layout_below="@+id/image"
-        android:hint="@string/promptAmount"/>
+        android:id="@+id/relativeLayout">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/confirmationMessage"
-        android:layout_below="@+id/balance"
-        android:textAlignment="center"/>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/verifyCheque"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/verify"
-        android:layout_below="@+id/confirmationMessage"
-        android:id="@+id/verify"/>
+        <ImageView
+            android:layout_width="@dimen/cheque_size"
+            android:layout_height="@dimen/cheque_size"
+            android:id="@+id/image"
+            android:layout_below="@+id/title"
+            android:scaleType="centerInside"
+            android:layout_centerHorizontal="true"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/decline"
-        android:layout_below="@+id/verify"
-        android:id="@+id/decline"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/balance"
+            android:layout_below="@+id/image"
+            android:hint="@string/promptAmount"
+            android:inputType="numberDecimal"/>
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/confirmationMessage"
+            android:layout_below="@+id/balance"
+            android:textAlignment="center"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/verify"
+            android:layout_below="@+id/confirmationMessage"
+            android:id="@+id/verify"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/decline"
+            android:layout_below="@+id/verify"
+            android:id="@+id/decline"/>
+
+
+    </RelativeLayout>
+
+</ScrollView>

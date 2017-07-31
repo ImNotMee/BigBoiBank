@@ -3,6 +3,7 @@ package com.bigboibanks;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Environment;
@@ -77,6 +78,7 @@ public class UserInterface extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_user_interface);
+    this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     context = this;
     storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
     machineTerminal = getIntent().getStringExtra("machine");
@@ -86,6 +88,7 @@ public class UserInterface extends AppCompatActivity {
       machine = new TellerTerminal(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
     } else {
       machine = new AutomatedTellerMachine(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
+      OptionDialogs.showCurrentCustomerDialog(machine, context);
     }
     RelativeLayout buttonsContainer = (RelativeLayout) findViewById(R.id.home).findViewById(R.id.scrollView).findViewById(R.id.buttons);
     List<Button> customerOptions = new ArrayList<>();
