@@ -204,6 +204,6 @@ public class DatabaseUpdateHelper {
             interestRate.setScale(2, BigDecimal.ROUND_HALF_UP), id);
     }
     driverExtender.close();
-    return false;
+    return success;
   }
 }

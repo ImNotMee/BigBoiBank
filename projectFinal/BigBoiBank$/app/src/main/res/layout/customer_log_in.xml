@@ -10,6 +10,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/title"
         android:text="@string/customerInfo"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimary"/>
 
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.bigboibanks;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public abstract class OptionDialogs {
   public static void makeUserDialog(final BankWorkerServiceSystems machine, final String user, final Context context) {
     final Dialog makeUser = new Dialog(context);
     makeUser.setContentView(R.layout.make_user);
+    makeUser.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
     RelativeLayout layout = (RelativeLayout) makeUser.findViewById(R.id.makeUser);
     TextView title = (TextView) layout.findViewById(R.id.title);
     if (user.equals("admin")) {
@@ -402,9 +404,11 @@ public abstract class OptionDialogs {
       final Dialog checkBalance = new Dialog(context);
       checkBalance.setContentView(R.layout.one_input);
       RelativeLayout layout = (RelativeLayout) checkBalance.findViewById(R.id.layout);
+      ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.giveInterest));
       final EditText inputAccountId = (EditText) layout.findViewById(R.id.input);
       final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
       final Button check = (Button) layout.findViewById(R.id.confirm);
+      check.setText(R.string.confirm);
       check.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -445,7 +449,7 @@ public abstract class OptionDialogs {
       RelativeLayout layout = (RelativeLayout) updateName.findViewById(R.id.layout);
       ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.updateName));
       final EditText inputName = (EditText) layout.findViewById(R.id.input);
-      inputName.setInputType(InputType.TYPE_NULL);
+      inputName.setInputType(InputType.TYPE_CLASS_TEXT);
       inputName.setHint(context.getString(R.string.promptName));
       final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
       final Button update = (Button) layout.findViewById(R.id.confirm);
@@ -512,7 +516,7 @@ public abstract class OptionDialogs {
       RelativeLayout layout = (RelativeLayout) updateAddress.findViewById(R.id.layout);
       ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.updateAddress));
       final EditText inputAddress = (EditText) layout.findViewById(R.id.input);
-      inputAddress.setInputType(InputType.TYPE_NULL);
+      inputAddress.setInputType(InputType.TYPE_CLASS_TEXT);
       inputAddress.setHint(context.getString(R.string.promptAddress));
       final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
       final Button update = (Button) layout.findViewById(R.id.confirm);
@@ -597,6 +601,8 @@ public abstract class OptionDialogs {
                 confirmationMessage += context.getString(R.string.invalidAmount);
               } catch (InsufficientFundsException e) {
                 confirmationMessage += context.getString(R.string.insufficientFunds);
+              } catch (Exception e) {
+                confirmationMessage += context.getString(R.string.noAccountAccess);
               }
             } else {
               confirmationMessage += context.getString(R.string.invalidId);

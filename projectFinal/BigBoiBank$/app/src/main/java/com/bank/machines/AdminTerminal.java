@@ -141,75 +141,75 @@ public class AdminTerminal extends BankWorkerServiceSystems {
 		DatabaseBackUp db = new DatabaseBackUp(this.context);
 		boolean check = false;
     try {
-      File file = new File(this.context.getFilesDir(), input);
-      FileInputStream inputStream = new FileInputStream(file);
-      ObjectInputStream deserialize = new ObjectInputStream(inputStream);
-      db = (DatabaseBackUp) deserialize.readObject();
-      deserialize.close();
-      inputStream.close();
+      File file = new File(this.context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), input);
+      if (file.exists()) {
+        FileInputStream inputStream = new FileInputStream(file);
+        ObjectInputStream deserialize = new ObjectInputStream(inputStream);
+        db = (DatabaseBackUp) deserialize.readObject();
+        deserialize.close();
+        inputStream.close();
         check = true;
-      } catch(Exception e) {
-      }
-
-    DatabaseDriverAExtender driver = new DatabaseDriverAExtender(this.context);
-    driver.reinitialize();
-    ArrayList<BigDecimal> balance = db.getAccountBalances();
-    ArrayList<BigDecimal> interestRate = db.getAccountInterestRates();
-    ArrayList<String> accountNames = db.getAccountNames();
-    ArrayList<String> accountTypeNames = db.getAccountTypeNames();
-    ArrayList<Integer> accountType = db.getAccountTypes();
-    ArrayList<Integer> roles = db.getUserRoleIds();
-    ArrayList<String> roleNames = db.getRoleNames();
-    HashMap<Integer, ArrayList<Integer>> accountsIds = db.getAccountsIds();
-    HashMap<Integer, ArrayList<Integer>> messageRelation = db.getMessageRelationships();
-    HashMap<Integer, String> messages = db.getMessages();
-    ArrayList<String> names = db.getUserNames();
-    ArrayList<String> addresses = db.getUserAddresses();
-    ArrayList<Integer> age = db.getUserAges();
-    ArrayList<String> passwords = db.getUserPassword();
+        DatabaseDriverAExtender driver = new DatabaseDriverAExtender(this.context);
+        driver.reinitialize();
+        ArrayList<BigDecimal> balance = db.getAccountBalances();
+        ArrayList<BigDecimal> interestRate = db.getAccountInterestRates();
+        ArrayList<String> accountNames = db.getAccountNames();
+        ArrayList<String> accountTypeNames = db.getAccountTypeNames();
+        ArrayList<Integer> accountType = db.getAccountTypes();
+        ArrayList<Integer> roles = db.getUserRoleIds();
+        ArrayList<String> roleNames = db.getRoleNames();
+        HashMap<Integer, ArrayList<Integer>> accountsIds = db.getAccountsIds();
+        HashMap<Integer, ArrayList<Integer>> messageRelation = db.getMessageRelationships();
+        HashMap<Integer, String> messages = db.getMessages();
+        ArrayList<String> names = db.getUserNames();
+        ArrayList<String> addresses = db.getUserAddresses();
+        ArrayList<Integer> age = db.getUserAges();
+        ArrayList<String> passwords = db.getUserPassword();
 
 
-    for(int i = 0; i < accountTypeNames.size(); i ++) {
-      insertor.insertAccountType(accountTypeNames.get(i), interestRate.get(i));
-    }
+        for(int i = 0; i < accountTypeNames.size(); i ++) {
+          insertor.insertAccountType(accountTypeNames.get(i), interestRate.get(i));
+        }
 
-    for(int i = 0; i < roleNames.size(); i ++) {
-      insertor.insertRole(roleNames.get(i));
-    }
+        for(int i = 0; i < roleNames.size(); i ++) {
+          insertor.insertRole(roleNames.get(i));
+        }
 
-    for(int i = 1; i < accountsIds.size() + 1; i++) {
-      ArrayList<Integer> accountID = accountsIds.get(i);
-      for(Integer Id: accountID) {
-        insertor.insertUserAccount(i, Id);
-      }
-    }
+        for(int i = 1; i < accountsIds.size() + 1; i++) {
+          ArrayList<Integer> accountID = accountsIds.get(i);
+          for(Integer Id: accountID) {
+            insertor.insertUserAccount(i, Id);
+          }
+        }
 
-    for(int i = 0; i < balance.size(); i++) {
-      insertor.insertAccount(accountNames.get(i), balance.get(i),
-          accountType.get(i));
-    }
+        for(int i = 0; i < balance.size(); i++) {
+          insertor.insertAccount(accountNames.get(i), balance.get(i),
+                  accountType.get(i));
+        }
 
-    for(int i = 0; i < names.size(); i++) {
-      int id = insertor.insertNewUser(names.get(i), age.get(i), addresses.get(i),
-          roles.get(i), "");
-      updater.updateUserPassword(passwords.get(i), id);
-    }
+        for(int i = 0; i < names.size(); i++) {
+          int id = insertor.insertNewUser(names.get(i), age.get(i), addresses.get(i),
+                  roles.get(i), "");
+          updater.updateUserPassword(passwords.get(i), id);
+        }
 
-    boolean messageExists = true;
-    int currMessageId = 1;
-    while (messageExists) {
-      messageExists = false;
-      for(int i = 1; i < messageRelation.size() + 1; i++ ) {
-        ArrayList<Integer> messages1 = messageRelation.get(i);
-        if (messages1.contains(currMessageId)) {
-          insertor.insertMessage(i, messages.get(currMessageId));
-          messageExists = true;
-          currMessageId++;
-          break;
+        boolean messageExists = true;
+        int currMessageId = 1;
+        while (messageExists) {
+          messageExists = false;
+          for(int i = 1; i < messageRelation.size() + 1; i++ ) {
+            ArrayList<Integer> messages1 = messageRelation.get(i);
+            if (messages1.contains(currMessageId)) {
+              insertor.insertMessage(i, messages.get(currMessageId));
+              messageExists = true;
+              currMessageId++;
+              break;
+            }
+          }
         }
       }
-    }
-    System.out.println("The DatabaseBackUp object has been sucessfully loaded");
+      } catch(Exception e) {
+      }
     return check;
   }
    
