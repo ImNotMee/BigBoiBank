@@ -9,6 +9,7 @@
         android:id="@+id/title"
         android:layout_centerHorizontal="true"
         android:textAlignment="center"
+        android:text="@string/makeUser"
         android:background="@color/colorPrimary"
         android:textColor="@color/white"
         android:textSize="@dimen/dialog_title"/>

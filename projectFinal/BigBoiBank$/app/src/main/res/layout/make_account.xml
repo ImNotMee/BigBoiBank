@@ -7,8 +7,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/title"
+        android:background="@color/colorPrimary"
+        android:text="@string/makeAccount"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dialog_title"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -16,7 +20,6 @@
         android:layout_below="@id/title"
         android:id="@+id/accountName"
         android:hint="@string/promptAccountName"
-        android:background="@color/colorPrimary"
         android:textColor="@color/white"
         android:textSize="@dimen/dialog_title"/>
 
