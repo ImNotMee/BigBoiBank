@@ -149,13 +149,8 @@ public class AdminTerminal extends BankWorkerServiceSystems {
       } catch(Exception e) {
       }
 
-    try {
-      DatabaseDriverAExtender driver = new DatabaseDriverAExtender(this.context);
-      driver.reinitialize();
-    } catch (Exception e) {
-      Log.e("MYAPP", "exception", e);
-    }
-
+    DatabaseDriverAExtender driver = new DatabaseDriverAExtender(this.context);
+    driver.reinitialize();
     ArrayList<BigDecimal> balance = db.getAccountBalances();
     ArrayList<BigDecimal> interestRate = db.getAccountInterestRates();
     ArrayList<String> accountNames = db.getAccountNames();
