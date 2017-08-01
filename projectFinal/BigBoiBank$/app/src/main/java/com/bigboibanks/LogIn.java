@@ -69,7 +69,7 @@ public class LogIn extends AppCompatActivity {
       savedInfoWriter.apply();
 
     }
-
+    // user input of id and password
     final EditText idText = (EditText) findViewById(R.id.inputId);
     final EditText password = (EditText) findViewById(R.id.inputPassword);
 
