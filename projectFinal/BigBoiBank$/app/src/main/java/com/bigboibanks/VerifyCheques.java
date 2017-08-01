@@ -22,6 +22,7 @@ import com.bank.exceptions.IllegalAmountException;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class VerifyCheques extends AppCompatActivity {
 
@@ -79,6 +80,7 @@ public class VerifyCheques extends AppCompatActivity {
                 String confirmationMessage = "";
                 try {
                   amount = new java.math.BigDecimal(inputAmount.getText().toString());
+                  amount = amount.setScale(2, RoundingMode.HALF_UP);
                   try {
                     if (UserInterface.machine.makeDeposit(amount, chequeAccount)) {
                       confirmationMessage += context.getString(R.string.chequeVerified);

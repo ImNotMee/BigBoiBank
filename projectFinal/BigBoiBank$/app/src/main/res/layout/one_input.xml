@@ -27,11 +27,12 @@
         android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/confirmationMessage"
+        android:id="@+id/confirm"
         android:text="@string/check"
-        android:layout_below="@id/input"
+        android:layout_below="@id/confirmationMessage"
+        android:layout_centerHorizontal="true"
         android:textAlignment="center"/>
 
     <TextView
@@ -39,6 +40,7 @@
         android:layout_height="wrap_content"
         android:id="@id/confirmationMessage"
         android:textAlignment="center"
-        android:layout_below="@id/input"/>
+        android:layout_below="@id/input"
+        android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
 </RelativeLayout>

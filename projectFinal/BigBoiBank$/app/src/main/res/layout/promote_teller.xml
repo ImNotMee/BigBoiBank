@@ -28,8 +28,9 @@
         android:layout_marginBottom="@dimen/button_margin_bottom"/>
 
     <Button
+        android:layout_centerHorizontal="true"
         android:id="@+id/promote"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/confirmationMessage"
         android:text="@string/confirm" />
