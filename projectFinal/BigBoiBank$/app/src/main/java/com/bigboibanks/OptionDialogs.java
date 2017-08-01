@@ -203,7 +203,7 @@ public abstract class OptionDialogs {
   }
 
   /**
-   * A method that
+   * A method that performs either a withdrawal or deposit.
    * @param machine , the type of terminal.
    * @param transaction ,the type of transaction.
    * @param context ,the connection between the main activity and the dialog.
