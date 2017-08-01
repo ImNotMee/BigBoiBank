@@ -61,6 +61,9 @@ public class UserInterface extends AppCompatActivity {
           "jpg", "png", "bmp" // and other formats you need
   };
 
+  /**
+   * A method that filters the file name.
+   */
   public static final FilenameFilter IMAGE_FILTER = new FilenameFilter() {
 
     @Override
@@ -74,6 +77,10 @@ public class UserInterface extends AppCompatActivity {
     }
   };
 
+  /**
+   * A method that creates the user interface.
+   * @param savedInstanceState , the bundle that is used in every Android activity.
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -90,6 +97,7 @@ public class UserInterface extends AppCompatActivity {
       machine = new AutomatedTellerMachine(getIntent().getIntExtra("id", -1), getIntent().getStringExtra("password"), this );
       OptionDialogs.showCurrentCustomerDialog(machine, context);
     }
+    // References to the Buttons
     RelativeLayout buttonsContainer = (RelativeLayout) findViewById(R.id.home).findViewById(R.id.scrollView).findViewById(R.id.buttons);
     List<Button> customerOptions = new ArrayList<>();
     List<Button> messageOptions = new ArrayList<>();
@@ -225,6 +233,10 @@ public class UserInterface extends AppCompatActivity {
     OptionDialogs.listCurrentUserDialog((AdminTerminal) machine , context, "TELLER");
   }
 
+  /**
+   * A method that builds a new interface to allow the user to deposit money into their account.
+   * @param v , the View object that builds the interface.
+   */
   public void makeDeposit(View v) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -371,6 +383,10 @@ public class UserInterface extends AppCompatActivity {
     OptionDialogs.updatePasswordDialog((BankWorkerServiceSystems) machine, context);
   }
 
+  /**
+   * A method that logs out the current customer from the current terminal.
+   * @param v , the View object that builds the interface.
+   */
   public void closeCustomerSession(View v) {
     ((BankWorkerServiceSystems) machine).deAuthenticateCustomer();
     Toast.makeText(context, context.getString(R.string.closeCustomerSession), Toast.LENGTH_LONG).show();
@@ -380,6 +396,10 @@ public class UserInterface extends AppCompatActivity {
     OptionDialogs.transferFunds(machine, context);
   }
 
+  /**
+   * A method that backups the database.
+   * @param v , the View object that builds the interface.
+   */
   public void backUpDatabase(View v) {
     if (((AdminTerminal) machine).backUpDatabase("database_copy.ser")) {
       Toast.makeText(context, context.getString(R.string.databaseBackedUp), Toast.LENGTH_LONG).show();
@@ -388,6 +408,10 @@ public class UserInterface extends AppCompatActivity {
     }
   }
 
+  /**
+   * A method that loads the database.
+   * @param v , the View object that builds the interface.
+   */
   public void loadSavedDatabase(View v) {
     if (((AdminTerminal) machine).loadDatabase("database_copy.ser")) {
       Toast.makeText(context, context.getString(R.string.databaseLoaded), Toast.LENGTH_LONG).show();
@@ -418,6 +442,10 @@ public class UserInterface extends AppCompatActivity {
 
   public void showUserMessageIds(View v) { OptionDialogs.showUserMessageIds((BankWorkerServiceSystems) machine, context);}
 
+  /**
+   * A method that verify cheques.
+   * @param v , the View object that builds the interface.
+   */
   public void verifyCheques(View v) {
     if (LogIn.savedInfo.contains("ChequeAccount1")) {
       Intent intent = new Intent(context, VerifyCheques.class);
@@ -425,7 +453,6 @@ public class UserInterface extends AppCompatActivity {
     } else {
       Toast.makeText(context, context.getString(R.string.noCheques), Toast.LENGTH_LONG).show();
     }
-
   }
 
   public void promoteTeller(View v) {
