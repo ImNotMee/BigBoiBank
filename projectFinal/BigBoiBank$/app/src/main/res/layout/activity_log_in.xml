@@ -76,4 +76,50 @@
         android:layout_centerHorizontal="true"
         android:text="@string/logIn"/>
 
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/roleen"
+        android:id="@+id/imageView"
+        android:layout_below="@+id/logIn"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="88dp" />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Project Manager"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:id="@+id/textView"
+        android:layout_below="@+id/imageView2"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:text="CEO"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:layout_alignBaseline="@+id/textView"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_alignEnd="@+id/title" />
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/joe"
+        android:id="@+id/imageView2"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:text="BankBoiBank$ Copyright © 2017"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="21dp" />
 </RelativeLayout>
