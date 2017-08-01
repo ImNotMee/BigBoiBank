@@ -187,7 +187,7 @@
 
     <string name="noMessages">No message ID\'s available to see</string>
     
-    <string name="promptAccountInterest">Input Account Interest (Between 0.0 and 1.0) </string>
+    <string name="promptAccountInterest">Input Interest Rate </string>
     <string name="interestUpdated">Interest successfully updated</string>
     <string name="interestNotUpdated">Interest was not successfully updated</string>
 

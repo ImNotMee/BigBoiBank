@@ -31,6 +31,7 @@ import com.bank.users.User;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,6 +159,7 @@ public abstract class OptionDialogs {
           java.math.BigDecimal balance = java.math.BigDecimal.ZERO;
           try {
             balance = java.math.BigDecimal.valueOf(Double.parseDouble(inputBalance.getText().toString()));
+            balance = balance.setScale(2, RoundingMode.HALF_UP);
             if (balance.doubleValue() < 0.00 && !accountType.equals("balanceOwing")) {
               confirmationMessage = context.getString(R.string.invalidAmount);
               validInput = false;
@@ -226,6 +228,7 @@ public abstract class OptionDialogs {
           java.math.BigDecimal amount = new java.math.BigDecimal(BigInteger.ZERO);
           try {
             amount = new java.math.BigDecimal(inputAmount.getText().toString());
+            amount = amount.setScale(2, RoundingMode.CEILING);
           } catch (NumberFormatException e) {
             confirmationMessage += context.getString(R.string.invalidAmount);
             validInput = false;
@@ -606,6 +609,7 @@ public abstract class OptionDialogs {
                     && selector.getAccountType(toId) != -1) {
               try {
                 BigDecimal amount = new BigDecimal(inputAmount.getText().toString());
+                amount = amount.setScale(2, RoundingMode.HALF_UP);
                 machine.makeWithdrawal(amount, fromId);
                 if (machine.makeDeposit(amount, toId)) {
                   confirmationMessage += context.getString(R.string.transferCompleted);
@@ -635,8 +639,8 @@ public abstract class OptionDialogs {
 
   public static void viewUserBalanceDialog(final BankWorkerServiceSystems machine, final Context context) {
     final Dialog customerBalance = new Dialog(context);
-    customerBalance.getWindow().setBackgroundDrawable(null);
     customerBalance.setContentView(R.layout.one_input);
+    customerBalance.getWindow().setBackgroundDrawable(null);
     RelativeLayout layout = (RelativeLayout) customerBalance.findViewById(R.id.layout);
     ((TextView) layout.findViewById(R.id.title)).setText(context.getString(R.string.customerBalance));
     final EditText inputID = (EditText) layout.findViewById(R.id.input);
@@ -928,6 +932,7 @@ public abstract class OptionDialogs {
         boolean validInput = true;
         try {
           interest = java.math.BigDecimal.valueOf(Double.parseDouble(inputInterest.getText().toString()));
+          interest = interest.setScale(2, RoundingMode.HALF_UP);
           if (interest.doubleValue() < 0.00 || interest.doubleValue() >= 1.00) {
             confirmMessage = context.getString(R.string.invalidAmount);
             validInput = false;
