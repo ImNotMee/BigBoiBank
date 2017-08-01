@@ -58,12 +58,14 @@ public abstract class OptionDialogs {
     } else if (user.equals("customer")) {
       title.setText(context.getText(R.string.makeCustomer));
     }
+    // references to the editText and TextEdits
     final EditText inputName = (EditText) layout.findViewById(R.id.name);
     final EditText inputAge = (EditText) layout.findViewById(R.id.age);
     final EditText inputAddress = (EditText) layout.findViewById(R.id.address);
     final EditText inputPassword = (EditText) layout.findViewById(R.id.password);
     final EditText inputConfirmPassword = (EditText) layout.findViewById(R.id.confirmPassword);
     final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+    // reference to the Button
     final Button confirm = (Button) layout.findViewById(R.id.confirm);
     confirm.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -132,9 +134,11 @@ public abstract class OptionDialogs {
       final Dialog makeAccount = new Dialog(context);
       makeAccount.setContentView(R.layout.make_account);
       makeAccount.getWindow().setBackgroundDrawable(null);
+      // references to the editText and TextEdits
       RelativeLayout layout = (RelativeLayout) makeAccount.findViewById(R.id.makeAccount);
       final EditText inputName = (EditText) layout.findViewById(R.id.accountName);
       final EditText inputBalance = (EditText) layout.findViewById(R.id.balance);
+      // References to the RadioButtons and RadioGroup
       RadioGroup accountTypes = (RadioGroup) layout.findViewById(R.id.accounts);
       final RadioButton tfsa = (RadioButton) accountTypes.findViewById(R.id.tfsa);
       final RadioButton chequing = (RadioButton) accountTypes.findViewById(R.id.chequing);
@@ -213,14 +217,17 @@ public abstract class OptionDialogs {
       makeTransaction.getWindow().setBackgroundDrawable(null);
       RelativeLayout layout = (RelativeLayout) makeTransaction.findViewById(R.id.layout);
       TextView title = (TextView) layout.findViewById(R.id.title);
+      // Check which type of transaction
       if (transaction.equals("deposit")) {
         title.setText(context.getText(R.string.makeDeposit));
       } else if (transaction.equals("withdrawal")) {
         title.setText(context.getText(R.string.makeWithdrawal));
       }
+      // references to the editText and TextEdits
       final EditText inputAccountId = (EditText) layout.findViewById(R.id.account);
       final EditText inputAmount = (EditText) layout.findViewById(R.id.amount);
       final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+      // reference to the Button
       final Button confirm = (Button) layout.findViewById(R.id.confirm);
       confirm.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -309,9 +316,11 @@ public abstract class OptionDialogs {
     setCustomer.setContentView(R.layout.set_customer);
     setCustomer.getWindow().setBackgroundDrawable(null);
     RelativeLayout layout = (RelativeLayout) setCustomer.findViewById(R.id.layout);
+    // references to the editText and TextEdits
     final EditText inputId = (EditText) layout.findViewById(R.id.id);
     final EditText inputPassword = (EditText) layout.findViewById(R.id.password);
     final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+    // Reference to the button
     final Button confirm = (Button) layout.findViewById(R.id.confirm);
     confirm.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -385,11 +394,9 @@ public abstract class OptionDialogs {
           ((TextView) details.findViewById(R.id.balance)).setText(balance);
           ((TextView) details.findViewById(R.id.type)).setText(type);
           ((LinearLayout) scrollView.findViewById(R.id.linearLayout)).addView(details);
-
         }
         makeTransaction.show();
       }
-
     }
   }
 
@@ -649,10 +656,12 @@ public abstract class OptionDialogs {
       transferFunds.getWindow().setBackgroundDrawable(null);
       transferFunds.setContentView(R.layout.transfer_funds);
       RelativeLayout layout = (RelativeLayout) transferFunds.findViewById(R.id.layout);
+      // references to the editText and TextEdits
       final EditText transferFrom = (EditText) layout.findViewById(R.id.transferFrom);
       final EditText transferTo = (EditText) layout.findViewById(R.id.transferTo);
       final EditText inputAmount = (EditText) layout.findViewById(R.id.amount);
       final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
+      // reference to the button
       final Button transfer = (Button) layout.findViewById(R.id.transfer);
       transfer.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -1007,7 +1016,7 @@ public abstract class OptionDialogs {
     final EditText inputInterest = (EditText) layout.findViewById(R.id.updateInterest);
     final Button update = (Button) layout.findViewById(R.id.confirm);
     final TextView confirm = (TextView) layout.findViewById(R.id.confirmationMessage);
-
+    // References to the RadioButtons and RadioGroup
     RadioGroup accountTypes = (RadioGroup) layout.findViewById(R.id.accounts);
     final RadioButton tfsa = (RadioButton) accountTypes.findViewById(R.id.tfsa);
     final RadioButton chequing = (RadioButton) accountTypes.findViewById(R.id.chequing);
