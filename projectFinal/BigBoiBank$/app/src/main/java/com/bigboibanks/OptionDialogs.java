@@ -931,11 +931,9 @@ public abstract class OptionDialogs {
         ((TextView) details.findViewById(R.id.balance)).setText(address);
         ((TextView) details.findViewById(R.id.type)).setText(type);
         ((LinearLayout) scrollView.findViewById(R.id.linearLayout)).addView(details);
-
       }
       makeTransaction.show();
     }
-
   }
 
   /**
