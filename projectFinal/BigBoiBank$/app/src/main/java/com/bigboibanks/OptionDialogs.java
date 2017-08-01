@@ -36,15 +36,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public abstract class OptionDialogs {
 
+  /**
+   * A method that makes a new user.
+   * @param machine , the type of terminal.
+   * @param user ,a string that indicates the type of user using the bank.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void makeUserDialog(final BankWorkerServiceSystems machine, final String user, final Context context) {
     final Dialog makeUser = new Dialog(context);
     makeUser.setContentView(R.layout.make_user);
     makeUser.getWindow().setBackgroundDrawable(null);
     RelativeLayout layout = (RelativeLayout) makeUser.findViewById(R.id.makeUser);
     TextView title = (TextView) layout.findViewById(R.id.title);
+    // Checks with type of user
     if (user.equals("admin")) {
       title.setText(context.getText(R.string.makeAdmin));
     } else if (user.equals("teller")) {
@@ -58,7 +64,6 @@ public abstract class OptionDialogs {
     final EditText inputPassword = (EditText) layout.findViewById(R.id.password);
     final EditText inputConfirmPassword = (EditText) layout.findViewById(R.id.confirmPassword);
     final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
-
     final Button confirm = (Button) layout.findViewById(R.id.confirm);
     confirm.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -115,7 +120,11 @@ public abstract class OptionDialogs {
     makeUser.show();
   }
 
-
+  /**
+   * A method that creates a new account for the current customer in the terminal.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void makeAccountDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -132,9 +141,7 @@ public abstract class OptionDialogs {
       final RadioButton savings = (RadioButton) accountTypes.findViewById(R.id.savings);
       final RadioButton restrictedSavings = (RadioButton) accountTypes.findViewById(R.id.restrictedSavings);
       final RadioButton balanceOwing = (RadioButton) accountTypes.findViewById(R.id.balanceOwing);
-
       final TextView confirmMessage = (TextView) layout.findViewById(R.id.confirmationMessage);
-
       final Button confirm = (Button) makeAccount.findViewById(R.id.makeAccount).findViewById(R.id.confirm);
       confirm.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -191,6 +198,12 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that
+   * @param machine , the type of terminal.
+   * @param transaction ,the type of transaction.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void moneyTransactionDialog(final BankServiceSystems machine, final String transaction, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -286,7 +299,11 @@ public abstract class OptionDialogs {
     }
   }
 
-
+  /**
+   * A method that sets the customer for the terminal.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void setCustomerDialog(final BankWorkerServiceSystems machine, final Context context) {
     final Dialog setCustomer = new Dialog(context);
     setCustomer.setContentView(R.layout.set_customer);
@@ -337,6 +354,11 @@ public abstract class OptionDialogs {
     setCustomer.show();
   }
 
+  /**
+   * A method that lists all the accounts of the current customer.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void listAccountsDialog(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -371,6 +393,11 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that checks the balance of a given account.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void checkBalanceDialog(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -409,6 +436,11 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that gives interest to the selected account.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.t
+   */
   public static void giveInterestDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -453,6 +485,11 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that updates the name of the current customer.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void updateNameDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -486,6 +523,11 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that updates the age of the current customer.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void updateAgeDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -522,6 +564,11 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that updates the address of the current customer.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void updateAddressDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -555,6 +602,11 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that updates the password ot the current customer.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void updatePasswordDialog(final BankWorkerServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -584,6 +636,11 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that transfers funds from one account to another account.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void transferFunds(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -637,6 +694,11 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that shows the current customer's accounts balances.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void viewUserBalanceDialog(final BankWorkerServiceSystems machine, final Context context) {
     final Dialog customerBalance = new Dialog(context);
     customerBalance.setContentView(R.layout.one_input);
@@ -670,6 +732,11 @@ public abstract class OptionDialogs {
     customerBalance.show();
   }
 
+  /**
+   * A method that leaves a message to the given ID of the user.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void leaveMessage(final BankServiceSystems machine, final Context context) {
     final Dialog leaveMessage = new Dialog(context);
     leaveMessage.setContentView(R.layout.leave_message);
@@ -711,6 +778,11 @@ public abstract class OptionDialogs {
     leaveMessage.show();
   }
 
+  /**
+   * A method that shows all the messages' IDs.
+   * @param machine , the type of terminal..
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void showMessageIds(final BankServiceSystems machine, final Context context) {
     if (machine.getCurrentCustomer() == null) {
       Toast.makeText(context, context.getString(R.string.setCustomerFirst), Toast.LENGTH_LONG).show();
@@ -740,6 +812,11 @@ public abstract class OptionDialogs {
     }
   }
 
+  /**
+   * A method that shows a particular message based on the given ID of the message.
+   * @param machine , the type of terminal..
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void seeSpecificMessage(final BankServiceSystems machine, final Context context) {
     final Dialog dialog = new Dialog(context);
     dialog.setContentView(R.layout.one_input);
@@ -781,6 +858,11 @@ public abstract class OptionDialogs {
     dialog.show();
   }
 
+  /**
+   * A method that shows the information of the current customer.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void showCurrentCustomerDialog(final BankServiceSystems machine, final Context context) {
     Customer customer = (Customer) machine.getCurrentCustomer();
     final Dialog showCustomer = new Dialog(context);
@@ -802,6 +884,12 @@ public abstract class OptionDialogs {
     showCustomer.show();
   }
 
+  /**
+   * A method that lists all of the current users. of a given role.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   * @param role , the type of the user.
+   */
   public static void listCurrentUserDialog(final AdminTerminal machine, final Context context, String role) {
     List<User> users = machine.listUsers(role);
     if (users.size() == 0) {
@@ -841,6 +929,11 @@ public abstract class OptionDialogs {
 
   }
 
+  /**
+   * A method that shows all of the message available to the current user.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void showUserMessageIds(final BankWorkerServiceSystems machine, final Context context) {
     ArrayList<Integer> ids = (ArrayList<Integer>) machine.getUserMessageIds();
     if (ids.size() == 0) {
@@ -860,8 +953,13 @@ public abstract class OptionDialogs {
       }
       dialog.show();
     }
-
   }
+
+  /**
+   * A method that changes a user into a Teller.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void promoteTeller(final AdminTerminal machine, final Context context) {
     final Dialog promoteTeller = new Dialog(context);
     promoteTeller.setContentView(R.layout.promote_teller);
@@ -896,6 +994,11 @@ public abstract class OptionDialogs {
     promoteTeller.show();
   }
 
+  /**
+   * A method that updates the interest rate of a certain type of account.
+   * @param machine , the type of terminal.
+   * @param context ,the connection between the main activity and the dialog.
+   */
   public static void updateInterestRateDialog(final AdminTerminal machine, final Context context) {
     final Dialog updateInterest = new Dialog(context);
     updateInterest.setContentView(R.layout.account_role);
