@@ -11,6 +11,12 @@ public class FeelsBadMan extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // picture taken from tenor.com
+        /*
+        Exact URL for picture
+        https://tenor.com/view/tiny-violin-mr-krabs-spongebob-gif-3533818
+         */
+
         setContentView(R.layout.mr_krabz);
         MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.mr_krabs);
         mediaPlayer.start();
