@@ -110,6 +110,8 @@ public class VerifyCheques extends AppCompatActivity {
                 // set that it has now been checked
                 LogIn.savedInfoWriter.putBoolean("ChequeVerified" + String.valueOf(iCopy), true);
                 LogIn.savedInfoWriter.apply();
+                verify.setClickable(false);
+                decline.setClickable(false);
               }
             });
           }

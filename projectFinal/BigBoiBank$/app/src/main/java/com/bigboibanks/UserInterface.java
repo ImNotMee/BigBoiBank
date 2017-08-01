@@ -238,6 +238,7 @@ public class UserInterface extends AppCompatActivity {
           final Dialog accountCheck = new Dialog(context);
           accountCheck.setContentView(R.layout.one_input);
           RelativeLayout layout = (RelativeLayout) accountCheck.findViewById(R.id.layout);
+          ((TextView) layout.findViewById(R.id.title)).setText(R.string.makeDeposit);
           final EditText inputAccountId = (EditText) layout.findViewById(R.id.input);
           final TextView balance = (TextView) layout.findViewById(R.id.confirmationMessage);
           final Button check = (Button) layout.findViewById(R.id.confirm);
