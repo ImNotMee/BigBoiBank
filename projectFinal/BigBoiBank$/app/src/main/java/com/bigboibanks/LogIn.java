@@ -57,7 +57,6 @@ public class LogIn extends AppCompatActivity {
         accountTypeStr = accountTypes.toString();
         inserter.insertAccountType(accountTypeStr, new BigDecimal(interestRate));
       }
-
       // insert roles
       String roleStr;
       for (Roles role : Roles.values()) {
