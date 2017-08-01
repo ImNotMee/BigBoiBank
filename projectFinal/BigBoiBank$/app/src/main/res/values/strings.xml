@@ -118,7 +118,7 @@
     <string name="passwordUpdated">Password successfully updated. </string>
 
     <string name="customerSet">Customer has been set and authenticated. </string>
-    <string name="incorrectPassword">Incorrect Password .</string>
+    <string name="incorrectPassword">Incorrect Password.</string>
 
     <string name="invalidAddress">Address is too long. </string>
     <string name="passwordNoMatch">Passwords do not match. </string>

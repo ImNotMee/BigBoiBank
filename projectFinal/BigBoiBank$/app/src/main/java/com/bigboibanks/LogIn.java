@@ -73,11 +73,13 @@ public class LogIn extends AppCompatActivity {
     final EditText idText = (EditText) findViewById(R.id.inputId);
     final EditText password = (EditText) findViewById(R.id.inputPassword);
 
+    // radio button group to select type of user to log in
     RadioGroup userTypes = (RadioGroup) findViewById(R.id.userChoice);
     final RadioButton admin = (RadioButton) userTypes.findViewById(R.id.admin);
     final RadioButton teller = (RadioButton) userTypes.findViewById(R.id.teller);
     final RadioButton customer = (RadioButton) userTypes.findViewById(R.id.customer);
 
+    // attempt to log in user using provided id, password, and type
     Button logIn = (Button) findViewById(R.id.logIn);
     logIn.setOnClickListener(new View.OnClickListener() {
       @Override
