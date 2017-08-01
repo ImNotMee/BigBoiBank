@@ -26,6 +26,10 @@ import java.math.RoundingMode;
 
 public class VerifyCheques extends AppCompatActivity {
 
+  /**
+   * A method that verifies cheques.
+   * @param savedInstanceState, the Bundle used in every Android activity.
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

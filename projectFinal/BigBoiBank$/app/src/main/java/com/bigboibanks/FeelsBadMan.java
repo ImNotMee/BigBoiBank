@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 
 public class FeelsBadMan extends AppCompatActivity {
 
+    /**
+     * A method that plays sad music with mr.krabs picture when logging in with wrong user type.
+     * @param savedInstanceState, the Bundle used in every Android activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
