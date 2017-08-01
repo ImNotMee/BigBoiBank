@@ -965,7 +965,7 @@ public abstract class OptionDialogs {
   }
 
   /**
-   * A method that changes a user into a Teller.
+   * A method that changes a teller into an admin.
    * @param machine , the type of terminal.
    * @param context ,the connection between the main activity and the dialog.
    */
