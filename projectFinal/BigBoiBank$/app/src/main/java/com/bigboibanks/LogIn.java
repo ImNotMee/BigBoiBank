@@ -29,6 +29,10 @@ public class LogIn extends AppCompatActivity {
   protected static SharedPreferences savedInfo;
   protected static SharedPreferences.Editor savedInfoWriter;
 
+  /**
+   * A method used to login users.
+   * @param savedInstanceState, the Bundle used in every Android activity.
+   */
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
