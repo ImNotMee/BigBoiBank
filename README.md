@@ -1,4 +1,4 @@
-# BigBoiBank
+# BigBoiBank$
 This Android bank app was the final project of one of our second year courses. (a group of 5 students) 
 
 This project was coded with Java and used Android Studio to build the app.
