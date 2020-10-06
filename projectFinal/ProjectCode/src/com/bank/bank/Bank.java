@@ -36,7 +36,7 @@ public class Bank {
    *
    * @param argv Used to tell if initialize mode or a terminal.
    */
-  public static void main(String[] argv) {
+  public static void main(String[] args) {
     final Connection connection = DatabaseDriverExtender.connectOrCreateDataBase();
     try {
       BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
@@ -44,7 +44,7 @@ public class Bank {
       String currentInput;
       // check what mode will be used
       String mode;
-      if (argv.length == 0) {
+      if (args.length == 0) {
         mode = "user";
       } else if (argv[0].equals("-1")) {
         mode = "initialize";
